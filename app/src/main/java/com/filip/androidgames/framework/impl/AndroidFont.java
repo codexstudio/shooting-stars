@@ -7,7 +7,7 @@ public class AndroidFont implements Font {
     float size;
     Typeface typeface;
 
-    AndroidFont(float size, Typeface typeface) {
+    public AndroidFont(float size, Typeface typeface) {
         this.size = size;
         this.typeface = typeface;
     }
