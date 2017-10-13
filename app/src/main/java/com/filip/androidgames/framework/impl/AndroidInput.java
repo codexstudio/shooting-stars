@@ -18,13 +18,15 @@ public class AndroidInput implements Input, View.OnTouchListener {
     public AndroidInput(Context context, View view, float scaleX, float scaleY) {
         accelHandler = new AccelerometerHandler(context);
         touchHandler = new TouchHandler(scaleX, scaleY);
+        swipeHandler = new SwipeHandler();
         gestureHandler = new GestureDetector(context, swipeHandler);
         view.setOnTouchListener(this);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return touchHandler.onTouch(v, event) && gestureHandler.onTouchEvent(event);
+        gestureHandler.onTouchEvent(event);
+        return touchHandler.onTouch(v, event);
     }
 
     @Override
