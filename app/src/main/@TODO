@@ -1,0 +1,28 @@
+SHIT TO DO MOTHERFUCKERS!!!!
+
+-- Movement --
+    - Input Handler - Add to Philips interface -> virtual joystick capabilities
+
+-- Base Character Class --
+    - Define Bounding boxes and hit detection
+    - Define all AI in Base class since all our actor classes utilize it? (other option is make a seperate AI class for sub characters to inherit from. i.e. multiple inheritance)
+
+        - Inheriting Classes -
+            - Player Character class (Player Ship)
+                - Has a "switch" in behaviour : Either is using AI from base class to wander or is receiving player input.
+            - Non AI Enemy class (Asteroids)
+            - AI Enemy class (Enemy Ships)
+
+-- UI --
+    - Score
+    - Pause Button
+
+-- Enhancing object pool interface --
+    - Create pools for all character types
+    - Create methods for pulling and resetting objects to and from the pool
+
+-- Main Game Logic --
+    - Set and scroll game background here?
+    - Set spawning rates
+    - Control game speed
+
