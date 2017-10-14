@@ -54,12 +54,12 @@ public interface Graphics
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight);
     public void drawPixmap(Pixmap pixmap, int x, int y);
     public void drawText(String str, int x, int y, Font font, int color);
+    public void drawAnimations(float deltaTime);
     public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight);
     public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, boolean bIsLooping);
     public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, int maxLoops);
     public int getWidth();
     public int getHeight();
 
-    public void update(float deltaTime);
 }
 
