@@ -25,7 +25,8 @@ public class AndroidInput implements Input, View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return touchHandler.onTouch(v, event) && gestureHandler.onTouchEvent(event);
+        gestureHandler.onTouchEvent(event);
+        return touchHandler.onTouch(v, event);
     }
 
     @Override

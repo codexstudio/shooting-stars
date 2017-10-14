@@ -2,12 +2,12 @@ package com.filip.androidgames.framework.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.*;
 
 import android.content.res.AssetManager;
 import android.graphics.*;
 import android.graphics.Paint.Style;
 
-import android.os.Handler;
 import com.filip.androidgames.framework.Font;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
@@ -19,12 +19,46 @@ public class AndroidGraphics implements Graphics {
     Paint paint;		// needed for drawing
     Rect srcRect = new Rect();
     Rect dstRect = new Rect();
+    List<Animation> animationList;
 
     public AndroidGraphics(AssetManager assets, Bitmap frameBuffer) {
         this.assets = assets;
         this.frameBuffer = frameBuffer;
         this.canvas = new Canvas(frameBuffer);
         this.paint = new Paint();
+        this.animationList = new ArrayList<>();
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        for (Animation a : animationList) {
+            srcRect.left = a.srcWidth * ((a.counter - 1) % a.columns);
+            srcRect.right = srcRect.left + a.srcWidth;
+            srcRect.top = a.srcHeight * ((int) Math.ceil((double) a.counter / (double) a.columns) - 1);
+            srcRect.bottom = srcRect.top + a.srcHeight;
+
+            dstRect.left = a.x;
+            dstRect.top = a.y;
+            dstRect.right = a.x + a.srcWidth - 1;
+            dstRect.bottom = a.y + a.srcHeight - 1;
+
+            if (a.counter > a.columns * a.rows - 1) {
+                if (a.bIsLooping) {
+                    if (a.maxLoops != 0) {
+                        if (a.loopCounter >= a.maxLoops) {
+                            animationList.remove(a);
+                        }
+                    }
+                    a.counter = 1;
+                    a.loopCounter++;
+                }
+            }
+            else {
+                a.counter++;
+            }
+
+            canvas.drawBitmap(((AndroidPixmap)a.pixmap).bitmap, srcRect, dstRect, null);
+        }
     }
 
     @Override
@@ -100,34 +134,25 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
-    public void drawAnimation(final Pixmap pixmap, final int x, final int y, final int rows, final int columns, final int srcWidth, final int srcHeight) {
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            // sprite counter
-            int i = 0;
-
-            @Override
-            public void run() {
-                srcRect.left = srcWidth * ((i - 1) % columns);
-                srcRect.right = srcRect.left + srcWidth;
-                srcRect.top = srcHeight * ((int) Math.ceil((double) i / (double) columns) - 1);
-                srcRect.bottom = srcRect.top + srcHeight;
-
-                if (i > columns * rows - 1) {
-                    handler.removeCallbacks(this);
-                }
-
-                canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, srcRect, dstRect, null);
-                handler.postDelayed(this, 250);
-            }
-        };
-        handler.post(runnable);
+    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight) {
+        animationList.add(new Animation(pixmap, x, y, rows, columns, srcWidth, srcHeight));
     }
 
     @Override
-    public void drawText(String str, int x, int y, Font font) {
+    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, boolean bIsLooping) {
+        animationList.add(new Animation(pixmap, x, y, rows, columns, srcWidth, srcHeight, bIsLooping));
+    }
+
+    @Override
+    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, int maxLoops) {
+        animationList.add(new Animation(pixmap, x, y, rows, columns, srcWidth, srcHeight, maxLoops));
+    }
+
+    @Override
+    public void drawText(String str, int x, int y, Font font, int color) {
         paint.setTextSize(font.getSize());
         paint.setTypeface(((AndroidFont)font).typeface);
+        paint.setColor(color);
         canvas.drawText(str, x, y, paint);
     }
 
