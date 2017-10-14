@@ -10,7 +10,7 @@ import com.filip.androidgames.framework.Screen;
 import java.util.List;
 import java.util.Random;
 
-public class GameScreen extends Screen{
+public class GameScreen extends Screen {
     private static final float UPDATE_BLOB_TIME = 1.0f;
 
     private static Pixmap background;
