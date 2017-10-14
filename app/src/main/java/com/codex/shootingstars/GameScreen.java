@@ -26,6 +26,7 @@ public class GameScreen extends Screen {
 
     private Random random = new Random();
 
+
     public GameScreen(Game game) {
         super(game);
         Graphics g = game.getGraphics();
