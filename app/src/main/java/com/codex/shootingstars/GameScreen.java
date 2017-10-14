@@ -10,14 +10,17 @@ import java.util.List;
 import java.util.Random;
 
 public class GameScreen extends Screen {
+
+    public int x,y;
+
     private static final float UPDATE_BLOB_TIME = 1.0f;
 
     private static Pixmap background;
     private static Pixmap blob;
     private static Pixmap numbers;
 
-    private int blobXPos;
-    private int blobYPos;
+    private int blobXPos = x;
+    private int blobYPos = y;
 
     private int oldScore;
     private String score = "0";
@@ -26,17 +29,21 @@ public class GameScreen extends Screen {
 
     private Random random = new Random();
 
+
     public GameScreen(Game game) {
         super(game);
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         blob = g.newPixmap("blob.png", Graphics.PixmapFormat.ARGB4444);
         numbers = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
+
+        y = g.getHeight()/2;
+        x = g.getWidth()/2;
     }
 
     @Override
     public void update(float deltaTime) {
-        List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+   /*     List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
@@ -57,7 +64,7 @@ public class GameScreen extends Screen {
             blobXPos = random.nextInt(game.getGraphics().getWidth() - blob.getWidth());
             blobYPos = random.nextInt(game.getGraphics().getHeight() - blob.getHeight());
             timePassed = 0;
-        }
+        }*/
     }
 
     @Override
@@ -65,6 +72,7 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         g.drawPixmap(background, 0, 0);
         g.drawPixmap(blob, blobXPos, blobYPos);
+
 
         drawText(g, score, g.getWidth() / 2 - score.length() * 20 / 2, g.getHeight() - 42);
     }
