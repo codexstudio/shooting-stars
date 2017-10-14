@@ -86,7 +86,7 @@ public class AndroidGraphics implements Graphics {
 
     @Override
     public Font newFont(String fileName, float size) {
-        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName));
+        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName), Color.WHITE);
     }
 
     @Override
