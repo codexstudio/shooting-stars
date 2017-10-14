@@ -34,6 +34,8 @@ public class MainMenuScreen extends Screen {
 //                    game.setScreen(new GameScreen(game));
 //                    return;
 //                }
+                game.setScreen(new GameScreen(game));
+                return;
             }
         }
     }
