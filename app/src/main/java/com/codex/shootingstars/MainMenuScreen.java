@@ -19,7 +19,7 @@ public class MainMenuScreen extends Screen {
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         explosion = g.newPixmap("explosion.png", Graphics.PixmapFormat.ARGB8888);
         g.addAnimation(explosion, 300, 300, 6, 8, 256, 256, true);
-        font = new AndroidFont(48, Typeface.DEFAULT);
+        font = new AndroidFont(48, Typeface.DEFAULT, Color.WHITE);
     }
 
     @Override
@@ -30,10 +30,8 @@ public class MainMenuScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-//                if (inBounds(event, playXPos, playYPos, playButton.getWidth(), playButton.getHeight())) {
-//                    game.setScreen(new GameScreen(game));
-//                    return;
-//                }
+                game.setScreen(new GameScreen(game));
+                return;
             }
         }
     }
@@ -43,7 +41,7 @@ public class MainMenuScreen extends Screen {
         Graphics g = game.getGraphics();
         g.drawPixmap(background, 0, 0);
         g.drawText("Play game", 200, 200, font, Color.WHITE);
-        g.update(deltaTime);
+        g.drawAnimations(deltaTime);
     }
 
     @Override

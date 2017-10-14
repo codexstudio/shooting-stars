@@ -30,7 +30,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
-    public void update(float deltaTime) {
+    public void drawAnimations(float deltaTime) {
         for (Animation a : animationList) {
             srcRect.left = a.srcWidth * ((a.counter - 1) % a.columns);
             srcRect.right = srcRect.left + a.srcWidth;
@@ -86,7 +86,7 @@ public class AndroidGraphics implements Graphics {
 
     @Override
     public Font newFont(String fileName, float size) {
-        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName));
+        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName), Color.WHITE);
     }
 
     @Override
