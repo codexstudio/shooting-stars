@@ -44,7 +44,6 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         blob = g.newPixmap("blob.png", Graphics.PixmapFormat.ARGB4444);
-//        numbers = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
         virtualJoystick = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
         width = g.getWidth();
         height = g.getHeight();

@@ -57,6 +57,7 @@ public interface Graphics
         Point(int p) {
             this.x = this.y = p;
         }
+
         Point() {
             x = y = 0;
         }
