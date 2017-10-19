@@ -9,14 +9,14 @@ public class FriendlyShip extends BaseCharacter{
         PLAYER_CONTROLLED
     }
 
+    //Members
+    private ControllerStates controllerState;
+
     //Constructor
     public FriendlyShip(Graphics g, ControllerStates state){
         setActorSpriteSheet(g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
         controllerState = state;
     }
-
-    //Members
-    private ControllerStates controllerState;
 
     //Setter & Getters
     public ControllerStates getState() {return controllerState; }
