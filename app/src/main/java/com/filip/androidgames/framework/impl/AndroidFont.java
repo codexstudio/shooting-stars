@@ -19,6 +19,6 @@ public class AndroidFont implements Font {
         return size;
     }
 
-    @Override
+@Override
     public int getColor() { return color; }
 }

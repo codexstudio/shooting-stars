@@ -86,7 +86,7 @@ public class AndroidGraphics implements Graphics {
 
     @Override
     public Font newFont(String fileName, float size) {
-        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName));
+        return new AndroidFont(size, Typeface.createFromAsset(assets, fileName), Color.WHITE);
     }
 
     @Override
@@ -111,6 +111,21 @@ public class AndroidGraphics implements Graphics {
         paint.setColor(color);
         paint.setStyle(Style.FILL);
         canvas.drawRect(x, y, x + width - 1, y + width - 1, paint);
+    }
+
+    @Override
+    public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight, int dstWidth, int dstHeight) {
+        srcRect.left = srcX;
+        srcRect.top = srcY;
+        srcRect.right = srcX + srcWidth - 1;
+        srcRect.bottom = srcY + srcHeight - 1;
+
+        dstRect.left = x;
+        dstRect.top = y;
+        dstRect.right = x + dstWidth - 1;
+        dstRect.bottom = y + dstHeight - 1;
+
+        canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect, null);
     }
 
     @Override
