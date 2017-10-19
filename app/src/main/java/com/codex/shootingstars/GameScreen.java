@@ -15,13 +15,16 @@ public class GameScreen extends Screen {
 
     private static Pixmap background;
     private static Pixmap blob;
-    private static Pixmap numbers;
+    private static Pixmap virtualJoystick;
+//    private static Pixmap numbers;
 
     private int blobXPos;
     private int blobYPos;
 
     private int backgroundXPos = 0;
     private int backgroundYPos = 0;
+    private int virtualJoystickXPos = 0;
+    private int virtualJoystickYPos = 0;
 
     int width;
     int height;
@@ -33,13 +36,16 @@ public class GameScreen extends Screen {
 
     private Random random = new Random();
 
+    private boolean bIsTouching;
+
 
     public GameScreen(Game game) {
         super(game);
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         blob = g.newPixmap("blob.png", Graphics.PixmapFormat.ARGB4444);
-        numbers = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
+//        numbers = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
+        virtualJoystick = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
         width = g.getWidth();
         height = g.getHeight();
     }
@@ -51,7 +57,14 @@ public class GameScreen extends Screen {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
+            if (event.type == MotionEvent.ACTION_DOWN) {
+                virtualJoystickXPos = event.x;
+                virtualJoystickYPos = event.y;
+
+                bIsTouching = true;
+            }
             if (event.type == MotionEvent.ACTION_MOVE) {
+                bIsTouching = true;
                 if (inBounds(event, 0, 0, width, height/2)) {
                     if (backgroundYPos < -height) {
                         backgroundYPos = 0;
@@ -95,6 +108,9 @@ public class GameScreen extends Screen {
                     }
                     //score = "" + oldScore;
                 }
+            }
+            if (event.type == MotionEvent.ACTION_UP) {
+                bIsTouching = false;
             }
         }
 
@@ -146,9 +162,10 @@ public class GameScreen extends Screen {
             g.drawPixmap(background, background.getWidth() + backgroundXPos, background.getHeight() + backgroundYPos);
         }
 
+        if (bIsTouching) {
+            g.drawPixmap(virtualJoystick, virtualJoystickXPos - 128, virtualJoystickYPos - 128, 0, 0, virtualJoystick.getWidth(), virtualJoystick.getHeight(), 256, 256);
+        }
         g.drawPixmap(blob, blobXPos, blobYPos);
-
-        //drawText(g, score, g.getWidth() / 2 - score.length() * 20 / 2, g.getHeight() - 42);
     }
 
     @Override
@@ -159,30 +176,5 @@ public class GameScreen extends Screen {
 
     @Override
     public void dispose() {}
-
-//    public void drawText(Graphics g, String line, int x, int y) {
-//        int len = line.length();
-//        for (int i = 0; i < len; i++) {
-//            char character = line.charAt(i);
-//
-//            if (character == ' ') {
-//                x += 20;
-//                continue;
-//            }
-//
-//            int srcX;
-//            int srcWidth;
-//            if (character == '.') {
-//                srcX = 200;
-//                srcWidth = 10;
-//            } else {
-//                srcX = (character - '0') * 20;
-//                srcWidth = 20;
-//            }
-//
-//            g.drawPixmap(numbers, x, y, srcX, 0, srcWidth, 32);
-//            x += srcWidth;
-//        }
-//    }
 }
 
