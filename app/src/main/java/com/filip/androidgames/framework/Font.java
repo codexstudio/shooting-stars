@@ -4,3 +4,4 @@ public interface Font {
     public float getSize();
     public int getColor();
 }
+
