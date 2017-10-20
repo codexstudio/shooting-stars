@@ -21,10 +21,21 @@ public class Vector2 {
         this.y = y;
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public void setX(float x) { this.x = x; }
-    public void setY(float y) { this.y = y; }
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
 
     public Vector2 unitVector() {
         final float sqrSum = x * x + y * y;
@@ -49,6 +60,20 @@ public class Vector2 {
 
     public boolean equal(final Vector2 rhs) {
         return x == rhs.getX() && y == rhs.getY();
+    }
+
+    public float normalize() {
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public Vector2 getClampedToSize(float MaxSize) {
+        final float sqrSum = x*x + y*y;
+        if (sqrSum > MaxSize * MaxSize) {
+            final float scale = (float) (1 / Math.sqrt(sqrSum));
+            return new Vector2(x * scale, y * scale);
+        } else {
+            return this;
+        }
     }
 
     public static final float DotProduct(final Vector2 lhs, final Vector2 rhs) {
