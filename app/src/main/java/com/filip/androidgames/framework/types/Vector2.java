@@ -8,7 +8,9 @@ public class Vector2 {
     public static final Vector2 UP_VECTOR = new Vector2(0.0f, 1.0f);
     public static final Vector2 RIGHT_VECTOR = new Vector2(1.0f, 0.0f);
 
-    public Vector2() {}
+    public Vector2() {
+        x = y = 0;
+    }
 
     public Vector2(float v) {
         this.x = this.y = v;
@@ -60,4 +62,5 @@ public class Vector2 {
     public static final float Distance(final Vector2 lhs, final Vector2 rhs) {
         return (float) (Math.sqrt(rhs.getX() - lhs.getX()) + Math.sqrt(rhs.getY() - lhs.getY()));
     }
+
 }
