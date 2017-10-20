@@ -1,11 +1,13 @@
 package com.codex.shootingstars;
 
+import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Input.TouchEvent;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.Screen;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
+import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,7 @@ public class GameScreen extends Screen {
     private int backgroundYPos = 0;
     private int virtualJoystickXPos = 0;
     private int virtualJoystickYPos = 0;
+    private float scrollSpeed = 5.0f;
 
     int width;
     int height;
@@ -107,17 +110,21 @@ public class GameScreen extends Screen {
         }
 
         if (bIsTouching) {
-            if (virtualJoystickXPos < width / 2) {
-                backgroundXPos += 5;
+            double test = virtualJoystick.getDirection().getX();
+            double test2 = virtualJoystick.getDirection().getY();
+            Log.d("X Scroll",Double.toString(test));
+            Log.d("Y Scroll",Double.toString(test2));
+            if (virtualJoystick.getDirection().getX() < 0) {
+                backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR);
             }
-            if (virtualJoystickXPos > width / 2) {
-                backgroundXPos -= 5;
+            if (virtualJoystick.getDirection().getX() > 0) {
+                backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR);
             }
-            if (virtualJoystickYPos > height / 2) {
-                backgroundYPos -= 5;
+            if (virtualJoystick.getDirection().getY() > 0) {
+                backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR);
             }
-            if (virtualJoystickYPos < height / 2) {
-                backgroundYPos += 5;
+            if (virtualJoystick.getDirection().getY() < 0) {
+                backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR);
             }
         }
     }

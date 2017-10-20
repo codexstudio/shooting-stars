@@ -21,9 +21,7 @@ public class Vector2 {
         this.y = y;
     }
 
-    public float getX() {
-        return x;
-    }
+    public float getX() { return x; }
 
     public float getY() {
         return y;
@@ -62,8 +60,12 @@ public class Vector2 {
         return x == rhs.getX() && y == rhs.getY();
     }
 
-    public float normalize() {
-        return (float) Math.sqrt(x * x + y * y);
+    public Vector2 normalize() {
+        double newX = x/(Math.sqrt(x * x + y * y));
+        double newY = y/(Math.sqrt(x * x + y * y));
+        float newXf = (float)newX;
+        float newYf = (float)newY;
+        return new Vector2(newXf, newYf);
     }
 
     public Vector2 getClampedToSize(float MaxSize) {
@@ -88,4 +90,7 @@ public class Vector2 {
         return (float) (Math.sqrt(rhs.getX() - lhs.getX()) + Math.sqrt(rhs.getY() - lhs.getY()));
     }
 
+    public static final float Projection(final Vector2 a, final Vector2 b){
+        return (float) DotProduct(a, b.normalize());
+    }
 }
