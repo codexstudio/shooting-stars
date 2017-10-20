@@ -5,7 +5,11 @@ public class Transform2D {
     private Vector2 rotation;
     private Vector2 scale;
 
-    public Transform2D() {}
+    public Transform2D() {
+        location = new Vector2();
+        rotation = new Vector2();
+        scale = new Vector2();
+    }
 
     public Transform2D(Vector2 location, Vector2 rotation, Vector2 scale) {
         this.location = location;

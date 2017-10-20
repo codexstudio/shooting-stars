@@ -11,4 +11,3 @@ public interface Pixmap
     public void dispose();
     public void setRotation(Vector2 rotation);
 }
-

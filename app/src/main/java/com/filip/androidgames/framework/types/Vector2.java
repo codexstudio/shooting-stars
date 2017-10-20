@@ -8,7 +8,9 @@ public class Vector2 {
     public static final Vector2 UP_VECTOR = new Vector2(0.0f, 1.0f);
     public static final Vector2 RIGHT_VECTOR = new Vector2(1.0f, 0.0f);
 
-    public Vector2() {}
+    public Vector2() {
+        x = y = 0;
+    }
 
     public Vector2(float v) {
         this.x = this.y = v;
@@ -19,10 +21,21 @@ public class Vector2 {
         this.y = y;
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public void setX(float x) { this.x = x; }
-    public void setY(float y) { this.y = y; }
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
 
     public Vector2 unitVector() {
         final float sqrSum = x * x + y * y;
@@ -45,8 +58,35 @@ public class Vector2 {
         y *= scale;
     }
 
+    public Vector2 getScaledVector(float scale) {
+        Vector2 temp = unitVector();
+        return new Vector2(temp.getX() * scale, temp.getY() * scale);
+    }
+
     public boolean equal(final Vector2 rhs) {
         return x == rhs.getX() && y == rhs.getY();
+    }
+
+    public Vector2 normalize() {
+        double newX = x/(Math.sqrt(x * x + y * y));
+        double newY = y/(Math.sqrt(x * x + y * y));
+        float newXf = (float)newX;
+        float newYf = (float)newY;
+        return new Vector2(newXf, newYf);
+    }
+
+    public float magnitude() {
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public Vector2 getClampedToSize(float MaxSize) {
+        if (magnitude() > MaxSize) {
+            Vector2 temp = unitVector();
+            temp.scale(MaxSize);
+            return temp;
+        } else {
+            return this;
+        }
     }
 
     public static final float DotProduct(final Vector2 lhs, final Vector2 rhs) {
@@ -59,5 +99,9 @@ public class Vector2 {
 
     public static final float Distance(final Vector2 lhs, final Vector2 rhs) {
         return (float) (Math.sqrt(rhs.getX() - lhs.getX()) + Math.sqrt(rhs.getY() - lhs.getY()));
+    }
+
+    public static final float Projection(final Vector2 a, final Vector2 b){
+        return (float) DotProduct(a, b.normalize());
     }
 }

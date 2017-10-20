@@ -1,7 +1,5 @@
 package com.filip.androidgames.framework;
 
-import android.view.GestureDetector;
-
 import java.util.List;
 
 public interface Input {
@@ -49,7 +47,6 @@ public interface Input {
             }
             return builder.toString();
         }
-
     }
 
     public boolean isTouchDown(int pointer);
