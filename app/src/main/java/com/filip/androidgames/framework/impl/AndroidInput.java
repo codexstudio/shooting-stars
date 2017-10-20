@@ -14,13 +14,11 @@ public class AndroidInput implements Input, View.OnTouchListener {
     TouchHandler touchHandler;
     GestureDetector gestureHandler;
     SwipeHandler swipeHandler;
-    VirtualController virtualController;
 
     public AndroidInput(Context context, View view, float scaleX, float scaleY) {
         accelHandler = new AccelerometerHandler(context);
         touchHandler = new TouchHandler(scaleX, scaleY);
         swipeHandler = new SwipeHandler();
-        virtualController = new VirtualController();
         gestureHandler = new GestureDetector(context, swipeHandler);
         view.setOnTouchListener(this);
     }
@@ -28,7 +26,6 @@ public class AndroidInput implements Input, View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         gestureHandler.onTouchEvent(event);
-        virtualController.onTouch(v, event);
         return touchHandler.onTouch(v, event);
     }
 
