@@ -38,7 +38,7 @@ public class Vector2 {
     }
 
     public Vector2 unitVector() {
-        final float sqrSum = x * x + y * y;
+        final float sqrSum = x*x + y*y;
         final float scale = (float) (1 / Math.sqrt(sqrSum));
         return new Vector2(x * scale, y * scale);
     }
@@ -67,12 +67,9 @@ public class Vector2 {
         return x == rhs.getX() && y == rhs.getY();
     }
 
-    public Vector2 normalize() {
-        double newX = x/(Math.sqrt(x * x + y * y));
-        double newY = y/(Math.sqrt(x * x + y * y));
-        float newXf = (float)newX;
-        float newYf = (float)newY;
-        return new Vector2(newXf, newYf);
+    public void normalize() {
+        final float sqrSum = x*x + y*y;
+        scale((float) (1 / Math.sqrt(sqrSum)));
     }
 
     public float magnitude() {
@@ -102,6 +99,6 @@ public class Vector2 {
     }
 
     public static final float Projection(final Vector2 a, final Vector2 b){
-        return (float) DotProduct(a, b.normalize());
+        return DotProduct(a, b.unitVector());
     }
 }

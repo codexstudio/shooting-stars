@@ -129,6 +129,11 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
+    public void drawPixmap(Pixmap pixmap, Point dst, Point dstSize) {
+        drawPixmap(pixmap, dst.x, dst.y, 0, 0, pixmap.getWidth(), pixmap.getHeight(), dstSize.x, dstSize.y);
+    }
+
+    @Override
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight) {
         srcRect.left = srcX;
         srcRect.top = srcY;
@@ -146,6 +151,11 @@ public class AndroidGraphics implements Graphics {
     @Override
     public void drawPixmap(Pixmap pixmap, int x, int y) {
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
+    }
+
+    @Override
+    public void drawPixmap(Pixmap pixmap, Point dst) {
+        drawPixmap(pixmap, dst.x, dst.y);
     }
 
     @Override
