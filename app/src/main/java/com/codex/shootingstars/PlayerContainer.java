@@ -24,7 +24,7 @@ public class PlayerContainer extends GameObject{
         friendlyShipList.remove(ship);
     }
 
-    public void playerContainerUpdateRotations(Vector2 direction) {
+    public void rotateTo(Vector2 direction) {
         for (FriendlyShip obj : friendlyShipList) {
             obj.transform.setRotation(direction);
         }
