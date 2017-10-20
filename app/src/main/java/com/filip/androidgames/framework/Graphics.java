@@ -1,8 +1,5 @@
 package com.filip.androidgames.framework;
 
-import android.graphics.Typeface;
-import com.filip.androidgames.framework.types.Vector2;
-
 public interface Graphics
 {
     public static enum PixmapFormat
@@ -71,8 +68,10 @@ public interface Graphics
     public void drawLine(int x, int y, int x2, int y2, int color);
     public void drawRect(int x, int y, int width, int height, int color);
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight, int dstWidth, int dstHeight);
+    public void drawPixmap(Pixmap pixmap, Point dst, Point dstSize);
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight);
     public void drawPixmap(Pixmap pixmap, int x, int y);
+    public void drawPixmap(Pixmap pixmap, Point dst);
     public void drawText(String str, int x, int y, Font font, int color);
     public void drawAnimations(float deltaTime);
     public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight);
