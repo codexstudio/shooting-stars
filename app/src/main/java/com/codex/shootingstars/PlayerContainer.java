@@ -1,5 +1,7 @@
 package com.codex.shootingstars;
 
+import com.filip.androidgames.framework.types.Vector2;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +24,9 @@ public class PlayerContainer extends GameObject{
         friendlyShipList.remove(ship);
     }
 
-    public void playerContainerUpdateRotations(Vector3 direction) {
+    public void playerContainerUpdateRotations(Vector2 direction) {
         for (FriendlyShip obj : friendlyShipList) {
-            obj.rotation = direction;
+            obj.transform.setRotation(direction);
         }
     }
 
