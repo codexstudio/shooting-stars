@@ -31,6 +31,8 @@ public class GameScreen extends Screen {
     private boolean bIsTouching;
     private VirtualJoystick joystick;
 
+    PlayerContainer playerContainer;
+
     FriendlyShip testShipOne;
     FriendlyShip testShipTwo;
     EnemyShip testEnemyShip;
@@ -48,10 +50,14 @@ public class GameScreen extends Screen {
         bkgPos = new Point();
         joystickPos = new Point();
 
-        testShipOne = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 200.0f, 200.0f, 0.5f, 0.5f);
-        testShipOne.transform.setRotation(new Vector2(5, 8));
-        testShipTwo = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 300.0f, 500.0f, 0.85f, 0.85f);
-        testShipTwo.transform.setRotation(Vector2.RIGHT_VECTOR);
+        testShipOne = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 250.0f, 550.0f, 0.5f, 0.5f);
+        testShipTwo = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 450.0f, 550.0f, 0.5f, 0.5f);
+
+        playerContainer = new PlayerContainer();
+        playerContainer.addShip(testShipOne);
+        playerContainer.addShip(testShipTwo);
+        playerContainer.rotateShips(joystick.getDirection());
+
         testEnemyShip = new EnemyShip(g,250.0f, 800.0f, 0.5f, 0.5f);
         testEnemyShip.transform.setRotation(new Vector2(-1, 7));
         testAsteroid = new Asteroid(g,500.0f, 100.0f, 0.5f, 0.5f);

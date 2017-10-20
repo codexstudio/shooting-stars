@@ -12,7 +12,7 @@ public abstract class BaseCharacter extends GameObject{
     private Pixmap actorSpriteSheet;
     private Rect boundingRect;
 
-    //Default Contructor
+    //Default Constructor
     protected BaseCharacter() {
         this.transform.setLocation(new Vector2(0.0f,0.0f));
         this.transform.setRotation(new Vector2(0.0f,0.0f));
@@ -29,10 +29,10 @@ public abstract class BaseCharacter extends GameObject{
     }
 
     //Setter & Getters
-    public Pixmap getActorSpriteSheet() { return actorSpriteSheet; }
+    protected Pixmap getActorSpriteSheet() { return actorSpriteSheet; }
     protected void setActorSpriteSheet(Pixmap sprite) {actorSpriteSheet = sprite;}
 
-    public Rect getBoundingRect() { return boundingRect; }
+    protected Rect getBoundingRect() { return boundingRect; }
     private void setBoundingRect(){
         if (actorSpriteSheet != null) {
             boundingRect.set(0, 0, actorSpriteSheet.getHeight(), actorSpriteSheet.getWidth());
