@@ -16,7 +16,7 @@ public class GameScreen extends Screen {
     private static Pixmap background;
     private static Pixmap blob;
     private static Pixmap virtualJoystick;
-//    private static Pixmap numbers;
+    private static Pixmap ship;
 
     private int blobXPos;
     private int blobYPos;
@@ -44,7 +44,7 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         blob = g.newPixmap("blob.png", Graphics.PixmapFormat.ARGB4444);
-//        numbers = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
+        ship = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB4444);
         virtualJoystick = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
         width = g.getWidth();
         height = g.getHeight();
@@ -57,7 +57,7 @@ public class GameScreen extends Screen {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
-            if (event.type == MotionEvent.ACTION_DOWN) {
+            if (event.type == MotionEvent.ACTION_MOVE) {
                 virtualJoystickXPos = event.x;
                 virtualJoystickYPos = event.y;
 
@@ -69,10 +69,10 @@ public class GameScreen extends Screen {
                     if (backgroundYPos < -height) {
                         backgroundYPos = 0;
                     }
-                    else
-                    {
-                        backgroundYPos -= 5;
-                    }
+//                    else
+//                    {
+//                        backgroundYPos += 5;
+//                    }
                     //score = "" + oldScore;
                 }
                 if(inBounds(event, 0, height/2, width, height))
@@ -80,10 +80,10 @@ public class GameScreen extends Screen {
                     if (backgroundYPos > height) {
                         backgroundYPos = 0;
                     }
-                    else
-                    {
-                        backgroundYPos += 5;
-                    }
+//                    else
+//                    {
+//                        backgroundYPos -= 5;
+//                    }
                     //score = "" + oldScore;
                 }
                 if(inBounds(event, 0, 0, width/2, height))
@@ -91,10 +91,10 @@ public class GameScreen extends Screen {
                     if (backgroundXPos < -width) {
                         backgroundXPos = 0;
                     }
-                    else
-                    {
-                        backgroundXPos -= 5;
-                    }
+//                    else
+//                    {
+//                        backgroundXPos += 5;
+//                    }
                     //score = "" + oldScore;
                 }
                 if(inBounds(event, width/2, 0, width, height))
@@ -102,10 +102,10 @@ public class GameScreen extends Screen {
                     if (backgroundXPos > width) {
                         backgroundXPos = 0;
                     }
-                    else
-                    {
-                        backgroundXPos += 5;
-                    }
+//                    else
+//                    {
+//                        backgroundXPos -= 5;
+//                    }
                     //score = "" + oldScore;
                 }
             }
@@ -119,6 +119,25 @@ public class GameScreen extends Screen {
             blobXPos = random.nextInt(game.getGraphics().getWidth() - blob.getWidth());
             blobYPos = random.nextInt(game.getGraphics().getHeight() - blob.getHeight());
             timePassed = 0;
+        }
+        if (bIsTouching)
+        {
+            if (virtualJoystickXPos < width/2)
+            {
+                backgroundXPos += 5;
+            }
+            if (virtualJoystickXPos > width/2)
+            {
+                backgroundXPos -= 5;
+            }
+            if (virtualJoystickYPos > height/2)
+            {
+                backgroundYPos -= 5;
+            }
+            if (virtualJoystickYPos < height/2)
+            {
+                backgroundYPos += 5;
+            }
         }
     }
 
@@ -166,6 +185,7 @@ public class GameScreen extends Screen {
             g.drawPixmap(virtualJoystick, virtualJoystickXPos - 128, virtualJoystickYPos - 128, 0, 0, virtualJoystick.getWidth(), virtualJoystick.getHeight(), 256, 256);
         }
         g.drawPixmap(blob, blobXPos, blobYPos);
+        g.drawPixmap(ship, width/2 - ship.getWidth()/6, height/2- ship.getHeight()/6, 0, 0, ship.getWidth(), ship.getHeight(), ship.getWidth()/3, ship.getHeight()/3);
     }
 
     @Override
@@ -176,5 +196,7 @@ public class GameScreen extends Screen {
 
     @Override
     public void dispose() {}
+
+
 }
 
