@@ -21,7 +21,9 @@ public class Vector2 {
         this.y = y;
     }
 
-    public float getX() { return x; }
+    public float getX() {
+        return x;
+    }
 
     public float getY() {
         return y;
@@ -68,11 +70,15 @@ public class Vector2 {
         return new Vector2(newXf, newYf);
     }
 
+    public float magnitude() {
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
     public Vector2 getClampedToSize(float MaxSize) {
-        final float sqrSum = x*x + y*y;
-        if (sqrSum > MaxSize * MaxSize) {
-            final float scale = (float) (1 / Math.sqrt(sqrSum));
-            return new Vector2(x * scale, y * scale);
+        if (magnitude() > MaxSize) {
+            Vector2 temp = unitVector();
+            temp.scale(MaxSize);
+            return temp;
         } else {
             return this;
         }

@@ -60,6 +60,8 @@ public class GameScreen extends Screen {
                 bIsTouching = false;
             }
 
+            Log.d("vector", "x: " + Float.toString(virtualJoystick.getDirection().getX()) + "   y: " + Float.toString(virtualJoystick.getDirection().getY()));
+
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 virtualJoystickXPos = event.x;
                 virtualJoystickYPos = event.y;
