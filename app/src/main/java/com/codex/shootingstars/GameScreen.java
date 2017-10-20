@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class GameScreen extends Screen {
     private static Pixmap background;
-    private static Pixmap virtualJoystickPixmap;
+    private static Pixmap joystickPixmap;
 
     private Point bkgPos;
     private Point joystickPos;
@@ -29,15 +29,15 @@ public class GameScreen extends Screen {
     private Random random = new Random();
 
     private boolean bIsTouching;
-    private VirtualJoystick virtualJoystick;
+    private VirtualJoystick joystick;
 
 
     public GameScreen(Game game) {
         super(game);
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
-        virtualJoystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
-        virtualJoystick = new VirtualJoystick();
+        joystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
+        joystick = new VirtualJoystick();
         width = g.getWidth();
         height = g.getHeight();
         bkgPos = new Point();
@@ -49,7 +49,7 @@ public class GameScreen extends Screen {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         for (TouchEvent event : touchEvents) {
-            bIsTouching = virtualJoystick.isActiveAndSetDirection(event);
+            bIsTouching = joystick.isActiveAndSetDirection(event);
 
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 joystickPos.x = event.x;
@@ -58,12 +58,14 @@ public class GameScreen extends Screen {
         }
 
         if (bIsTouching) {
-            if (virtualJoystick.getDirection().getX() < 0) { bkgPos.x -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR); }
-            if (virtualJoystick.getDirection().getX() > 0) { bkgPos.x -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR); }
-            if (virtualJoystick.getDirection().getY() > 0) { bkgPos.y += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR); }
-            if (virtualJoystick.getDirection().getY() < 0) { bkgPos.y += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR); }
-            if (bkgPos.x > width || bkgPos.x < -width) { bkgPos.x = 0; }
-            if (bkgPos.y < -height || bkgPos.y > width) { bkgPos.y = 0; }
+            bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
+            bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
+            if (bkgPos.x > width || bkgPos.x < -width) {
+                bkgPos.x = 0;
+            }
+            if (bkgPos.y < -height || bkgPos.y > height) {
+                bkgPos.y = 0;
+            }
         }
     }
 
@@ -73,32 +75,34 @@ public class GameScreen extends Screen {
         //original
         g.drawPixmap(background, bkgPos.x, bkgPos.y);
 
-        //up/down screens
-        if (bkgPos.y > 0) { g.drawPixmap(background, bkgPos.x, -background.getHeight() + bkgPos.y); }
-        if (bkgPos.y < 0) { g.drawPixmap(background, bkgPos.x, background.getHeight() + bkgPos.y); }
+        if (bkgPos.x != 0 && bkgPos.y != 0) {
+            final int bkgYPos = ((bkgPos.y > 0) ? -1 : 1) * background.getHeight();
+            final int bkgXPos = ((bkgPos.x > 0) ? -1 : 1) * background.getWidth();
 
-        //left/right screens
-        if (bkgPos.x > 0) { g.drawPixmap(background, -background.getWidth() + bkgPos.x, bkgPos.y); }
-        if (bkgPos.x < 0) { g.drawPixmap(background, background.getWidth() + bkgPos.x, bkgPos.y); }
+            //up/down screens
+            g.drawPixmap(background, bkgPos.x, bkgYPos + bkgPos.y);
 
-        //fourth corner screen
-        if ((bkgPos.y > 0) && (bkgPos.x > 0)) { g.drawPixmap(background, -background.getWidth() + bkgPos.x, -background.getHeight() + bkgPos.y); }
-        if ((bkgPos.y > 0) && (bkgPos.x < 0)) { g.drawPixmap(background, background.getWidth() + bkgPos.x, -background.getHeight() + bkgPos.y); }
-        if ((bkgPos.y < 0) && (bkgPos.x > 0)) { g.drawPixmap(background, -background.getWidth() + bkgPos.x, background.getHeight() + bkgPos.y); }
-        if ((bkgPos.y < 0) && (bkgPos.x < 0)) { g.drawPixmap(background, background.getWidth() + bkgPos.x, background.getHeight() + bkgPos.y); }
+            //left/right screens
+            g.drawPixmap(background, bkgXPos + bkgPos.x, bkgPos.y);
 
+            //fourth corner screen
+            g.drawPixmap(background, bkgXPos + bkgPos.x, bkgYPos + bkgPos.y);
+        }
         if (bIsTouching) {
-            g.drawPixmap(virtualJoystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
+            g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
         }
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+    }
 }
 

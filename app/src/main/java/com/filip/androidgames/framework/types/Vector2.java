@@ -63,7 +63,7 @@ public class Vector2 {
         return new Vector2(temp.getX() * scale, temp.getY() * scale);
     }
 
-    public boolean equal(final Vector2 rhs) {
+    public boolean equals(final Vector2 rhs) {
         return x == rhs.getX() && y == rhs.getY();
     }
 
