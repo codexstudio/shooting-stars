@@ -2,7 +2,9 @@ package com.codex.shootingstars;
 
 import android.graphics.Rect;
 import android.util.Log;
+import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Vector2;
 
 public abstract class BaseCharacter extends GameObject{
 
@@ -16,7 +18,7 @@ public abstract class BaseCharacter extends GameObject{
     }
 
     //Setter & Getters
-    public Pixmap getActorSpriteSheet() { return actorSpriteSheet; }
+    public Pixmap getActorSpriteSheet() { actorSpriteSheet.setRotation(transform.getRotation()); return actorSpriteSheet; }
     protected void setActorSpriteSheet(Pixmap sprite) {actorSpriteSheet = sprite;}
 
     public Rect getBoundingRect() { return boundingRect; }
@@ -28,6 +30,7 @@ public abstract class BaseCharacter extends GameObject{
     }
 
     //Methods
-        //AI Behaviour Here
+
+    //AI Behaviour Here
 
 }

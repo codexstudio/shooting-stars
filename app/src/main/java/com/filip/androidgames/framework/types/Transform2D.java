@@ -1,13 +1,13 @@
 package com.filip.androidgames.framework.types;
 
-public class Transform {
+public class Transform2D {
     private Vector2 location;
     private Vector2 rotation;
     private Vector2 scale;
 
-    public Transform() {}
+    public Transform2D() {}
 
-    public Transform(Vector2 location, Vector2 rotation, Vector2 scale) {
+    public Transform2D(Vector2 location, Vector2 rotation, Vector2 scale) {
         this.location = location;
         this.rotation = rotation;
         this.scale = scale;

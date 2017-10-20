@@ -5,10 +5,13 @@ import com.filip.androidgames.framework.types.*;
 public abstract class GameObject {
 
     //Members
-    protected Transform transform;
+    protected Transform2D transform;
 
     //Constructor
     protected GameObject() {
-        transform = new Transform();
+        transform = new Transform2D();
     }
+
+    //Methods
+
 }

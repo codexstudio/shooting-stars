@@ -1,6 +1,7 @@
 package com.filip.androidgames.framework;
 
 import android.graphics.Typeface;
+import com.filip.androidgames.framework.types.Vector2;
 
 public interface Graphics
 {
@@ -49,16 +50,16 @@ public interface Graphics
         public int x;
         public int y;
 
-        Point(int x, int y) {
+        public Point(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
-        Point(int p) {
+        public Point(int p) {
             this.x = this.y = p;
         }
 
-        Point() {
+        public Point() {
             x = y = 0;
         }
     }

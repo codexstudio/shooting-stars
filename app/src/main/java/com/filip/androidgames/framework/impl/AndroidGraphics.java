@@ -8,15 +8,20 @@ import android.content.res.AssetManager;
 import android.graphics.*;
 import android.graphics.Paint.Style;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import com.filip.androidgames.framework.Font;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Vector2;
+
+import java.lang.Math;
 
 public class AndroidGraphics implements Graphics {
     AssetManager assets;
     Bitmap frameBuffer; // represents our artificial framebuffer
-    Canvas canvas;		// use to draw to the artificial framebuffer
-    Paint paint;		// needed for drawing
+    Canvas canvas;        // use to draw to the artificial framebuffer
+    Paint paint;        // needed for drawing
     Rect srcRect = new Rect();
     Rect dstRect = new Rect();
     List<Animation> animationList;
@@ -52,12 +57,11 @@ public class AndroidGraphics implements Graphics {
                     a.counter = 1;
                     a.loopCounter++;
                 }
-            }
-            else {
+            } else {
                 a.counter++;
             }
 
-            canvas.drawBitmap(((AndroidPixmap)a.pixmap).bitmap, srcRect, dstRect, null);
+            canvas.drawBitmap(((AndroidPixmap) a.pixmap).bitmap, srcRect, dstRect, null);
         }
     }
 
@@ -142,10 +146,10 @@ public class AndroidGraphics implements Graphics {
 
         canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect, null);
     }
-    
+
     @Override
     public void drawPixmap(Pixmap pixmap, int x, int y) {
-        canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
+        canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, x, y, null);
     }
 
     @Override
@@ -166,7 +170,7 @@ public class AndroidGraphics implements Graphics {
     @Override
     public void drawText(String str, int x, int y, Font font, int color) {
         paint.setTextSize(font.getSize());
-        paint.setTypeface(((AndroidFont)font).typeface);
+        paint.setTypeface(((AndroidFont) font).typeface);
         paint.setColor(color);
         canvas.drawText(str, x, y, paint);
     }

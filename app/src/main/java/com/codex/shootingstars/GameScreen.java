@@ -6,9 +6,11 @@ import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Input.TouchEvent;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.Screen;
+import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 public class GameScreen extends Screen {
     private static final float UPDATE_BLOB_TIME = 1.0f;
@@ -16,7 +18,6 @@ public class GameScreen extends Screen {
     private static Pixmap background;
     private static Pixmap blob;
     private static Pixmap virtualJoystick;
-    private static Pixmap ship;
 
     private int blobXPos;
     private int blobYPos;
@@ -44,7 +45,6 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         blob = g.newPixmap("blob.png", Graphics.PixmapFormat.ARGB4444);
-        ship = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB4444);
         virtualJoystick = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
         width = g.getWidth();
         height = g.getHeight();
@@ -57,6 +57,7 @@ public class GameScreen extends Screen {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
+
             if (event.type == MotionEvent.ACTION_MOVE) {
                 virtualJoystickXPos = event.x;
                 virtualJoystickYPos = event.y;
@@ -185,7 +186,6 @@ public class GameScreen extends Screen {
             g.drawPixmap(virtualJoystick, virtualJoystickXPos - 128, virtualJoystickYPos - 128, 0, 0, virtualJoystick.getWidth(), virtualJoystick.getHeight(), 256, 256);
         }
         g.drawPixmap(blob, blobXPos, blobYPos);
-        g.drawPixmap(ship, width/2 - ship.getWidth()/6, height/2- ship.getHeight()/6, 0, 0, ship.getWidth(), ship.getHeight(), ship.getWidth()/3, ship.getHeight()/3);
     }
 
     @Override
