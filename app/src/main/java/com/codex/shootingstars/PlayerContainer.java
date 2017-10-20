@@ -35,9 +35,7 @@ public class PlayerContainer extends GameObject{
 
     public void rotateShips(Vector2 direction) {
         for (FriendlyShip obj : friendlyShipList) {
-            if (obj.getState() == FriendlyShip.ControllerStates.PLAYER_CONTROLLED) {
                 obj.transform.setRotation(direction);
-            }
         }
     }
 
