@@ -1,6 +1,5 @@
 package com.codex.shootingstars;
 
-import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Input.TouchEvent;
@@ -21,7 +20,7 @@ public class GameScreen extends Screen {
     private int backgroundYPos = 0;
     private int virtualJoystickXPos = 0;
     private int virtualJoystickYPos = 0;
-    private float scrollSpeed = 5.0f;
+    private float scrollSpeed = 0.25f;
 
     int width;
     int height;
@@ -55,79 +54,25 @@ public class GameScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
             if (virtualJoystick.isActiveAndSetDirection(event)) {
                 bIsTouching = true;
-            }
-            else {
+            } else {
                 bIsTouching = false;
             }
-
-            Log.d("vector", "x: " + Float.toString(virtualJoystick.getDirection().getX()) + "   y: " + Float.toString(virtualJoystick.getDirection().getY()));
 
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 virtualJoystickXPos = event.x;
                 virtualJoystickYPos = event.y;
 
                 bIsTouching = true;
-
-                if (inBounds(event, 0, 0, width, height / 2)) {
-                    if (backgroundYPos < -height) {
-                        backgroundYPos = 0;
-                    }
-//                    else
-//                    {
-//                        backgroundYPos += 5;
-//                    }
-                    //score = "" + oldScore;
-                }
-                if (inBounds(event, 0, height / 2, width, height)) {
-                    if (backgroundYPos > height) {
-                        backgroundYPos = 0;
-                    }
-//                    else
-//                    {
-//                        backgroundYPos -= 5;
-//                    }
-                    //score = "" + oldScore;
-                }
-                if (inBounds(event, 0, 0, width / 2, height)) {
-                    if (backgroundXPos < -width) {
-                        backgroundXPos = 0;
-                    }
-//                    else
-//                    {
-//                        backgroundXPos += 5;
-//                    }
-                    //score = "" + oldScore;
-                }
-                if (inBounds(event, width / 2, 0, width, height)) {
-                    if (backgroundXPos > width) {
-                        backgroundXPos = 0;
-                    }
-//                    else
-//                    {
-//                        backgroundXPos -= 5;
-//                    }
-                    //score = "" + oldScore;
-                }
             }
         }
 
         if (bIsTouching) {
-            double test = virtualJoystick.getDirection().getX();
-            double test2 = virtualJoystick.getDirection().getY();
-            Log.d("X Scroll",Double.toString(test));
-            Log.d("Y Scroll",Double.toString(test2));
-            if (virtualJoystick.getDirection().getX() < 0) {
-                backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR);
-            }
-            if (virtualJoystick.getDirection().getX() > 0) {
-                backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR);
-            }
-            if (virtualJoystick.getDirection().getY() > 0) {
-                backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR);
-            }
-            if (virtualJoystick.getDirection().getY() < 0) {
-                backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR);
-            }
+            if (virtualJoystick.getDirection().getX() < 0) { backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR); }
+            if (virtualJoystick.getDirection().getX() > 0) { backgroundXPos -= scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.RIGHT_VECTOR); }
+            if (virtualJoystick.getDirection().getY() > 0) { backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR); }
+            if (virtualJoystick.getDirection().getY() < 0) { backgroundYPos += scrollSpeed*Vector2.Projection(virtualJoystick.getDirection(), Vector2.UP_VECTOR); }
+            if (backgroundXPos > width || backgroundXPos < -width) { backgroundXPos = 0; }
+            if (backgroundYPos < -height || backgroundYPos > width) { backgroundYPos = 0; }
         }
     }
 
@@ -138,34 +83,18 @@ public class GameScreen extends Screen {
         g.drawPixmap(background, backgroundXPos, backgroundYPos);
 
         //up/down screens
-        if (backgroundYPos > 0) {
-            g.drawPixmap(background, backgroundXPos, -background.getHeight() + backgroundYPos);
-        }
-        if (backgroundYPos < 0) {
-            g.drawPixmap(background, backgroundXPos, background.getHeight() + backgroundYPos);
-        }
+        if (backgroundYPos > 0) { g.drawPixmap(background, backgroundXPos, -background.getHeight() + backgroundYPos); }
+        if (backgroundYPos < 0) { g.drawPixmap(background, backgroundXPos, background.getHeight() + backgroundYPos); }
 
         //left/right screens
-        if (backgroundXPos > 0) {
-            g.drawPixmap(background, -background.getWidth() + backgroundXPos, backgroundYPos);
-        }
-        if (backgroundXPos < 0) {
-            g.drawPixmap(background, background.getWidth() + backgroundXPos, backgroundYPos);
-        }
+        if (backgroundXPos > 0) { g.drawPixmap(background, -background.getWidth() + backgroundXPos, backgroundYPos); }
+        if (backgroundXPos < 0) { g.drawPixmap(background, background.getWidth() + backgroundXPos, backgroundYPos); }
 
         //fourth corner screen
-        if ((backgroundYPos > 0) && (backgroundXPos > 0)) {
-            g.drawPixmap(background, -background.getWidth() + backgroundXPos, -background.getHeight() + backgroundYPos);
-        }
-        if ((backgroundYPos > 0) && (backgroundXPos < 0)) {
-            g.drawPixmap(background, background.getWidth() + backgroundXPos, -background.getHeight() + backgroundYPos);
-        }
-        if ((backgroundYPos < 0) && (backgroundXPos > 0)) {
-            g.drawPixmap(background, -background.getWidth() + backgroundXPos, background.getHeight() + backgroundYPos);
-        }
-        if ((backgroundYPos < 0) && (backgroundXPos < 0)) {
-            g.drawPixmap(background, background.getWidth() + backgroundXPos, background.getHeight() + backgroundYPos);
-        }
+        if ((backgroundYPos > 0) && (backgroundXPos > 0)) { g.drawPixmap(background, -background.getWidth() + backgroundXPos, -background.getHeight() + backgroundYPos); }
+        if ((backgroundYPos > 0) && (backgroundXPos < 0)) { g.drawPixmap(background, background.getWidth() + backgroundXPos, -background.getHeight() + backgroundYPos); }
+        if ((backgroundYPos < 0) && (backgroundXPos > 0)) { g.drawPixmap(background, -background.getWidth() + backgroundXPos, background.getHeight() + backgroundYPos); }
+        if ((backgroundYPos < 0) && (backgroundXPos < 0)) { g.drawPixmap(background, background.getWidth() + backgroundXPos, background.getHeight() + backgroundYPos); }
 
         if (bIsTouching) {
             g.drawPixmap(virtualJoystickPixmap, virtualJoystickXPos - 128, virtualJoystickYPos - 128, 0, 0, virtualJoystickPixmap.getWidth(), virtualJoystickPixmap.getHeight(), 256, 256);
