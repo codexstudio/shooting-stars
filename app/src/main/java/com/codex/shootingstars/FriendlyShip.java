@@ -1,6 +1,7 @@
 package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
+import com.filip.androidgames.framework.types.Vector2;
 
 public class FriendlyShip extends BaseCharacter{
 
@@ -12,10 +13,19 @@ public class FriendlyShip extends BaseCharacter{
     //Members
     private ControllerStates controllerState;
 
+    //Default Constrctor
+    public FriendlyShip(Graphics g){
+        setActorSpriteSheet(g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
+        controllerState = ControllerStates.AI_CONTROLLED;
+        update();
+    }
+
     //Constructor
-    public FriendlyShip(Graphics g, ControllerStates state){
+    public FriendlyShip(Graphics g, ControllerStates state, float xLocation, float yLocation, float xScale, float yScale) {
+        super(xLocation, yLocation, xScale, yScale);
         setActorSpriteSheet(g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
         controllerState = state;
+        update();
     }
 
     //Setter & Getters
