@@ -1,5 +1,7 @@
 package com.filip.androidgames.framework;
 
+import android.graphics.Matrix;
+
 public interface Graphics
 {
     public static enum PixmapFormat
@@ -79,5 +81,7 @@ public interface Graphics
     public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, int maxLoops);
     public int getWidth();
     public int getHeight();
+
+    public void drawPixmap(Pixmap pixmap);
 }
 

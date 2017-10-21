@@ -43,17 +43,14 @@ public abstract class BaseCharacter extends GameObject{
     //Methods
     protected void update() {
         //Update sprite rotation
-        actorSpriteSheet.setRotation(transform.getRotation());
+        actorSpriteSheet.setTransform(transform);
         //Update Bounding Rect
         setBoundingRect();
     }
 
     protected void draw(Graphics g){
         update();
-        g.drawPixmap(   actorSpriteSheet,
-                        new Graphics.Point((int)transform.getLocation().getX(), (int)transform.getLocation().getY()),
-                        new Graphics.Point((int)(transform.getScale().getX() * actorSpriteSheet.getWidth()), (int)(transform.getScale().getY() * actorSpriteSheet.getHeight()))
-        );
+        g.drawPixmap(actorSpriteSheet);
     }
 
     //AI Behaviour Here

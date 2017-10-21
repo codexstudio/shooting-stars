@@ -24,8 +24,8 @@ public class VirtualJoystick {
                 direction.setY(initialY - touchEvent.y);
                 break;
             default:
-                direction.setX(0);
-                direction.setY(0);
+//                direction.setX(0);
+//                direction.setY(0);
                 return false;
         }
         return true;

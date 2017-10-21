@@ -6,19 +6,20 @@ import android.graphics.Matrix;
 import android.util.Log;
 import com.filip.androidgames.framework.Graphics.PixmapFormat;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
 // @todo: deprecate originalBitmap!!!
 
 public class AndroidPixmap implements Pixmap {
-    private Bitmap originalBitmap;
+    private Matrix matrix;
     Bitmap bitmap;
     PixmapFormat format;
     
     public AndroidPixmap(Bitmap bitmap, PixmapFormat format) {
-        this.originalBitmap = bitmap;
         this.bitmap = bitmap;
         this.format = format;
+        this.matrix = new Matrix();
     }
 
     @Override
@@ -42,17 +43,35 @@ public class AndroidPixmap implements Pixmap {
     }
 
     @Override
-    public void setRotation(Vector2 rotation){
-        Matrix matrix = new Matrix();
+    public void setRotation(Vector2 rotation) {
+        final float degrees = (float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY()));
 
-        matrix.postRotate((float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY())));
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(),true);
-
-        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-
-        bitmap = rotatedBitmap;
+        matrix.setRotate(degrees, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
     }
+
+    @Override
+    public void postTranslate(Vector2 translation) {
+        matrix.postTranslate(translation.getX(), translation.getY());
+    }
+
+    @Override
+    public void postScale(Vector2 scale) {
+        matrix.postScale(scale.getX(), scale.getY());
+    }
+
+    @Override
+    public void setTransform(Transform2D transform) {
+        final Vector2 rotation = transform.getRotation();
+        final Vector2 scale = transform.getScale();
+        final Vector2 location = transform.getLocation();
+
+        matrix.setScale(scale.getX(), scale.getY());
+        final float degrees = (float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY()));
+        matrix.postRotate(degrees, bitmap.getWidth() / (2 * ( 1 / scale.getX())), bitmap.getHeight() / (2 * (1 / scale.getY())));
+        matrix.postTranslate(location.getX(), location.getY());
+    }
+
+    public Matrix getMatrix() { return matrix; }
 }
 
 

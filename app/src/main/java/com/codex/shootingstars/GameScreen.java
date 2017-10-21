@@ -1,5 +1,6 @@
 package com.codex.shootingstars;
 
+import android.graphics.Matrix;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -15,6 +16,7 @@ import java.util.Random;
 public class GameScreen extends Screen {
     private static Pixmap background;
     private static Pixmap joystickPixmap;
+//    private static Pixmap ship;
 
     private Point bkgPos;
     private Point joystickPos;
@@ -56,12 +58,10 @@ public class GameScreen extends Screen {
         playerContainer = new PlayerContainer();
         playerContainer.addShip(testShipOne);
         playerContainer.addShip(testShipTwo);
-        playerContainer.rotateShips(joystick.getDirection());
 
         testEnemyShip = new EnemyShip(g,250.0f, 800.0f, 0.5f, 0.5f);
         testEnemyShip.transform.setRotation(new Vector2(-1, 7));
         testAsteroid = new Asteroid(g,500.0f, 100.0f, 0.5f, 0.5f);
-
     }
 
     @Override
@@ -86,8 +86,10 @@ public class GameScreen extends Screen {
             if (bkgPos.y < -height || bkgPos.y > height) {
                 bkgPos.y = 0;
             }
+            playerContainer.rotateShips(joystick.getDirection());
         }
     }
+
 
     @Override
     public void present(float deltaTime) {

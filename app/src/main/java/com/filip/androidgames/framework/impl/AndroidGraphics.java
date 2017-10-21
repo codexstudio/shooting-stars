@@ -194,4 +194,10 @@ public class AndroidGraphics implements Graphics {
     public int getHeight() {
         return frameBuffer.getHeight();
     }
+
+    @Override
+    public void drawPixmap(Pixmap pixmap) {
+        final AndroidPixmap pm = (AndroidPixmap) pixmap;
+        canvas.drawBitmap(pm.bitmap, pm.getMatrix(), null);
+    }
 }
