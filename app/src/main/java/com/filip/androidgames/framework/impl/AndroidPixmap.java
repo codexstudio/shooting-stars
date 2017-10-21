@@ -42,6 +42,7 @@ public class AndroidPixmap implements Pixmap {
         bitmap.recycle();
     }
 
+    @Deprecated
     @Override
     public void setRotation(Vector2 rotation) {
         final float degrees = (float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY()));
@@ -60,7 +61,7 @@ public class AndroidPixmap implements Pixmap {
     }
 
     @Override
-    public void setTransform(Transform2D transform) {
+    public void setPixmapTransform(Transform2D transform) {
         final Vector2 rotation = transform.getRotation();
         final Vector2 scale = transform.getScale();
         final Vector2 location = transform.getLocation();

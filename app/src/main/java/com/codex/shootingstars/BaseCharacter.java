@@ -42,8 +42,8 @@ public abstract class BaseCharacter extends GameObject{
 
     //Methods
     protected void update() {
-        //Update sprite rotation
-        actorSpriteSheet.setTransform(transform);
+        //Update sprite transform
+        actorSpriteSheet.setPixmapTransform(transform);
         //Update Bounding Rect
         setBoundingRect();
     }

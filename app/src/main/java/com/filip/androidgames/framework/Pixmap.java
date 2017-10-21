@@ -10,8 +10,10 @@ public interface Pixmap
     public int getHeight();
     public PixmapFormat getFormat();
     public void dispose();
-    public void setRotation(Vector2 rotation);
     public void postTranslate(Vector2 translation);
     public void postScale(Vector2 scale);
-    public void setTransform(Transform2D transform);
+    public void setPixmapTransform(Transform2D transform);
+
+    @Deprecated
+    public void setRotation(Vector2 rotation);
 }
