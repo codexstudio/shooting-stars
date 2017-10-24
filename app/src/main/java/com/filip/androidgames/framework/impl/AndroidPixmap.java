@@ -66,13 +66,11 @@ public class AndroidPixmap implements Pixmap {
         final Vector2 scale = transform.getScale();
         final Vector2 location = transform.getLocation();
 
-        matrix.setScale(scale.getX(), scale.getY());
+        matrix.setScale(scale.getX(), scale.getY(), bitmap.getWidth() / 2, bitmap.getHeight() / 2);
         final float degrees = (float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY()));
-        matrix.postRotate(degrees, bitmap.getWidth() / (2 * ( 1 / scale.getX())), bitmap.getHeight() / (2 * (1 / scale.getY())));
+        matrix.postRotate(degrees, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
         matrix.postTranslate(location.getX(), location.getY());
     }
 
     public Matrix getMatrix() { return matrix; }
 }
-
-
