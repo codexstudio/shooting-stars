@@ -13,5 +13,7 @@ public abstract class GameObject {
     }
 
     //Methods
+    protected void update() {
 
+    }
 }

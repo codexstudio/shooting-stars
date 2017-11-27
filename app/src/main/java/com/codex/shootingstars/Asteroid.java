@@ -14,8 +14,7 @@ public class Asteroid extends BaseCharacter {
 
     //Constructor
     public Asteroid(Graphics g, float xLocation, float yLocation, float xScale, float yScale) {
-        super(xLocation, yLocation, xScale, yScale);
-        setActorSpriteSheet(g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888));
+        super(xLocation, yLocation, xScale, yScale, g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888));
         update();
     }
 
