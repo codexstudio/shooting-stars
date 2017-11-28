@@ -11,13 +11,15 @@ public abstract class DrawableObject extends GameObject {
     //Members
     private Pixmap actorSpriteSheet;
     private float boundingRadius;
+    private boolean isVisible;
 
-    //Default Contructor
+    //Default Constructor
     protected DrawableObject() {
         this.transform.setLocation(new Vector2(0.0f,0.0f));
         this.transform.setRotation(new Vector2(0.0f,0.0f));
         this.transform.setScale(new Vector2(0.0f,0.0f));
         boundingRadius = 0.0f;
+        isVisible = true;
     }
 
     //Constructor
@@ -27,11 +29,15 @@ public abstract class DrawableObject extends GameObject {
         this.transform.setScale(new Vector2(xScale,yScale));
         actorSpriteSheet = pixmap;
         setBoundingRadius();
+        isVisible = true;
     }
 
     //Setter & Getters
     protected Pixmap getActorSpriteSheet() { return actorSpriteSheet; }
     protected void setActorSpriteSheet(Pixmap sprite) {actorSpriteSheet = sprite;}
+
+    public boolean getVisibility() { return isVisible; }
+    public void setVisibility(boolean value) { isVisible = value; }
 
     protected float getBoundingRadius() { return boundingRadius; }
     //private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() > actorSpriteSheet.getWidth()) ? ((float) actorSpriteSheet.getHeight() / 2) : ((float) actorSpriteSheet.getWidth() / 2); }

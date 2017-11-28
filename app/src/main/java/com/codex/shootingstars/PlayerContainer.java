@@ -9,11 +9,13 @@ import java.util.List;
 public class PlayerContainer extends GameObject{
 
     //Members
-    private List<FriendlyShip> friendlyShipList = new ArrayList<FriendlyShip>();
+    private List<FriendlyShip> friendlyShipList;
+    private PlayerContainerListener listener;
 
     //Constructor
-    public void PlayerContainer() {
-
+    public PlayerContainer(PlayerContainerListener listener) {
+        this.listener = listener;
+        friendlyShipList = new ArrayList<FriendlyShip>();
     }
 
     //Setters & Getters
@@ -25,12 +27,14 @@ public class PlayerContainer extends GameObject{
     public void addShip(FriendlyShip ship) {
         if (ship.getState() == FriendlyShip.ControllerStates.PLAYER_CONTROLLED) {
             friendlyShipList.add(ship);
+            listener.onPlayerAdded(ship);
         }
         else { Log.wtf("WARNING!", "Tried to add a non PLAYER_CONTROLLED" + ship.getClass().getName() + "to the list."); }
     }
 
     public void removeShip(FriendlyShip ship) {
         friendlyShipList.remove(ship);
+        listener.onPlayerRemoved(ship);
     }
 
     public void rotateShips(Vector2 direction) {
@@ -38,5 +42,7 @@ public class PlayerContainer extends GameObject{
                 obj.transform.setRotation(direction);
         }
     }
+
+    public List<FriendlyShip> getShipList() { return friendlyShipList; }
 
 }

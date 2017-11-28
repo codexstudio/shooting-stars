@@ -1,7 +1,5 @@
 package com.codex.shootingstars;
 
-import android.graphics.Matrix;
-import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -14,7 +12,7 @@ import com.filip.androidgames.framework.types.Vector2;
 import java.util.List;
 import java.util.Random;
 
-public class GameScreen extends Screen {
+public class GameScreen extends Screen implements PlayerContainerListener {
     private static Pixmap background;
     private static Pixmap joystickPixmap;
 //    private static Pixmap ship;
@@ -41,6 +39,8 @@ public class GameScreen extends Screen {
     EnemyShip testEnemyShip;
     Asteroid testAsteroid;
 
+    CanvasContainer<BaseCharacter> gameContainer;
+    CanvasContainer<BaseUIObject> uiContainer;
 
     public GameScreen(Game game) {
         super(game);
@@ -53,16 +53,22 @@ public class GameScreen extends Screen {
         bkgPos = new Point();
         joystickPos = new Point();
 
+        gameContainer = new CanvasContainer<BaseCharacter>();
+        uiContainer = new CanvasContainer<BaseUIObject>();
+
         testShipOne = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 250.0f, 550.0f, 0.5f, 0.5f);
         testShipTwo = new FriendlyShip(g, FriendlyShip.ControllerStates.PLAYER_CONTROLLED, 450.0f, 550.0f, 0.5f, 0.5f);
 
-        playerContainer = new PlayerContainer();
+        playerContainer = new PlayerContainer(this);
         playerContainer.addShip(testShipOne);
         playerContainer.addShip(testShipTwo);
 
         testEnemyShip = new EnemyShip(g,250.0f, 800.0f, 0.5f, 0.5f);
         testEnemyShip.transform.setRotation(new Vector2(-1, 7));
         testAsteroid = new Asteroid(g,500.0f, 100.0f, 0.5f, 0.5f);
+
+        gameContainer.add(testEnemyShip);
+        gameContainer.add(testAsteroid);
     }
 
     @Override
@@ -115,10 +121,7 @@ public class GameScreen extends Screen {
             g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
         }
 
-        testShipOne.draw(g);
-        testShipTwo.draw(g);
-        testEnemyShip.draw(g);
-        testAsteroid.draw(g);
+        gameContainer.drawContainer(g);
     }
 
     @Override
@@ -131,6 +134,16 @@ public class GameScreen extends Screen {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public void onPlayerAdded(FriendlyShip fs) {
+        gameContainer.add(fs);
+    }
+
+    @Override
+    public void onPlayerRemoved(FriendlyShip fs) {
+        gameContainer.remove(fs);
     }
 }
 
