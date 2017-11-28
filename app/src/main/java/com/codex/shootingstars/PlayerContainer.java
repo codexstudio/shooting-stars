@@ -42,7 +42,4 @@ public class PlayerContainer extends GameObject{
                 obj.transform.setRotation(direction);
         }
     }
-
-    public List<FriendlyShip> getShipList() { return friendlyShipList; }
-
 }
