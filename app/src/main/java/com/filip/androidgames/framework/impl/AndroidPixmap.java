@@ -69,7 +69,7 @@ public class AndroidPixmap implements Pixmap {
         matrix.setScale(scale.getX(), scale.getY(), bitmap.getWidth() / 2, bitmap.getHeight() / 2);
         final float degrees = (float) Math.toDegrees(Math.atan2(rotation.getX(), rotation.getY()));
         matrix.postRotate(degrees, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
-        matrix.postTranslate(location.getX(), location.getY());
+        matrix.postTranslate(location.getX() - bitmap.getWidth() / 2, location.getY() - bitmap.getHeight() / 2);
     }
 
     public Matrix getMatrix() { return matrix; }

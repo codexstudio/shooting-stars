@@ -1,6 +1,7 @@
 package com.codex.shootingstars;
 
 import android.graphics.Matrix;
+import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;

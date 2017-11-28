@@ -3,6 +3,7 @@ package com.codex.shootingstars;
 import android.util.Log;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
 public abstract class DrawableObject extends GameObject {
@@ -33,7 +34,8 @@ public abstract class DrawableObject extends GameObject {
     protected void setActorSpriteSheet(Pixmap sprite) {actorSpriteSheet = sprite;}
 
     protected float getBoundingRadius() { return boundingRadius; }
-    private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() > actorSpriteSheet.getWidth()) ? ((float) actorSpriteSheet.getHeight()) : ((float) actorSpriteSheet.getWidth()); }
+    //private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() > actorSpriteSheet.getWidth()) ? ((float) actorSpriteSheet.getHeight() / 2) : ((float) actorSpriteSheet.getWidth() / 2); }
+    private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() * this.transform.getScale().getY() + actorSpriteSheet.getWidth() * this.transform.getScale().getX()) / 4; }
     protected void setBoundingRadius(float value) { boundingRadius = value; }
 
     //Methods
@@ -46,6 +48,23 @@ public abstract class DrawableObject extends GameObject {
     protected void draw(Graphics g){
         update();
         g.drawPixmap(actorSpriteSheet);
+    }
+
+    protected boolean isCollidingWith(DrawableObject object) {
+        //Log.i("This", "" + this.transform.getLocation().getX() + " " + this.transform.getLocation().getY());
+        //Log.i("Object", "" + object.transform.getLocation().getX() + " " + object.transform.getLocation().getY());
+        float distance = distance(this.transform.getLocation(), object.transform.getLocation());
+        //Log.i("Distance", "" + distance);
+        //Log.i("This Rad", "" + this.getBoundingRadius());
+        //Log.i("Object Rad", "" + object.getBoundingRadius());
+        if (distance < this.getBoundingRadius() + object.getBoundingRadius()) {
+            return true;
+        }
+        return false;
+    }
+
+    private float distance(Vector2 v1, Vector2 v2) {
+        return Math.abs( (float) Math.sqrt( (Math.pow( (v2.getX() - v1.getX()) , 2)) + (Math.pow( (v2.getY() - v1.getY()) , 2)) ) );
     }
 
 }
