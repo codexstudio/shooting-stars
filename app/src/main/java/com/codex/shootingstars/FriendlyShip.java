@@ -1,6 +1,7 @@
 package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
+import com.filip.androidgames.framework.Pixmap;
 
 public class FriendlyShip extends BaseCharacter{
 
@@ -20,8 +21,8 @@ public class FriendlyShip extends BaseCharacter{
     }
 
     //Constructor
-    public FriendlyShip(Graphics g, ControllerState state, float xLocation, float yLocation, float xScale, float yScale) {
-        super(xLocation, yLocation, xScale, yScale, g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
+    public FriendlyShip(Pixmap pixmap, ControllerState state, float xLocation, float yLocation, float xScale, float yScale) {
+        super(xLocation, yLocation, xScale, yScale, pixmap);
         controllerState = state;
         update();
     }
@@ -36,5 +37,11 @@ public class FriendlyShip extends BaseCharacter{
 
     protected void update() {
         super.update();
+    }
+
+    @Override
+    public void setToPoolTransform() {
+        super.setToPoolTransform();
+        this.controllerState = ControllerState.AI_CONTROLLED;
     }
 }

@@ -1,5 +1,7 @@
 package com.filip.androidgames.framework;
 
+import com.codex.shootingstars.FriendlyShip;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class Pool<T>
 	
 	// This pool object factory interface will be used
 	// to create any type of objects that we want
-    public interface PoolObjectFactory<T> 
+    public interface PoolObjectFactory<T>
     {
         public T createObject();
     }
