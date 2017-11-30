@@ -1,12 +1,11 @@
 package com.codex.shootingstars;
 
 import android.graphics.Color;
-import com.filip.androidgames.framework.Game;
-import com.filip.androidgames.framework.Graphics;
+import android.graphics.Typeface;
+import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Graphics.Point;
 import com.filip.androidgames.framework.Input.TouchEvent;
-import com.filip.androidgames.framework.Pixmap;
-import com.filip.androidgames.framework.Screen;
+import com.filip.androidgames.framework.impl.AndroidFont;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
@@ -28,7 +27,7 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     boolean isPaused = false;
 
     //private int oldScore;
-    private String score = "0";
+    private float score = 0;
 
     private Random random = new Random();
 
@@ -46,9 +45,13 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     Button pauseResumeBtn;
     Button endPausebtn;
     Button optionsIcon;
+    Button death;
+    Button restart;
 
     StaticUI playScore;
     StaticUI options;
+
+    private Font font;
 
     CanvasContainer<BaseCharacter> gameContainer;
     CanvasContainer<BaseUIObject> uiContainer;
@@ -63,6 +66,7 @@ public class GameScreen extends Screen implements PlayerContainerListener {
         height = g.getHeight();
         bkgPos = new Point();
         joystickPos = new Point();
+        font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
         gameContainer = new CanvasContainer<BaseCharacter>();
         uiContainer = new CanvasContainer<BaseUIObject>();
@@ -86,6 +90,8 @@ public class GameScreen extends Screen implements PlayerContainerListener {
         optionsIcon = new Button(width/2, height*2/3, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
         pauseResumeBtn = new Button(width/2, height/2, 1.0f, 1.0f, g.newPixmap("Resume.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
         endPausebtn = new Button(width/2, height*5/6, 1.0f, 1.0f, g.newPixmap("End.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+        death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
+        restart = new Button(width/2, height*1/3, 1, 1, g.newPixmap("restart.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
 
         playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
         options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
@@ -96,6 +102,8 @@ public class GameScreen extends Screen implements PlayerContainerListener {
         uiContainer.add(pauseResumeBtn);
         uiContainer.add(endPausebtn);
         uiContainer.add(playScore);
+        uiContainer.add(death);
+        uiContainer.add(restart);
     }
 
     @Override
@@ -113,9 +121,6 @@ public class GameScreen extends Screen implements PlayerContainerListener {
                     if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius())
                     {
                         pause();
-                        playPauseBtn.setVisibility(false);
-                        playScore.setVisibility(false);
-                        optionsIcon.setVisibility(true);
                     }
                 }
             }
@@ -125,16 +130,25 @@ public class GameScreen extends Screen implements PlayerContainerListener {
                     if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius())
                     {
                         pause();
-                        pauseResumeBtn.setVisibility(false);
-                        playScore.setVisibility(true);
-                        optionsIcon.setVisibility(false);
-                        options.setVisibility(false);
                     }
                 }
                 if (endPausebtn.getVisibility() == true){
                     if (Vector2.Distance(new Vector2(event.x, event.y), endPausebtn.transform.getLocation()) < endPausebtn.getBoundingRadius())
                     {
                         game.setScreen(new MainMenuScreen(game));
+                    }
+                }
+                if (death.getVisibility() == true){
+                    if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius())
+                    {
+                        pause();
+                        restart.setVisibility(true);
+                    }
+                }
+                if (restart.getVisibility() == true){
+                    if (Vector2.Distance(new Vector2(event.x, event.y), restart.transform.getLocation()) < restart.getBoundingRadius())
+                    {
+                        game.setScreen(new GameScreen(game));
                     }
                 }
             }
@@ -151,6 +165,7 @@ public class GameScreen extends Screen implements PlayerContainerListener {
                     bkgPos.y = 0;
                 }
                 playerContainer.rotateShips(joystick.getDirection());
+                score +=1;
             }
         }
     }
@@ -182,15 +197,18 @@ public class GameScreen extends Screen implements PlayerContainerListener {
             if (bIsTouching) {
                 g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
             }
+            restart.setVisibility(false);
             pauseResumeBtn.setVisibility(false);
             playPauseBtn.setVisibility(true);
             playScore.setVisibility(true);
             endPausebtn.setVisibility(false);
             optionsIcon.setVisibility(false);
             options.setVisibility(false);
+            g.drawText(String.valueOf(score),210, 76, font, Color.WHITE);
         }
         else
         {
+            playPauseBtn.setVisibility(false);
             pauseResumeBtn.setVisibility(true);
             playScore.setVisibility(false);
             endPausebtn.setVisibility(true);
