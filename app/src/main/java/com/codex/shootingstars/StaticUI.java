@@ -11,7 +11,7 @@ public class StaticUI extends BaseUIObject{
     }
 
     //Constructor
-    protected StaticUI(float xLocation, float yLocation, float xScale, float yScale, Pixmap pixmap, ScreenType type) {
-        super(xLocation, yLocation, xScale, yScale, pixmap, type);
+    protected StaticUI(float xLocation, float yLocation, float xScale, float yScale, Pixmap pixmap) {
+        super(xLocation, yLocation, xScale, yScale, pixmap);
     }
 }

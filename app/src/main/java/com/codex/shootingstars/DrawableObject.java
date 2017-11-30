@@ -1,9 +1,8 @@
 package com.codex.shootingstars;
 
-import android.util.Log;
+import android.graphics.Rect;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
-import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
 public abstract class DrawableObject extends GameObject {
@@ -11,6 +10,7 @@ public abstract class DrawableObject extends GameObject {
     //Members
     private Pixmap actorSpriteSheet;
     private float boundingRadius;
+    private Rect boundingRect;
     private boolean isVisible;
 
     //Default Constructor
@@ -19,6 +19,7 @@ public abstract class DrawableObject extends GameObject {
         this.transform.setRotation(new Vector2(0.0f,0.0f));
         this.transform.setScale(new Vector2(0.0f,0.0f));
         boundingRadius = 0.0f;
+        boundingRect = new Rect(0,0,0,0);
         isVisible = true;
     }
 
@@ -29,6 +30,7 @@ public abstract class DrawableObject extends GameObject {
         this.transform.setScale(new Vector2(xScale,yScale));
         actorSpriteSheet = pixmap;
         setBoundingRadius();
+        setBoundingRect();
         isVisible = true;
     }
 
@@ -43,6 +45,10 @@ public abstract class DrawableObject extends GameObject {
     //private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() > actorSpriteSheet.getWidth()) ? ((float) actorSpriteSheet.getHeight() / 2) : ((float) actorSpriteSheet.getWidth() / 2); }
     private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() * this.transform.getScale().getY() + actorSpriteSheet.getWidth() * this.transform.getScale().getX()) / 4; }
     protected void setBoundingRadius(float value) { boundingRadius = value; }
+
+    protected Rect getBoundingRect() {return boundingRect;}
+    private void setBoundingRect() { boundingRect = new Rect((int)(this.transform.getLocation().getX() - actorSpriteSheet.getWidth()/2), (int)(this.transform.getLocation().getY() - actorSpriteSheet.getHeight()/2), (int)this.transform.getLocation().getX() + actorSpriteSheet.getWidth()/2, (int)this.transform.getLocation().getY() + actorSpriteSheet.getHeight()/2);}
+    protected void setBoundingRect(int x, int y) { boundingRect = new Rect(x, y, actorSpriteSheet.getWidth()+x, actorSpriteSheet.getHeight()+y); }
 
     //Methods
     protected void update() {
