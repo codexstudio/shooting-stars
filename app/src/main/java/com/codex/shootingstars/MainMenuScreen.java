@@ -19,6 +19,10 @@ public class MainMenuScreen extends Screen {
     Button lbMenubtn;
     Button charMenubtn;
     Button backBtn;
+    Button leftCharbtn;
+    Button rightCharbtn;
+
+    StaticUI shipOne, shipTwo, shipThree, shipFour, shipFive, shipSix;
 
     CanvasContainer<BaseUIObject> uiContainer;
 
@@ -39,14 +43,36 @@ public class MainMenuScreen extends Screen {
         lbMenubtn = new Button(g.getWidth()/2, g.getHeight()*3/5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
         charMenubtn = new Button(g.getWidth()/2, g.getHeight()*3.5f/5, 1.0f, 1.0f, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
         backBtn = new Button(g.getWidth()-200, g.getHeight()-100, 1.0f, 1.0f, g.newPixmap("Back.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.None);
+        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("Play_Game.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
+        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("Play_Game.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
+
+        shipOne = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
+        shipTwo = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip2.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
+        shipThree = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip3.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
+        shipFour = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip4.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
+        shipFive = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip5.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
+        shipSix = new StaticUI(g.getWidth()/2, g.getHeight()/2, 1.0f, 1.0f, g.newPixmap("PlayerShip6.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.None);
 
         backBtn.setVisibility(false);
+        shipOne.setVisibility(false);
+        shipTwo.setVisibility(false);
+        shipThree.setVisibility(false);
+        shipFive.setVisibility(false);
+        shipSix.setVisibility(false);
 
         uiContainer.add(playGameMenubtn);
         uiContainer.add(optionsMenubtn);
         uiContainer.add(lbMenubtn);
         uiContainer.add(charMenubtn);
         uiContainer.add(backBtn);
+
+        uiContainer.add(shipOne);
+        uiContainer.add(shipTwo);
+        uiContainer.add(shipThree);
+        uiContainer.add(shipFour);
+        uiContainer.add(shipFive);
+        uiContainer.add(shipSix);
+
     }
 
     @Override
