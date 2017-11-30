@@ -9,7 +9,7 @@ import java.util.List;
 public class PlayerContainer extends GameObject{
 
     //Members
-    private List<FriendlyShip> friendlyShipList;
+    public List<FriendlyShip> friendlyShipList;
     private GameEventListener listener;
 
     //Constructor

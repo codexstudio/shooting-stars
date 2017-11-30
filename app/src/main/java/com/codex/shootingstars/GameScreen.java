@@ -175,6 +175,7 @@ public class GameScreen extends Screen implements GameEventListener {
                 playerContainer.rotateShips(joystick.getDirection());
                 score +=1;
             }
+            checkCollisions();
         }
     }
 
@@ -248,6 +249,37 @@ public class GameScreen extends Screen implements GameEventListener {
     @Override
     public void onPlayerRemoved(FriendlyShip fs) {
         gameContainer.remove(fs);
+    }
+
+    public void checkCollisions(){
+        for (FriendlyShip frSp : playerContainer.friendlyShipList) {
+            for (BaseCharacter obj : gameContainer.containerList) {
+                if (frSp.isCollidingWith(obj)) {
+                    if (obj.getClass() == Asteroid.class) {
+                        playerContainer.removeShip(frSp);
+                        //frSp.returnToPool();
+                        if (playerContainer.getShipListSize() == 0) {
+                            loseGame();
+                        }
+                    }
+                    else if (obj.getClass() == EnemyShip.class) {
+                        playerContainer.removeShip(frSp);
+                        //frSp.returnToPool();
+                        if (playerContainer.getShipListSize() == 0) {
+                            loseGame();
+                        }
+                    }
+                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerStates.AI_CONTROLLED) {
+                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerStates.PLAYER_CONTROLLED);
+                        playerContainer.addShip((FriendlyShip)obj);
+                    }
+                }
+            }
+        }
+    }
+
+    public void loseGame() {
+        pause();
     }
 }
 

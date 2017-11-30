@@ -34,4 +34,7 @@ public class FriendlyShip extends BaseCharacter{
         controllerState = state;
     }
 
+    protected void update() {
+
+    }
 }

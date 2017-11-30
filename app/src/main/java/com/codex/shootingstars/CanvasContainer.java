@@ -3,12 +3,13 @@ package com.codex.shootingstars;
 import com.filip.androidgames.framework.Graphics;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CanvasContainer<T extends DrawableObject> {
 
     //Members
-    private List<T> containerList;
+    public List<T> containerList;
 
     //Constructor
     public CanvasContainer() {
