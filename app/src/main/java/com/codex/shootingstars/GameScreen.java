@@ -20,7 +20,6 @@ public class GameScreen extends Screen implements GameEventListener {
     private Point bkgPos;
     private Point joystickPos;
     private float scrollSpeed = 0.25f;
-    private boolean isDead;
 
     int width;
     int height;
@@ -68,7 +67,6 @@ public class GameScreen extends Screen implements GameEventListener {
         bkgPos = new Point();
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
-        isDead = false;
 
         gameContainer = new CanvasContainer<BaseCharacter>();
         uiContainer = new CanvasContainer<BaseUIObject>();
@@ -153,12 +151,6 @@ public class GameScreen extends Screen implements GameEventListener {
                         game.setScreen(new GameScreen(game));
                     }
                 }
-            }
-
-            if (isDead)
-            {
-                pause();
-                restart.setVisibility(true);
             }
         }
 
@@ -280,6 +272,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     public void loseGame() {
         pause();
+        restart.setVisibility(true);
     }
 }
 

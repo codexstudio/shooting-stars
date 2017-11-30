@@ -35,6 +35,6 @@ public class FriendlyShip extends BaseCharacter{
     }
 
     protected void update() {
-
+        super.update();
     }
 }
