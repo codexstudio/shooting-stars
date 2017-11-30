@@ -13,7 +13,7 @@ import com.filip.androidgames.framework.types.Vector2;
 import java.util.List;
 import java.util.Random;
 
-public class GameScreen extends Screen implements PlayerContainerListener {
+public class GameScreen extends Screen implements GameEventListener {
     private static Pixmap background;
     private static Pixmap joystickPixmap;
 //    private static Pixmap ship;
@@ -152,6 +152,7 @@ public class GameScreen extends Screen implements PlayerContainerListener {
                 }
                 playerContainer.rotateShips(joystick.getDirection());
             }
+            checkCollisions();
         }
     }
 
@@ -222,6 +223,37 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     @Override
     public void onPlayerRemoved(FriendlyShip fs) {
         gameContainer.remove(fs);
+    }
+
+    public void checkCollisions(){
+        for (FriendlyShip frSp : playerContainer.friendlyShipList) {
+            for (BaseCharacter obj : gameContainer.containerList) {
+                if (frSp.isCollidingWith(obj)) {
+                    if (obj.getClass() == Asteroid.class) {
+                        playerContainer.removeShip(frSp);
+                        //frSp.returnToPool();
+                        if (playerContainer.getShipListSize() == 0) {
+                            loseGame();
+                        }
+                    }
+                    else if (obj.getClass() == EnemyShip.class) {
+                        playerContainer.removeShip(frSp);
+                        //frSp.returnToPool();
+                        if (playerContainer.getShipListSize() == 0) {
+                            loseGame();
+                        }
+                    }
+                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerStates.AI_CONTROLLED) {
+                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerStates.PLAYER_CONTROLLED);
+                        playerContainer.addShip((FriendlyShip)obj);
+                    }
+                }
+            }
+        }
+    }
+
+    public void loseGame() {
+        pause();
     }
 }
 

@@ -9,11 +9,11 @@ import java.util.List;
 public class PlayerContainer extends GameObject{
 
     //Members
-    private List<FriendlyShip> friendlyShipList;
-    private PlayerContainerListener listener;
+    public List<FriendlyShip> friendlyShipList;
+    private GameEventListener listener;
 
     //Constructor
-    public PlayerContainer(PlayerContainerListener listener) {
+    public PlayerContainer(GameEventListener listener) {
         this.listener = listener;
         friendlyShipList = new ArrayList<FriendlyShip>();
     }

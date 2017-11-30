@@ -26,4 +26,8 @@ public abstract class BaseCharacter extends DrawableObject {
 
     //Methods
 
+    protected void update() {
+        super.update();
+    }
+
 }
