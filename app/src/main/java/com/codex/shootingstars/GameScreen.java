@@ -269,8 +269,8 @@ public class GameScreen extends Screen implements GameEventListener {
                             loseGame();
                         }
                     }
-                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerStates.AI_CONTROLLED) {
-                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerStates.PLAYER_CONTROLLED);
+                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
                         playerContainer.addShip((FriendlyShip)obj);
                     }
                 }
