@@ -32,6 +32,7 @@ public class MainMenuScreen extends Screen {
     StaticUI character;
     StaticUI leaderboards;
     StaticUI options;
+    StaticUI title;
 
     CanvasContainer<BaseUIObject> uiContainer;
 
@@ -65,6 +66,7 @@ public class MainMenuScreen extends Screen {
         leaderboards = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.LeaderBoardScreen);
         character = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.CharacterScreen);
         options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
+        title = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("title.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.LeaderBoardScreen);
 
 
         uiContainer.add(playGameMenubtn);
@@ -72,12 +74,13 @@ public class MainMenuScreen extends Screen {
         uiContainer.add(lbMenubtn);
         uiContainer.add(charMenubtn);
         uiContainer.add(backBtn);
-//        uiContainer.add(leftCharbtn);
-//        uiContainer.add(rightCharbtn);
+//       uiContainer.add(leftCharbtn);
+//       uiContainer.add(rightCharbtn);
 
         uiContainer.add(character);
         uiContainer.add(options);
         uiContainer.add(leaderboards);
+        uiContainer.add(title);
 
         uiContainer.add(shipOne);
         uiContainer.add(shipTwo);
@@ -125,6 +128,7 @@ public class MainMenuScreen extends Screen {
                         optionsMenubtn.setVisibility(false);
                         backBtn.setVisibility(true);
                         options.setVisibility(true);
+                        title.setVisibility(false);
                     }
                 }
                 if (lbMenubtn.getVisibility() == true){
@@ -136,6 +140,7 @@ public class MainMenuScreen extends Screen {
                         lbMenubtn.setVisibility(false);
                         backBtn.setVisibility(true);
                         leaderboards.setVisibility(true);
+                        title.setVisibility(false);
                     }
                 }
                 if (charMenubtn.getVisibility() == true){
@@ -147,6 +152,7 @@ public class MainMenuScreen extends Screen {
                         optionsMenubtn.setVisibility(false);
                         backBtn.setVisibility(true);
                         character.setVisibility(true);
+                        title.setVisibility(false);
 
                         shipOne.setVisibility(true);
                         shipTwo.setVisibility(true);
@@ -164,6 +170,7 @@ public class MainMenuScreen extends Screen {
                         optionsMenubtn.setVisibility(true);
                         charMenubtn.setVisibility(true);
                         backBtn.setVisibility(false);
+                        title.setVisibility(true);
 
                         character.setVisibility(false);
                         options.setVisibility(false);
