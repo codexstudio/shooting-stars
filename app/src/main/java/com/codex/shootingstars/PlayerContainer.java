@@ -24,10 +24,12 @@ public class PlayerContainer extends GameObject{
     }
 
     //Methods
-    public void addShip(FriendlyShip ship) {
+    public void addShip(FriendlyShip ship, boolean addToGameContainer) {
         if (ship.getState() == FriendlyShip.ControllerState.PLAYER_CONTROLLED) {
             friendlyShipList.add(ship);
-            listener.onPlayerAdded(ship);
+            if (addToGameContainer) {
+                listener.onPlayerAdded(ship);
+            }
         }
         else { Log.wtf("WARNING!", "Tried to add a non PLAYER_CONTROLLED" + ship.getClass().getName() + "to the list."); }
     }

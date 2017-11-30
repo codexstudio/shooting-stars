@@ -30,4 +30,9 @@ public abstract class BaseCharacter extends DrawableObject {
         super.update();
     }
 
+    public void setToPoolTransform() {
+        this.transform.setLocation(new Vector2(-500.0f, -500.0f));
+        this.transform.setRotation(new Vector2(0.0f, 0.0f));
+    }
+
 }

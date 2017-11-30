@@ -1,6 +1,7 @@
 package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
+import com.filip.androidgames.framework.Pixmap;
 
 public class EnemyShip extends BaseCharacter {
 
@@ -13,8 +14,8 @@ public class EnemyShip extends BaseCharacter {
     }
 
     //Constructor
-    public EnemyShip(Graphics g, float xLocation, float yLocation, float xScale, float yScale) {
-        super(xLocation, yLocation, xScale, yScale, g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888));
+    public EnemyShip(Pixmap pixmap, float xLocation, float yLocation, float xScale, float yScale) {
+        super(xLocation, yLocation, xScale, yScale, pixmap);
         update();
     }
 
