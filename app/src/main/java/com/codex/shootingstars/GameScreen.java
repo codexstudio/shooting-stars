@@ -20,6 +20,7 @@ public class GameScreen extends Screen implements GameEventListener {
     private Point bkgPos;
     private Point joystickPos;
     private float scrollSpeed = 0.25f;
+    private boolean isDead;
 
     int width;
     int height;
@@ -50,7 +51,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
     StaticUI playScore;
     StaticUI options;
-    StaticUI gameOver;
 
     private Font font;
 
@@ -68,6 +68,7 @@ public class GameScreen extends Screen implements GameEventListener {
         bkgPos = new Point();
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
+        isDead = false;
 
         gameContainer = new CanvasContainer<BaseCharacter>();
         uiContainer = new CanvasContainer<BaseUIObject>();
@@ -96,8 +97,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
         playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
         options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
-        gameOver = new StaticUI(g.getWidth()/2, g.getHeight()*1.5f/11, 1, 1, g.newPixmap("game_over.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
-
 
         uiContainer.add(optionsIcon);
         uiContainer.add(options);
@@ -107,7 +106,6 @@ public class GameScreen extends Screen implements GameEventListener {
         uiContainer.add(playScore);
         uiContainer.add(death);
         uiContainer.add(restart);
-        uiContainer.add(gameOver);
     }
 
     @Override
@@ -147,7 +145,6 @@ public class GameScreen extends Screen implements GameEventListener {
                     {
                         pause();
                         restart.setVisibility(true);
-                        gameOver.setVisibility(true);
                     }
                 }
                 if (restart.getVisibility() == true){
@@ -156,6 +153,12 @@ public class GameScreen extends Screen implements GameEventListener {
                         game.setScreen(new GameScreen(game));
                     }
                 }
+            }
+
+            if (isDead)
+            {
+                pause();
+                restart.setVisibility(true);
             }
         }
 
@@ -210,7 +213,6 @@ public class GameScreen extends Screen implements GameEventListener {
             endPausebtn.setVisibility(false);
             optionsIcon.setVisibility(false);
             options.setVisibility(false);
-            gameOver.setVisibility(false);
             g.drawText(String.valueOf(score),210, 76, font, Color.WHITE);
         }
         else
@@ -278,7 +280,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
     public void loseGame() {
         pause();
-        restart.setVisibility(true);
     }
 }
 

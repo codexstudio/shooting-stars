@@ -55,4 +55,14 @@ public class MainActivity extends AndroidGame {
     public Screen getStartScreen() {
         return new MainMenuScreen(this);
     }
+
+    @Override
+    public void onSignInFailed() {
+
+    }
+
+    @Override
+    public void onSignInSucceeded() {
+
+    }
 }

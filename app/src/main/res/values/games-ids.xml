@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_id">133886098861</string>
+    <string name="package_name">com.codex.shootingstars</string>
+    <string name="achievement_five_is_alive">CgkIrfvu4fIDEAIQAQ</string>
+    <string name="achievement_ten_ten">CgkIrfvu4fIDEAIQAg</string>
+    <string name="achievement_answer_to_everything">CgkIrfvu4fIDEAIQAw</string>
+    <string name="achievement_thousand_islands">CgkIrfvu4fIDEAIQBA</string>
+    <string name="achievement_lonely_death">CgkIrfvu4fIDEAIQBQ</string>
+    <string name="leaderboard_top_score">CgkIrfvu4fIDEAIQBg</string>
+</resources>
