@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Input.TouchEvent;
 import com.filip.androidgames.framework.impl.AndroidFont;
-import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
 
@@ -38,6 +37,7 @@ public class MainMenuScreen extends Screen {
 
     public MainMenuScreen(Game game) {
         super(game);
+
         Graphics g = game.getGraphics();
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         //explosion = g.newPixmap("explosion.png", Graphics.PixmapFormat.ARGB8888);
@@ -48,25 +48,25 @@ public class MainMenuScreen extends Screen {
         uiContainer = new CanvasContainer<BaseUIObject>();
 
 
-        playGameMenubtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("Play_Game.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
-        optionsMenubtn = new Button(g.getWidth()/2, g.getHeight()*2.5f/5, 1.0f, 1.0f, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
-        lbMenubtn = new Button(g.getWidth()/2, g.getHeight()*3/5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
-        charMenubtn = new Button(g.getWidth()/2, g.getHeight()*3.5f/5, 1.0f, 1.0f, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
-        backBtn = new Button(g.getWidth()-200, g.getHeight()-100, 1.0f, 1.0f, g.newPixmap("Back.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.None);
-//        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("LeftArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-//        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("RightArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
+        playGameMenubtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("Play_Game.png",Graphics.PixmapFormat.ARGB8888));
+        optionsMenubtn = new Button(g.getWidth()/2, g.getHeight()*2.5f/5, 1.0f, 1.0f, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888));
+        lbMenubtn = new Button(g.getWidth()/2, g.getHeight()*3/5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888));
+        charMenubtn = new Button(g.getWidth()/2, g.getHeight()*3.5f/5, 1.0f, 1.0f, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888));
+        backBtn = new Button(g.getWidth()-200, g.getHeight()-100, 1.0f, 1.0f, g.newPixmap("Back.png",Graphics.PixmapFormat.ARGB8888));
+//        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("LeftArrow.png",Graphics.PixmapFormat.ARGB8888));
+//        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("RightArrow.png",Graphics.PixmapFormat.ARGB8888));
 
-        shipOne = new Button(g.getWidth()/4, g.getHeight()*1/5, 2/5f, 2/5f, g.newPixmap("PlayerShip.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        shipTwo = new Button(g.getWidth()/4, g.getHeight()*2/5, 2/5f, 2/5f, g.newPixmap("PlayerShip2.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        shipThree = new Button(g.getWidth()/4, g.getHeight()*3/5, 1/3f, 1/3f, g.newPixmap("PlayerShip3.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        shipFour = new Button(g.getWidth()*3/4, g.getHeight()*1/5, 1/6f, 1/6f, g.newPixmap("PlayerShip4.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        shipFive = new Button(g.getWidth()*3/4, g.getHeight()*2/5, 1/3f, 1/3f, g.newPixmap("PlayerShip5.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        shipSix = new Button(g.getWidth()*3/4, g.getHeight()*3/5, 1/12f, 1/12f, g.newPixmap("PlayerShip6.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
+        shipOne = new Button(g.getWidth()/4, g.getHeight()*1/5, 2/5f, 2/5f, g.newPixmap("PlayerShip.png",Graphics.PixmapFormat.ARGB8888));
+        shipTwo = new Button(g.getWidth()/4, g.getHeight()*2/5, 2/5f, 2/5f, g.newPixmap("PlayerShip2.png",Graphics.PixmapFormat.ARGB8888));
+        shipThree = new Button(g.getWidth()/4, g.getHeight()*3/5, 1/3f, 1/3f, g.newPixmap("PlayerShip3.png",Graphics.PixmapFormat.ARGB8888));
+        shipFour = new Button(g.getWidth()*3/4, g.getHeight()*1/5, 1/6f, 1/6f, g.newPixmap("PlayerShip4.png",Graphics.PixmapFormat.ARGB8888));
+        shipFive = new Button(g.getWidth()*3/4, g.getHeight()*2/5, 1/3f, 1/3f, g.newPixmap("PlayerShip5.png",Graphics.PixmapFormat.ARGB8888));
+        shipSix = new Button(g.getWidth()*3/4, g.getHeight()*3/5, 1/12f, 1/12f, g.newPixmap("PlayerShip6.png",Graphics.PixmapFormat.ARGB8888));
 
-        leaderboards = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.LeaderBoardScreen);
-        character = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.CharacterScreen);
-        options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
-        title = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("title.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.LeaderBoardScreen);
+        leaderboards = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888));
+        character = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888));
+        options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888));
+        title = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("title.png",Graphics.PixmapFormat.ARGB8888));
 
 
         uiContainer.add(playGameMenubtn);
@@ -114,13 +114,13 @@ public class MainMenuScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (playGameMenubtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), playGameMenubtn.transform.getLocation()) < playGameMenubtn.getBoundingRadius())
+                    if (playGameMenubtn.getBoundingRect().contains(event.x, event.y))
                     {
                         game.setScreen(new GameScreen(game));
                     }
                 }
                 if (optionsMenubtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), optionsMenubtn.transform.getLocation()) < optionsMenubtn.getBoundingRadius())
+                    if (optionsMenubtn.getBoundingRect().contains(event.x, event.y))
                     {
                         playGameMenubtn.setVisibility(false);
                         lbMenubtn.setVisibility(false);
@@ -132,7 +132,7 @@ public class MainMenuScreen extends Screen {
                     }
                 }
                 if (lbMenubtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), lbMenubtn.transform.getLocation()) < lbMenubtn.getBoundingRadius())
+                    if (lbMenubtn.getBoundingRect().contains(event.x, event.y))
                     {
                         playGameMenubtn.setVisibility(false);
                         optionsMenubtn.setVisibility(false);
@@ -144,7 +144,7 @@ public class MainMenuScreen extends Screen {
                     }
                 }
                 if (charMenubtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), charMenubtn.transform.getLocation()) < charMenubtn.getBoundingRadius())
+                    if (charMenubtn.getBoundingRect().contains(event.x, event.y))
                     {
                         playGameMenubtn.setVisibility(false);
                         lbMenubtn.setVisibility(false);
@@ -163,7 +163,7 @@ public class MainMenuScreen extends Screen {
                     }
                 }
                 if (backBtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), backBtn.transform.getLocation()) < backBtn.getBoundingRadius())
+                    if (backBtn.getBoundingRect().contains(event.x, event.y))
                     {
                         playGameMenubtn.setVisibility(true);
                         lbMenubtn.setVisibility(true);

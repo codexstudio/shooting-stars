@@ -20,7 +20,6 @@ public class GameScreen extends Screen implements GameEventListener {
     private Point bkgPos;
     private Point joystickPos;
     private float scrollSpeed = 0.25f;
-    private boolean isDead;
 
     int width;
     int height;
@@ -45,12 +44,13 @@ public class GameScreen extends Screen implements GameEventListener {
     Button playPauseBtn;
     Button pauseResumeBtn;
     Button endPausebtn;
-    Button optionsIcon;
     Button death;
     Button restart;
+    Button options;
 
     StaticUI playScore;
-    StaticUI options;
+    StaticUI gameOver;
+    StaticUI paused;
 
     private Font font;
 
@@ -68,7 +68,6 @@ public class GameScreen extends Screen implements GameEventListener {
         bkgPos = new Point();
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
-        isDead = false;
 
         gameContainer = new CanvasContainer<BaseCharacter>();
         uiContainer = new CanvasContainer<BaseUIObject>();
@@ -88,17 +87,18 @@ public class GameScreen extends Screen implements GameEventListener {
         gameContainer.add(testAsteroid);
 
         //UI containers
-        playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
-        optionsIcon = new Button(width/2, height*2/3, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
-        pauseResumeBtn = new Button(width/2, height/2, 1.0f, 1.0f, g.newPixmap("Resume.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
-        endPausebtn = new Button(width/2, height*5/6, 1.0f, 1.0f, g.newPixmap("End.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
-        death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
-        restart = new Button(width/2, height*1/3, 1, 1, g.newPixmap("restart.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+        playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
+        pauseResumeBtn = new Button(width / 2, height / 2, 1.0f, 1.0f, g.newPixmap("Resume.png", Graphics.PixmapFormat.ARGB8888));
+        endPausebtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
+        death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
+        restart = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
+        options = new Button(g.getWidth() / 2, g.getHeight() * 3.5f/5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
 
-        playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
-        options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
+        playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
+        gameOver = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
+        paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
-        uiContainer.add(optionsIcon);
+
         uiContainer.add(options);
         uiContainer.add(playPauseBtn);
         uiContainer.add(pauseResumeBtn);
@@ -106,6 +106,8 @@ public class GameScreen extends Screen implements GameEventListener {
         uiContainer.add(playScore);
         uiContainer.add(death);
         uiContainer.add(restart);
+        uiContainer.add(gameOver);
+        uiContainer.add(paused);
     }
 
     @Override
@@ -119,50 +121,42 @@ public class GameScreen extends Screen implements GameEventListener {
                 joystickPos.x = event.x;
                 joystickPos.y = event.y;
 
-                if (playPauseBtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius())
-                    {
+                if (playPauseBtn.getVisibility() == true) {
+                    if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius()) {
                         pause();
+                        pauseResumeBtn.setVisibility(true);
+                        paused.setVisibility(true);
                     }
                 }
             }
-
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (pauseResumeBtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius())
-                    {
+                if (pauseResumeBtn.getVisibility() == true) {
+                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius()) {
                         pause();
                     }
                 }
-                if (endPausebtn.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), endPausebtn.transform.getLocation()) < endPausebtn.getBoundingRadius())
-                    {
+                if (endPausebtn.getVisibility() == true) {
+                    if (endPausebtn.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new MainMenuScreen(game));
                     }
                 }
-                if (death.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius())
-                    {
+                if (death.getVisibility() == true) {
+                    if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
                         pause();
                         restart.setVisibility(true);
+                        gameOver.setVisibility(true);
+                        pauseResumeBtn.setVisibility(false);
                     }
                 }
-                if (restart.getVisibility() == true){
-                    if (Vector2.Distance(new Vector2(event.x, event.y), restart.transform.getLocation()) < restart.getBoundingRadius())
-                    {
+                if (restart.getVisibility() == true) {
+                    if (restart.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new GameScreen(game));
                     }
                 }
             }
-
-            if (isDead)
-            {
-                pause();
-                restart.setVisibility(true);
-            }
         }
 
-        if(!isPaused) {
+        if (!isPaused) {
             if (bIsTouching) {
                 bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
                 bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
@@ -173,7 +167,7 @@ public class GameScreen extends Screen implements GameEventListener {
                     bkgPos.y = 0;
                 }
                 playerContainer.rotateShips(joystick.getDirection());
-                score +=1;
+                score += 1;
             }
             checkCollisions();
         }
@@ -201,36 +195,41 @@ public class GameScreen extends Screen implements GameEventListener {
             //fourth corner screen
             g.drawPixmap(background, bkgXPos + bkgPos.x, bkgYPos + bkgPos.y);
         }
-        if(!isPaused)
-        {
+        if (!isPaused) {
             if (bIsTouching) {
                 g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
             }
-            restart.setVisibility(false);
-            pauseResumeBtn.setVisibility(false);
             playPauseBtn.setVisibility(true);
             playScore.setVisibility(true);
+            death.setVisibility(true);
+
+            restart.setVisibility(false);
             endPausebtn.setVisibility(false);
-            optionsIcon.setVisibility(false);
             options.setVisibility(false);
-            g.drawText(String.valueOf(score),210, 76, font, Color.WHITE);
-        }
-        else
-        {
+            gameOver.setVisibility(false);
+            pauseResumeBtn.setVisibility(false);
+            paused.setVisibility(false);
+
+            g.drawText(String.valueOf(score), 212, 72, font, Color.WHITE);
+        } else {
             playPauseBtn.setVisibility(false);
-            pauseResumeBtn.setVisibility(true);
             playScore.setVisibility(false);
+            death.setVisibility(false);
+
             endPausebtn.setVisibility(true);
-            optionsIcon.setVisibility(true);
-        }
+            options.setVisibility(true);
+    }
         gameContainer.drawContainer(g);
         uiContainer.drawContainer(g);
     }
 
     @Override
     public void pause() {
-        if (isPaused) {isPaused = false;}
-        else {isPaused = true;}
+        if (isPaused) {
+            isPaused = false;
+        } else {
+            isPaused = true;
+        }
     }
 
     @Override
@@ -251,7 +250,7 @@ public class GameScreen extends Screen implements GameEventListener {
         gameContainer.remove(fs);
     }
 
-    public void checkCollisions(){
+    public void checkCollisions() {
         for (FriendlyShip frSp : playerContainer.friendlyShipList) {
             for (BaseCharacter obj : gameContainer.containerList) {
                 if (frSp.isCollidingWith(obj)) {
@@ -261,17 +260,15 @@ public class GameScreen extends Screen implements GameEventListener {
                         if (playerContainer.getShipListSize() == 0) {
                             loseGame();
                         }
-                    }
-                    else if (obj.getClass() == EnemyShip.class) {
+                    } else if (obj.getClass() == EnemyShip.class) {
                         playerContainer.removeShip(frSp);
                         //frSp.returnToPool();
                         if (playerContainer.getShipListSize() == 0) {
                             loseGame();
                         }
-                    }
-                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-                        playerContainer.addShip((FriendlyShip)obj);
+                    } else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
+                        playerContainer.addShip((FriendlyShip) obj);
                     }
                 }
             }
@@ -280,7 +277,9 @@ public class GameScreen extends Screen implements GameEventListener {
 
     public void loseGame() {
         pause();
+        restart.setVisibility(true);
+        gameOver.setVisibility(true);
+        pauseResumeBtn.setVisibility(false);
     }
+
 }
-
-
