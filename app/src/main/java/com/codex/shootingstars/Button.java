@@ -10,8 +10,8 @@ public class Button extends BaseUIObject {
         }
 
     //Constructor
-    protected Button(float xLocation, float yLocation, float xScale, float yScale, Pixmap pixmap, ScreenType type) {
-        super(xLocation, yLocation, xScale, yScale, pixmap, type);
+    protected Button(float xLocation, float yLocation, float xScale, float yScale, Pixmap pixmap) {
+        super(xLocation, yLocation, xScale, yScale, pixmap);
     }
 
     
