@@ -1,5 +1,6 @@
 package com.codex.shootingstars;
 
+import android.graphics.Color;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -24,6 +25,8 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     int width;
     int height;
 
+    boolean isPaused = false;
+
     //private int oldScore;
     private String score = "0";
 
@@ -38,6 +41,11 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     FriendlyShip testShipTwo;
     EnemyShip testEnemyShip;
     Asteroid testAsteroid;
+
+    Button playPauseBtn;
+    Button pauseResumeBtn;
+    Button endPausebtn;
+    StaticUI playScore;
 
     CanvasContainer<BaseCharacter> gameContainer;
     CanvasContainer<BaseUIObject> uiContainer;
@@ -69,6 +77,16 @@ public class GameScreen extends Screen implements PlayerContainerListener {
 
         gameContainer.add(testEnemyShip);
         gameContainer.add(testAsteroid);
+
+        //UI containers
+        playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
+        pauseResumeBtn = new Button(width/2, height/2, 1.0f, 1.0f, g.newPixmap("Resume.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+        endPausebtn = new Button(width/2, height*2/3, 1.0f, 1.0f, g.newPixmap("End.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+        playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
+        uiContainer.add(playPauseBtn);
+        uiContainer.add(pauseResumeBtn);
+        uiContainer.add(endPausebtn);
+        uiContainer.add(playScore);
     }
 
     @Override
@@ -81,19 +99,47 @@ public class GameScreen extends Screen implements PlayerContainerListener {
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 joystickPos.x = event.x;
                 joystickPos.y = event.y;
+
+            }
+            if (event.type == TouchEvent.TOUCH_UP) {
+                if (playPauseBtn.getVisibility() == true){
+                    if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius())
+                    {
+                        pause();
+                        playPauseBtn.setVisibility(false);
+                        playScore.setVisibility(false);
+                    }
+                }
+                if (pauseResumeBtn.getVisibility() == true){
+                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius())
+                    {
+                        pause();
+                        pauseResumeBtn.setVisibility(false);
+                        playScore.setVisibility(true);
+
+                    }
+                }
+                if (endPausebtn.getVisibility() == true){
+                    if (Vector2.Distance(new Vector2(event.x, event.y), endPausebtn.transform.getLocation()) < endPausebtn.getBoundingRadius())
+                    {
+                        game.setScreen(new MainMenuScreen(game));
+                    }
+                }
             }
         }
 
-        if (bIsTouching) {
-            bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
-            bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
-            if (bkgPos.x > width || bkgPos.x < -width) {
-                bkgPos.x = 0;
+        if(!isPaused) {
+            if (bIsTouching) {
+                bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
+                bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
+                if (bkgPos.x > width || bkgPos.x < -width) {
+                    bkgPos.x = 0;
+                }
+                if (bkgPos.y < -height || bkgPos.y > height) {
+                    bkgPos.y = 0;
+                }
+                playerContainer.rotateShips(joystick.getDirection());
             }
-            if (bkgPos.y < -height || bkgPos.y > height) {
-                bkgPos.y = 0;
-            }
-            playerContainer.rotateShips(joystick.getDirection());
         }
     }
 
@@ -101,7 +147,9 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     @Override
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
+        g.clear(Color.WHITE);
         //original
+
         g.drawPixmap(background, bkgPos.x, bkgPos.y);
 
         if (bkgPos.x != 0 && bkgPos.y != 0) {
@@ -117,15 +165,30 @@ public class GameScreen extends Screen implements PlayerContainerListener {
             //fourth corner screen
             g.drawPixmap(background, bkgXPos + bkgPos.x, bkgYPos + bkgPos.y);
         }
-        if (bIsTouching) {
-            g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
+        if(!isPaused)
+        {
+            if (bIsTouching) {
+                g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
+            }
+            pauseResumeBtn.setVisibility(false);
+            playPauseBtn.setVisibility(true);
+            playScore.setVisibility(true);
+            endPausebtn.setVisibility(false);
         }
-
+        else
+        {
+            pauseResumeBtn.setVisibility(true);
+            playScore.setVisibility(false);
+            endPausebtn.setVisibility(true);
+        }
         gameContainer.drawContainer(g);
+        uiContainer.drawContainer(g);
     }
 
     @Override
     public void pause() {
+        if (isPaused) {isPaused = false;}
+        else {isPaused = true;}
     }
 
     @Override
@@ -146,4 +209,5 @@ public class GameScreen extends Screen implements PlayerContainerListener {
         gameContainer.remove(fs);
     }
 }
+
 

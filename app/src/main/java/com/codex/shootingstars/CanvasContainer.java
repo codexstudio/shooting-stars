@@ -30,4 +30,9 @@ public class CanvasContainer<T extends DrawableObject> {
             }
         }
     }
+
+    public int getSize()
+    {
+        return containerList.size();
+    }
 }

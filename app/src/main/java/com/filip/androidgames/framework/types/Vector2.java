@@ -95,7 +95,7 @@ public class Vector2 {
     }
 
     public static final float Distance(final Vector2 lhs, final Vector2 rhs) {
-        return (float) (Math.sqrt(rhs.getX() - lhs.getX()) + Math.sqrt(rhs.getY() - lhs.getY()));
+        return (float) Math.abs(Math.sqrt(Math.pow(rhs.getX() - lhs.getX(), 2) + Math.pow(rhs.getY() - lhs.getY(), 2)));
     }
 
     public static final float Projection(final Vector2 a, final Vector2 b){
