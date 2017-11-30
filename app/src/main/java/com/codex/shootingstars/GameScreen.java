@@ -45,7 +45,10 @@ public class GameScreen extends Screen implements PlayerContainerListener {
     Button playPauseBtn;
     Button pauseResumeBtn;
     Button endPausebtn;
+    Button optionsIcon;
+
     StaticUI playScore;
+    StaticUI options;
 
     CanvasContainer<BaseCharacter> gameContainer;
     CanvasContainer<BaseUIObject> uiContainer;
@@ -80,9 +83,15 @@ public class GameScreen extends Screen implements PlayerContainerListener {
 
         //UI containers
         playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
+        optionsIcon = new Button(width/2, height*2/3, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
         pauseResumeBtn = new Button(width/2, height/2, 1.0f, 1.0f, g.newPixmap("Resume.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
-        endPausebtn = new Button(width/2, height*2/3, 1.0f, 1.0f, g.newPixmap("End.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+        endPausebtn = new Button(width/2, height*5/6, 1.0f, 1.0f, g.newPixmap("End.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.PauseScreen);
+
         playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.GameScreen);
+        options = new StaticUI(g.getWidth()/2, g.getHeight()*1/11, 1, 1, g.newPixmap("Options.png",Graphics.PixmapFormat.ARGB8888) , StaticUI.ScreenType.OptionsScreen);
+
+        uiContainer.add(optionsIcon);
+        uiContainer.add(options);
         uiContainer.add(playPauseBtn);
         uiContainer.add(pauseResumeBtn);
         uiContainer.add(endPausebtn);
@@ -100,23 +109,26 @@ public class GameScreen extends Screen implements PlayerContainerListener {
                 joystickPos.x = event.x;
                 joystickPos.y = event.y;
 
-            }
-            if (event.type == TouchEvent.TOUCH_UP) {
                 if (playPauseBtn.getVisibility() == true){
                     if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius())
                     {
                         pause();
                         playPauseBtn.setVisibility(false);
                         playScore.setVisibility(false);
+                        optionsIcon.setVisibility(true);
                     }
                 }
+            }
+
+            if (event.type == TouchEvent.TOUCH_UP) {
                 if (pauseResumeBtn.getVisibility() == true){
                     if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius())
                     {
                         pause();
                         pauseResumeBtn.setVisibility(false);
                         playScore.setVisibility(true);
-
+                        optionsIcon.setVisibility(false);
+                        options.setVisibility(false);
                     }
                 }
                 if (endPausebtn.getVisibility() == true){
@@ -174,12 +186,15 @@ public class GameScreen extends Screen implements PlayerContainerListener {
             playPauseBtn.setVisibility(true);
             playScore.setVisibility(true);
             endPausebtn.setVisibility(false);
+            optionsIcon.setVisibility(false);
+            options.setVisibility(false);
         }
         else
         {
             pauseResumeBtn.setVisibility(true);
             playScore.setVisibility(false);
             endPausebtn.setVisibility(true);
+            optionsIcon.setVisibility(true);
         }
         gameContainer.drawContainer(g);
         uiContainer.drawContainer(g);
