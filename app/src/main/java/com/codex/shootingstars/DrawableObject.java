@@ -59,7 +59,7 @@ public abstract class DrawableObject extends GameObject {
     protected boolean isCollidingWith(DrawableObject object) {
         //Log.i("This", "" + this.transform.getLocation().getX() + " " + this.transform.getLocation().getY());
         //Log.i("Object", "" + object.transform.getLocation().getX() + " " + object.transform.getLocation().getY());
-        float distance = distance(this.transform.getLocation(), object.transform.getLocation());
+        float distance = Math.abs(Vector2.Distance(this.transform.getLocation(), object.transform.getLocation()));
         //Log.i("Distance", "" + distance);
         //Log.i("This Rad", "" + this.getBoundingRadius());
         //Log.i("Object Rad", "" + object.getBoundingRadius());
@@ -68,9 +68,4 @@ public abstract class DrawableObject extends GameObject {
         }
         return false;
     }
-
-    private float distance(Vector2 v1, Vector2 v2) {
-        return Math.abs( (float) Math.sqrt( (Math.pow( (v2.getX() - v1.getX()) , 2)) + (Math.pow( (v2.getY() - v1.getY()) , 2)) ) );
-    }
-
 }

@@ -10,10 +10,10 @@ public class PlayerContainer extends GameObject{
 
     //Members
     private List<FriendlyShip> friendlyShipList;
-    private PlayerContainerListener listener;
+    private GameEventListener listener;
 
     //Constructor
-    public PlayerContainer(PlayerContainerListener listener) {
+    public PlayerContainer(GameEventListener listener) {
         this.listener = listener;
         friendlyShipList = new ArrayList<FriendlyShip>();
     }
@@ -25,7 +25,7 @@ public class PlayerContainer extends GameObject{
 
     //Methods
     public void addShip(FriendlyShip ship) {
-        if (ship.getState() == FriendlyShip.ControllerStates.PLAYER_CONTROLLED) {
+        if (ship.getState() == FriendlyShip.ControllerState.PLAYER_CONTROLLED) {
             friendlyShipList.add(ship);
             listener.onPlayerAdded(ship);
         }
