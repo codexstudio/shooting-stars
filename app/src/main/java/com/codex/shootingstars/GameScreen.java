@@ -159,7 +159,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
         playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
         gameOver = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
-        paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
+        paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
 
         uiContainer.add(options);
@@ -331,8 +331,7 @@ public class GameScreen extends Screen implements GameEventListener {
                         if (playerContainer.getShipListSize() == 0) {
                             gameOver();
                         }
-                    }
-                    else if (obj.getClass() == EnemyShip.class) {
+                    } else if (obj.getClass() == EnemyShip.class) {
                         playerContainer.removeShip(frSp);
                         gameContainer.remove(frSp);
                         frSp.setToPoolTransform();
