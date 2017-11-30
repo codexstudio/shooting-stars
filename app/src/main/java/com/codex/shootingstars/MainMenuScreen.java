@@ -19,8 +19,8 @@ public class MainMenuScreen extends Screen {
     Button lbMenubtn;
     Button charMenubtn;
     Button backBtn;
-    Button leftCharbtn;
-    Button rightCharbtn;
+//    Button leftCharbtn;
+//    Button rightCharbtn;
 
     Button shipOne;
     Button shipTwo;
@@ -52,8 +52,8 @@ public class MainMenuScreen extends Screen {
         lbMenubtn = new Button(g.getWidth()/2, g.getHeight()*3/5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
         charMenubtn = new Button(g.getWidth()/2, g.getHeight()*3.5f/5, 1.0f, 1.0f, g.newPixmap("Characters.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.MenuScreen);
         backBtn = new Button(g.getWidth()-200, g.getHeight()-100, 1.0f, 1.0f, g.newPixmap("Back.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.None);
-        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("LeftArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
-        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("RightArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
+//        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("LeftArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
+//        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("RightArrow.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
 
         shipOne = new Button(g.getWidth()/4, g.getHeight()*1/5, 2/5f, 2/5f, g.newPixmap("PlayerShip.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
         shipTwo = new Button(g.getWidth()/4, g.getHeight()*2/5, 2/5f, 2/5f, g.newPixmap("PlayerShip2.png",Graphics.PixmapFormat.ARGB8888) , Button.ScreenType.CharacterScreen);
@@ -72,8 +72,8 @@ public class MainMenuScreen extends Screen {
         uiContainer.add(lbMenubtn);
         uiContainer.add(charMenubtn);
         uiContainer.add(backBtn);
-        uiContainer.add(leftCharbtn);
-        uiContainer.add(rightCharbtn);
+//        uiContainer.add(leftCharbtn);
+//        uiContainer.add(rightCharbtn);
 
         uiContainer.add(character);
         uiContainer.add(options);
@@ -87,8 +87,8 @@ public class MainMenuScreen extends Screen {
         uiContainer.add(shipSix);
 
         backBtn.setVisibility(false);
-        leftCharbtn.setVisibility(false);
-        rightCharbtn.setVisibility(false);
+//        leftCharbtn.setVisibility(false);
+//        rightCharbtn.setVisibility(false);
 
         character.setVisibility(false);
         options.setVisibility(false);
