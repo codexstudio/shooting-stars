@@ -38,7 +38,7 @@ public abstract class DrawableObject extends GameObject {
     protected Pixmap getActorSpriteSheet() { return actorSpriteSheet; }
     protected void setActorSpriteSheet(Pixmap sprite) {actorSpriteSheet = sprite;}
 
-    public boolean getVisibility() { return isVisible; }
+    public boolean isVisible() { return isVisible; }
     public void setVisibility(boolean value) { isVisible = value; }
 
     protected float getBoundingRadius() { return boundingRadius; }
@@ -69,9 +69,6 @@ public abstract class DrawableObject extends GameObject {
         //Log.i("Distance", "" + distance);
         //Log.i("This Rad", "" + this.getBoundingRadius());
         //Log.i("Object Rad", "" + object.getBoundingRadius());
-        if (distance < this.getBoundingRadius() + object.getBoundingRadius()) {
-            return true;
-        }
-        return false;
+        return distance < this.getBoundingRadius() + object.getBoundingRadius();
     }
 }

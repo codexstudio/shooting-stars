@@ -5,7 +5,7 @@ import com.filip.androidgames.framework.Pixmap;
 
 public class FriendlyShip extends BaseCharacter{
 
-    public static enum ControllerState {
+    public enum ControllerState {
         AI_CONTROLLED,
         PLAYER_CONTROLLED
     }

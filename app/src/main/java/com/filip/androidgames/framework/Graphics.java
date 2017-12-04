@@ -4,12 +4,12 @@ import android.graphics.Matrix;
 
 public interface Graphics
 {
-    public static enum PixmapFormat
+    enum PixmapFormat
     {
         ARGB8888, ARGB4444, RGB565
     }
 
-    public static class Animation {
+    class Animation {
         public Pixmap pixmap;
         public int x;
         public int y;
@@ -45,7 +45,7 @@ public interface Graphics
         }
     }
 
-    public static class Point {
+    class Point {
         public int x;
         public int y;
 
@@ -63,25 +63,25 @@ public interface Graphics
         }
     }
 
-    public Pixmap newPixmap(String fileName, PixmapFormat format);
-    public Font newFont(String fileName, float size);
-    public void clear(int color);
-    public void drawPixel(int x, int y, int color);
-    public void drawLine(int x, int y, int x2, int y2, int color);
-    public void drawRect(int x, int y, int width, int height, int color);
-    public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight, int dstWidth, int dstHeight);
-    public void drawPixmap(Pixmap pixmap, Point dst, Point dstSize);
-    public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight);
-    public void drawPixmap(Pixmap pixmap, int x, int y);
-    public void drawPixmap(Pixmap pixmap, Point dst);
-    public void drawText(String str, int x, int y, Font font, int color);
-    public void drawAnimations(float deltaTime);
-    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight);
-    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, boolean bIsLooping);
-    public void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, int maxLoops);
-    public int getWidth();
-    public int getHeight();
+    Pixmap newPixmap(String fileName, PixmapFormat format);
+    Font newFont(String fileName, float size);
+    void clear(int color);
+    void drawPixel(int x, int y, int color);
+    void drawLine(int x, int y, int x2, int y2, int color);
+    void drawRect(int x, int y, int width, int height, int color);
+    void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight, int dstWidth, int dstHeight);
+    void drawPixmap(Pixmap pixmap, Point dst, Point dstSize);
+    void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY, int srcWidth, int srcHeight);
+    void drawPixmap(Pixmap pixmap, int x, int y);
+    void drawPixmap(Pixmap pixmap, Point dst);
+    void drawText(String str, int x, int y, Font font, int color);
+    void drawAnimations(float deltaTime);
+    void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight);
+    void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, boolean bIsLooping);
+    void addAnimation(Pixmap pixmap, int x, int y, int rows, int columns, int srcWidth, int srcHeight, int maxLoops);
+    int getWidth();
+    int getHeight();
 
-    public void drawPixmap(Pixmap pixmap);
+    void drawPixmap(Pixmap pixmap);
 }
 

@@ -11,76 +11,61 @@ import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
-import java.util.Random;
 
 public class GameScreen extends Screen implements GameEventListener {
     //Sprite Resources
     private static Pixmap background;
     private static Pixmap joystickPixmap;
-    Pixmap friendlyShipPixmap;
-    Pixmap enemyShipPixmap;
-    Pixmap asteroidPixmap;
+    private Pixmap friendlyShipPixmap;
+    private Pixmap enemyShipPixmap;
+    private Pixmap asteroidPixmap;
 
     private Point bkgPos;
     private Point joystickPos;
-    private float scrollSpeed = 0.25f;
 
-    int width;
-    int height;
+    private int width;
+    private int height;
 
-    boolean isPaused = false;
-
-    private final float OUT_OF_BOUNDS_EXTENSION = 5.0f;
+    private boolean isPaused = false;
 
     private float score = 0;
-
-    private Random random = new Random();
 
     private boolean bIsTouching;
     private VirtualJoystick joystick;
 
+    private Button playPauseBtn;
+    private Button pauseResumeBtn;
+    private Button endPauseBtn;
+    private Button death;
+    private Button restart;
+    private Button options;
 
-    //FriendlyShip testShipOne;
-    //FriendlyShip testShipTwo;
-    //EnemyShip testEnemyShip;
-    //Asteroid testAsteroid;
-
-    Button playPauseBtn;
-    Button pauseResumeBtn;
-    Button endPausebtn;
-    Button death;
-    Button restart;
-    Button options;
-
-    StaticUI playScore;
-    StaticUI gameOver;
-    StaticUI paused;
+    private StaticUI playScore;
+    private StaticUI gameOver;
+    private StaticUI paused;
 
     private Font font;
 
-    PlayerContainer playerContainer;
+    private PlayerContainer playerContainer;
 
-    CanvasContainer<BaseCharacter> gameContainer;
-    CanvasContainer<BaseUIObject> uiContainer;
+    private CanvasContainer<BaseCharacter> gameContainer;
+    private CanvasContainer<BaseUIObject> uiContainer;
 
-    PoolObjectFactory<FriendlyShip> friendlyPoolFactory;
-    Pool<FriendlyShip> friendlyPool;
-
-    PoolObjectFactory<EnemyShip> enemyPoolFactory;
-    Pool<EnemyShip> enemyPool;
-
-    PoolObjectFactory<Asteroid> asteroidPoolFactory;
-    Pool<Asteroid> asteroidPool;
+    private Pool<FriendlyShip> friendlyPool;
+    private Pool<EnemyShip> enemyPool;
+    private Pool<Asteroid> asteroidPool;
 
 
-    public GameScreen(final Game game) {
+    GameScreen(final Game game) {
         super(game);
         Graphics g = game.getGraphics();
+
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         joystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
         friendlyShipPixmap = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888);
         enemyShipPixmap = g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888);
         asteroidPixmap = g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888);
+
         joystick = new VirtualJoystick();
         width = g.getWidth();
         height = g.getHeight();
@@ -88,9 +73,13 @@ public class GameScreen extends Screen implements GameEventListener {
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
-        gameContainer = new CanvasContainer<BaseCharacter>();
-        uiContainer = new CanvasContainer<BaseUIObject>();
+        gameContainer = new CanvasContainer<>();
+        uiContainer = new CanvasContainer<>();
         playerContainer = new PlayerContainer(this);
+
+        PoolObjectFactory<FriendlyShip> friendlyPoolFactory;
+        PoolObjectFactory<EnemyShip> enemyPoolFactory;
+        PoolObjectFactory<Asteroid> asteroidPoolFactory;
 
         friendlyPoolFactory = new PoolObjectFactory<FriendlyShip>() {
             @Override
@@ -100,32 +89,34 @@ public class GameScreen extends Screen implements GameEventListener {
                 return temp;
             }
         };
-        friendlyPool = new Pool<>(friendlyPoolFactory, 100);
 
         enemyPoolFactory = new PoolObjectFactory<EnemyShip>() {
             @Override
             public EnemyShip createObject() {
-                EnemyShip temp = new EnemyShip(enemyShipPixmap,-500.0f, -500.0f, 0.5f, 0.5f);
+                EnemyShip temp = new EnemyShip(enemyShipPixmap, -500.0f, -500.0f, 0.5f, 0.5f);
                 gameContainer.add(temp);
                 return temp;
             }
         };
-        enemyPool = new Pool<>(enemyPoolFactory, 100);
 
         asteroidPoolFactory = new PoolObjectFactory<Asteroid>() {
             @Override
             public Asteroid createObject() {
-                Asteroid temp = new Asteroid(asteroidPixmap,-500.0f, -500.0f, 0.5f, 0.5f);
+                Asteroid temp = new Asteroid(asteroidPixmap, -500.0f, -500.0f, 0.5f, 0.5f);
                 gameContainer.add(temp);
                 return temp;
             }
         };
+
+        friendlyPool = new Pool<>(friendlyPoolFactory, 100);
+        enemyPool = new Pool<>(enemyPoolFactory, 100);
         asteroidPool = new Pool<>(asteroidPoolFactory, 100);
 
         FriendlyShip starterShip = friendlyPool.newObject();
         starterShip.transform.setLocation(new Vector2(width / 2, height / 2));
         starterShip.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
         playerContainer.addShip(starterShip, false);
+
         FriendlyShip starterShip2 = friendlyPool.newObject();
         starterShip2.transform.setLocation(new Vector2(width / 4 * 3, height / 2));
         starterShip2.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
@@ -133,39 +124,28 @@ public class GameScreen extends Screen implements GameEventListener {
 
         Asteroid testAsteroid = asteroidPool.newObject();
         testAsteroid.transform.setLocation(new Vector2(width / 2, 100.0f));
+
         Asteroid testAsteroid2 = asteroidPool.newObject();
-        testAsteroid2.transform.setLocation(new Vector2(width / 4 *3, 250.0f));
-
-        //testShipOne = new FriendlyShip(friendlyShipPixmap, FriendlyShip.ControllerState.PLAYER_CONTROLLED, 250.0f, 550.0f, 0.5f, 0.5f);
-        //testShipTwo = new FriendlyShip(friendlyShipPixmap, FriendlyShip.ControllerState.PLAYER_CONTROLLED, 450.0f, 550.0f, 0.5f, 0.5f);
-
-        //playerContainer.addShip(testShipOne);
-        //playerContainer.addShip(testShipTwo);
-
-        //testEnemyShip = new EnemyShip(enemyShipPixmap,250.0f, 800.0f, 0.5f, 0.5f);
-        //testEnemyShip.transform.setRotation(new Vector2(-1, 7));
-        //testAsteroid = new Asteroid(asteroidPixmap,500.0f, 100.0f, 0.5f, 0.5f);
-
-        //gameContainer.add(testEnemyShip);
-        //gameContainer.add(testAsteroid);
+        testAsteroid2.transform.setLocation(new Vector2(width / 4 * 3, 250.0f));
 
         //UI containers
         playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
         pauseResumeBtn = new Button(width / 2, height / 2, 1.0f, 1.0f, g.newPixmap("Resume.png", Graphics.PixmapFormat.ARGB8888));
-        endPausebtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
+        endPauseBtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
         death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
         restart = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
-        options = new Button(g.getWidth() / 2, g.getHeight() * 3.5f/5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
+        options = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
 
         playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
         gameOver = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
         paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
 
+//        uiContainer.add(options, playPauseBtn, pauseResumeBtn, endPauseBtn, playScore, death, restart, gameOver, paused);
         uiContainer.add(options);
         uiContainer.add(playPauseBtn);
         uiContainer.add(pauseResumeBtn);
-        uiContainer.add(endPausebtn);
+        uiContainer.add(endPauseBtn);
         uiContainer.add(playScore);
         uiContainer.add(death);
         uiContainer.add(restart);
@@ -184,7 +164,7 @@ public class GameScreen extends Screen implements GameEventListener {
                 joystickPos.x = event.x;
                 joystickPos.y = event.y;
 
-                if (playPauseBtn.getVisibility() == true) {
+                if (playPauseBtn.isVisible()) {
                     if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius()) {
                         pause();
                         pauseResumeBtn.setVisibility(true);
@@ -192,18 +172,19 @@ public class GameScreen extends Screen implements GameEventListener {
                     }
                 }
             }
+
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (pauseResumeBtn.getVisibility() == true) {
+                if (pauseResumeBtn.isVisible()) {
                     if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius()) {
                         pause();
                     }
                 }
-                if (endPausebtn.getVisibility() == true) {
-                    if (endPausebtn.getBoundingRect().contains(event.x, event.y)) {
+                if (endPauseBtn.isVisible()) {
+                    if (endPauseBtn.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new MainMenuScreen(game));
                     }
                 }
-                if (death.getVisibility() == true) {
+                if (death.isVisible()) {
                     if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
                         pause();
                         restart.setVisibility(true);
@@ -211,7 +192,7 @@ public class GameScreen extends Screen implements GameEventListener {
                         pauseResumeBtn.setVisibility(false);
                     }
                 }
-                if (restart.getVisibility() == true) {
+                if (restart.isVisible()) {
                     if (restart.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new GameScreen(game));
                     }
@@ -221,6 +202,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
         if (!isPaused) {
             if (bIsTouching) {
+                final float scrollSpeed = 0.25f;
                 bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
                 bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
                 if (bkgPos.x > width || bkgPos.x < -width) {
@@ -273,7 +255,7 @@ public class GameScreen extends Screen implements GameEventListener {
             death.setVisibility(true);
 
             restart.setVisibility(false);
-            endPausebtn.setVisibility(false);
+            endPauseBtn.setVisibility(false);
             options.setVisibility(false);
             gameOver.setVisibility(false);
             pauseResumeBtn.setVisibility(false);
@@ -285,24 +267,21 @@ public class GameScreen extends Screen implements GameEventListener {
             playScore.setVisibility(false);
             death.setVisibility(false);
 
-            endPausebtn.setVisibility(true);
+            endPauseBtn.setVisibility(true);
             options.setVisibility(true);
-    }
+        }
         gameContainer.drawContainer(g);
         uiContainer.drawContainer(g);
     }
 
     @Override
     public void pause() {
-        if (isPaused) {
-            isPaused = false;
-        } else {
-            isPaused = true;
-        }
+        isPaused = true;
     }
 
     @Override
     public void resume() {
+        isPaused = false;
     }
 
     @Override
@@ -319,7 +298,7 @@ public class GameScreen extends Screen implements GameEventListener {
         gameContainer.remove(fs);
     }
 
-    public void checkCollisions() {
+    private void checkCollisions() {
         for (FriendlyShip frSp : playerContainer.friendlyShipList) {
             for (BaseCharacter obj : gameContainer.containerList) {
                 if (frSp.isCollidingWith(obj)) {
@@ -339,39 +318,36 @@ public class GameScreen extends Screen implements GameEventListener {
                         if (playerContainer.getShipListSize() == 0) {
                             gameOver();
                         }
-                    }
-                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-                        playerContainer.addShip((FriendlyShip)obj, true);
+                    } else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
+                        playerContainer.addShip((FriendlyShip) obj, true);
                     }
                 }
             }
         }
     }
 
-    public void checkOutOfBounds() {
+    private void checkOutOfBounds() {
         for (BaseCharacter obj : gameContainer.containerList) {
+            final float OUT_OF_BOUNDS_EXTENSION = 5.0f;
             if (obj.transform.getLocation().getX() < -OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
-            {
+                    obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
+                    obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
+                    obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION) {
                 gameContainer.remove(obj);
                 obj.setToPoolTransform();
                 if (obj.getClass() == FriendlyShip.class) {
                     friendlyPool.free((FriendlyShip) obj);
-                }
-                else if (obj.getClass() == EnemyShip.class) {
+                } else if (obj.getClass() == EnemyShip.class) {
                     enemyPool.free((EnemyShip) obj);
-                }
-                else if (obj.getClass() == Asteroid.class) {
-                    asteroidPool.free((Asteroid)obj);
+                } else if (obj.getClass() == Asteroid.class) {
+                    asteroidPool.free((Asteroid) obj);
                 }
             }
         }
     }
 
-    public void gameOver() {
+    private void gameOver() {
         pause();
         restart.setVisibility(true);
         gameOver.setVisibility(true);

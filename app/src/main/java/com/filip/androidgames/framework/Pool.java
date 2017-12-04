@@ -16,7 +16,7 @@ public class Pool<T>
 	// to create any type of objects that we want
     public interface PoolObjectFactory<T>
     {
-        public T createObject();
+        T createObject();
     }
 
     // store pooled objects

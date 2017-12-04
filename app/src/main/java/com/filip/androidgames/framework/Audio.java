@@ -2,8 +2,8 @@ package com.filip.androidgames.framework;
 
 public interface Audio 
 {
-    public Music newMusic(String filename);
-    public Sound newSound(String filename);
+    Music newMusic(String filename);
+    Sound newSound(String filename);
 }
 
 

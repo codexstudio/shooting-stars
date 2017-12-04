@@ -6,14 +6,14 @@ import com.filip.androidgames.framework.types.Vector2;
 
 public interface Pixmap 
 {
-    public int getWidth();
-    public int getHeight();
-    public PixmapFormat getFormat();
-    public void dispose();
-    public void postTranslate(Vector2 translation);
-    public void postScale(Vector2 scale);
-    public void setPixmapTransform(Transform2D transform);
+    int getWidth();
+    int getHeight();
+    PixmapFormat getFormat();
+    void dispose();
+    void postTranslate(Vector2 translation);
+    void postScale(Vector2 scale);
+    void setPixmapTransform(Transform2D transform);
 
     @Deprecated
-    public void setRotation(Vector2 rotation);
+    void setRotation(Vector2 rotation);
 }

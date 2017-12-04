@@ -2,18 +2,18 @@ package com.filip.androidgames.framework;
 
 public interface Game 
 {
-    public Input getInput();
-    public FileIO getFileIO();
-    public Graphics getGraphics();
-    public Audio getAudio();
-    public void setScreen(Screen screen);
-    public Screen getCurrentScreen();
-    public Screen getStartScreen();
+    Input getInput();
+    FileIO getFileIO();
+    Graphics getGraphics();
+    Audio getAudio();
+    void setScreen(Screen screen);
+    Screen getCurrentScreen();
+    Screen getStartScreen();
 
-    public boolean isSignedIn();
-    public void signIn();
-    public void submitScore(int score);
-    public void showLeaderboard();
-    public void showAchievements();
+    boolean isSignedIn();
+    void signIn();
+    void submitScore(int score);
+    void showLeaderboard();
+    void showAchievements();
 }
 
