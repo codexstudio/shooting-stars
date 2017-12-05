@@ -2,6 +2,7 @@ package com.codex.shootingstars;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.icu.util.Freezable;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Pool.PoolObjectFactory;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -10,6 +11,8 @@ import com.filip.androidgames.framework.impl.AndroidFont;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -38,12 +41,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private boolean bIsTouching;
     private VirtualJoystick joystick;
-
-
-    //FriendlyShip testShipOne;
-    //FriendlyShip testShipTwo;
-    //EnemyShip testEnemyShip;
-    //Asteroid testAsteroid;
 
     Button playPauseBtn;
     Button pauseResumeBtn;
@@ -133,21 +130,11 @@ public class GameScreen extends Screen implements GameEventListener {
 
         Asteroid testAsteroid = asteroidPool.newObject();
         testAsteroid.transform.setLocation(new Vector2(width / 2, 100.0f));
-        Asteroid testAsteroid2 = asteroidPool.newObject();
-        testAsteroid2.transform.setLocation(new Vector2(width / 4 *3, 250.0f));
-
-        //testShipOne = new FriendlyShip(friendlyShipPixmap, FriendlyShip.ControllerState.PLAYER_CONTROLLED, 250.0f, 550.0f, 0.5f, 0.5f);
-        //testShipTwo = new FriendlyShip(friendlyShipPixmap, FriendlyShip.ControllerState.PLAYER_CONTROLLED, 450.0f, 550.0f, 0.5f, 0.5f);
-
-        //playerContainer.addShip(testShipOne);
-        //playerContainer.addShip(testShipTwo);
-
-        //testEnemyShip = new EnemyShip(enemyShipPixmap,250.0f, 800.0f, 0.5f, 0.5f);
-        //testEnemyShip.transform.setRotation(new Vector2(-1, 7));
-        //testAsteroid = new Asteroid(asteroidPixmap,500.0f, 100.0f, 0.5f, 0.5f);
-
-        //gameContainer.add(testEnemyShip);
-        //gameContainer.add(testAsteroid);
+        //Asteroid testAsteroid2 = asteroidPool.newObject();
+        //testAsteroid2.transform.setLocation(new Vector2(width / 4 *3, 250.0f));
+        FriendlyShip testAIFrShip = friendlyPool.newObject();
+        testAIFrShip.transform.setRotation(new Vector2(0.0f, -1.0f));
+        testAIFrShip.transform.setLocation(new Vector2(width / 4 *3, 250.0f));
 
         //UI containers
         playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
@@ -232,11 +219,17 @@ public class GameScreen extends Screen implements GameEventListener {
                 playerContainer.rotateShips(joystick.getDirection());
                 score += 1;
             }
+
+            //Test Movement
             for (BaseCharacter obj : gameContainer.containerList) {
                 if (obj.getClass() == Asteroid.class) {
-                    obj.transform.setLocation(new Vector2(obj.transform.getLocation().getX(), obj.transform.getLocation().getY() + 0.5f));
+                    obj.transform.setLocation(new Vector2(obj.transform.getLocation().getX(), obj.transform.getLocation().getY() + 0.7f));
+                }
+                else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+                    obj.transform.setLocation(new Vector2(obj.transform.getLocation().getX(), obj.transform.getLocation().getY() + 0.7f));
                 }
             }
+
             checkOutOfBounds();
             checkCollisions();
         }
@@ -320,23 +313,30 @@ public class GameScreen extends Screen implements GameEventListener {
     }
 
     public void checkCollisions() {
-        for (FriendlyShip frSp : playerContainer.friendlyShipList) {
-            for (BaseCharacter obj : gameContainer.containerList) {
+
+        List<FriendlyShip> frList = playerContainer.friendlyShipList;
+        List<BaseCharacter> baseChList = gameContainer.containerList;
+
+        for (Iterator<FriendlyShip> frIterator = frList.iterator(); frIterator.hasNext();) {
+            FriendlyShip frSp = frIterator.next();
+            for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {
+                BaseCharacter obj = bsChIterator.next();
                 if (frSp.isCollidingWith(obj)) {
                     if (obj.getClass() == Asteroid.class) {
-                        playerContainer.removeShip(frSp);
-                        gameContainer.remove(frSp);
+                        frIterator.remove();
+                        bsChIterator.remove();
                         frSp.setToPoolTransform();
                         friendlyPool.free(frSp);
-                        if (playerContainer.getShipListSize() == 0) {
+                        if (frList.isEmpty()) {
                             gameOver();
                         }
-                    } else if (obj.getClass() == EnemyShip.class) {
-                        playerContainer.removeShip(frSp);
-                        gameContainer.remove(frSp);
+                    }
+                    else if (obj.getClass() == EnemyShip.class) {
+                        frIterator.remove();
+                        bsChIterator.remove();
                         frSp.setToPoolTransform();
                         friendlyPool.free(frSp);
-                        if (playerContainer.getShipListSize() == 0) {
+                        if (frList.isEmpty()) {
                             gameOver();
                         }
                     }
@@ -347,16 +347,53 @@ public class GameScreen extends Screen implements GameEventListener {
                 }
             }
         }
+
+        playerContainer.friendlyShipList = frList;
+        gameContainer.containerList = baseChList;
+
+//        for (FriendlyShip frSp : playerContainer.friendlyShipList) {
+//            for (BaseCharacter obj : gameContainer.containerList) {
+//                if (frSp.isCollidingWith(obj)) {
+//                    if (obj.getClass() == Asteroid.class) {
+//                        playerContainer.removeShip(frSp);
+//                        gameContainer.remove(frSp);
+//                        frSp.setToPoolTransform();
+//                        friendlyPool.free(frSp);
+//                        if (playerContainer.getShipListSize() == 0) {
+//                            gameOver();
+//                        }
+//                    }
+//                    else if (obj.getClass() == EnemyShip.class) {
+//                        playerContainer.removeShip(frSp);
+//                        gameContainer.remove(frSp);
+//                        frSp.setToPoolTransform();
+//                        friendlyPool.free(frSp);
+//                        if (playerContainer.getShipListSize() == 0) {
+//                            gameOver();
+//                        }
+//                    }
+//                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+//                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
+//                        playerContainer.addShip((FriendlyShip)obj, true);
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void checkOutOfBounds() {
-        for (BaseCharacter obj : gameContainer.containerList) {
+
+        List<BaseCharacter> baseChList = gameContainer.containerList;
+
+        for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {
+            BaseCharacter obj = bsChIterator.next();
+
             if (obj.transform.getLocation().getX() < -OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
-                obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
+                    obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
+                    obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
+                    obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
             {
-                gameContainer.remove(obj);
+                bsChIterator.remove();
                 obj.setToPoolTransform();
                 if (obj.getClass() == FriendlyShip.class) {
                     friendlyPool.free((FriendlyShip) obj);
@@ -365,10 +402,32 @@ public class GameScreen extends Screen implements GameEventListener {
                     enemyPool.free((EnemyShip) obj);
                 }
                 else if (obj.getClass() == Asteroid.class) {
-                    asteroidPool.free((Asteroid)obj);
+                    asteroidPool.free((Asteroid) obj);
                 }
             }
         }
+
+        gameContainer.containerList = baseChList;
+
+//        for (BaseCharacter obj : gameContainer.containerList) {
+//            if (obj.transform.getLocation().getX() < -OUT_OF_BOUNDS_EXTENSION ||
+//                obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
+//                obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
+//                obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
+//            {
+//                gameContainer.remove(obj);
+//                obj.setToPoolTransform();
+//                if (obj.getClass() == FriendlyShip.class) {
+//                    friendlyPool.free((FriendlyShip) obj);
+//                }
+//                else if (obj.getClass() == EnemyShip.class) {
+//                    enemyPool.free((EnemyShip) obj);
+//                }
+//                else if (obj.getClass() == Asteroid.class) {
+//                    asteroidPool.free((Asteroid) obj);
+//                }
+//            }
+//        }
     }
 
     public void gameOver() {
