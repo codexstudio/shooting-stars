@@ -304,14 +304,6 @@ public class GameScreen extends Screen implements GameEventListener {
     @Override
     public void onPlayerAdded(FriendlyShip fs) {
         gameContainer.add(fs);
-        score++;
-        Log.d("score", Integer.toString(score));
-        if (score >= 5) {
-            game.unlockAchievement(R.string.achievement_five_is_alive);
-        }
-        if (score >= 10) {
-            game.unlockAchievement(R.string.achievement_ten_ten);
-        }
     }
 
     @Override
@@ -355,35 +347,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
         playerContainer.friendlyShipList = frList;
         gameContainer.containerList = baseChList;
-
-//        for (FriendlyShip frSp : playerContainer.friendlyShipList) {
-//            for (BaseCharacter obj : gameContainer.containerList) {
-//                if (frSp.isCollidingWith(obj)) {
-//                    if (obj.getClass() == Asteroid.class) {
-//                        playerContainer.removeShip(frSp);
-//                        gameContainer.remove(frSp);
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (playerContainer.getShipListSize() == 0) {
-//                            gameOver();
-//                        }
-//                    }
-//                    else if (obj.getClass() == EnemyShip.class) {
-//                        playerContainer.removeShip(frSp);
-//                        gameContainer.remove(frSp);
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (playerContainer.getShipListSize() == 0) {
-//                            gameOver();
-//                        }
-//                    }
-//                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip)obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-//                        ((FriendlyShip)obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-//                        playerContainer.addShip((FriendlyShip)obj, true);
-//                    }
-//                }
-//            }
-//        }
     }
 
     private void checkOutOfBounds() {
@@ -410,26 +373,6 @@ public class GameScreen extends Screen implements GameEventListener {
         }
 
         gameContainer.containerList = baseChList;
-
-//        for (BaseCharacter obj : gameContainer.containerList) {
-//            if (obj.transform.getLocation().getX() < -OUT_OF_BOUNDS_EXTENSION ||
-//                obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
-//                obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
-//                obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
-//            {
-//                gameContainer.remove(obj);
-//                obj.setToPoolTransform();
-//                if (obj.getClass() == FriendlyShip.class) {
-//                    friendlyPool.free((FriendlyShip) obj);
-//                }
-//                else if (obj.getClass() == EnemyShip.class) {
-//                    enemyPool.free((EnemyShip) obj);
-//                }
-//                else if (obj.getClass() == Asteroid.class) {
-//                    asteroidPool.free((Asteroid) obj);
-//                }
-//            }
-//        }
     }
 
     private void gameOver() {
