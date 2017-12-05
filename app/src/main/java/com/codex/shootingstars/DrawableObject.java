@@ -12,6 +12,7 @@ public abstract class DrawableObject extends GameObject {
     private float boundingRadius;
     private Rect boundingRect;
     private boolean isVisible;
+    private boolean isActive;
 
     //Default Constructor
     protected DrawableObject() {
@@ -21,6 +22,7 @@ public abstract class DrawableObject extends GameObject {
         boundingRadius = 0.0f;
         boundingRect = new Rect(0,0,0,0);
         isVisible = true;
+        isActive = true;
     }
 
     //Constructor
@@ -32,6 +34,7 @@ public abstract class DrawableObject extends GameObject {
         setBoundingRadius();
         setBoundingRect();
         isVisible = true;
+        isActive = true;
     }
 
     //Setter & Getters
@@ -40,6 +43,9 @@ public abstract class DrawableObject extends GameObject {
 
     public boolean isVisible() { return isVisible; }
     public void setVisibility(boolean value) { isVisible = value; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean value) { isActive = value; }
 
     protected float getBoundingRadius() { return boundingRadius; }
     //private void setBoundingRadius() { boundingRadius = (actorSpriteSheet.getHeight() > actorSpriteSheet.getWidth()) ? ((float) actorSpriteSheet.getHeight() / 2) : ((float) actorSpriteSheet.getWidth() / 2); }
@@ -51,24 +57,21 @@ public abstract class DrawableObject extends GameObject {
     protected void setBoundingRect(int x, int y) { boundingRect = new Rect(x, y, actorSpriteSheet.getWidth()+x, actorSpriteSheet.getHeight()+y); }
 
     //Methods
-    protected void update() {
-        super.update();
-        //Update sprite transform
-        actorSpriteSheet.setPixmapTransform(transform);
+    protected void update(float deltaTime) {
+        if (isActive) {
+            //Update sprite transform
+            actorSpriteSheet.setPixmapTransform(transform);
+        }
     }
 
-    protected void draw(Graphics g){
-        update();
-        g.drawPixmap(actorSpriteSheet);
+    protected void draw(Graphics g) {
+        if (isActive && isVisible) {
+            g.drawPixmap(actorSpriteSheet);
+        }
     }
 
     protected boolean isCollidingWith(DrawableObject object) {
-        //Log.i("This", "" + this.transform.getLocation().getX() + " " + this.transform.getLocation().getY());
-        //Log.i("Object", "" + object.transform.getLocation().getX() + " " + object.transform.getLocation().getY());
         float distance = Math.abs(Vector2.Distance(this.transform.getLocation(), object.transform.getLocation()));
-        //Log.i("Distance", "" + distance);
-        //Log.i("This Rad", "" + this.getBoundingRadius());
-        //Log.i("Object Rad", "" + object.getBoundingRadius());
         return distance < this.getBoundingRadius() + object.getBoundingRadius();
     }
 }

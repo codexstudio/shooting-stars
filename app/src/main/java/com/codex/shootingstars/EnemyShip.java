@@ -10,13 +10,11 @@ public class EnemyShip extends BaseCharacter {
     //Default Constructor
     public EnemyShip(Graphics g){
         setActorSpriteSheet(g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888));
-        update();
     }
 
     //Constructor
     public EnemyShip(Pixmap pixmap, float xLocation, float yLocation, float xScale, float yScale) {
         super(xLocation, yLocation, xScale, yScale, pixmap);
-        update();
     }
 
     //Methods

@@ -18,6 +18,68 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen extends Screen implements GameEventListener {
+
+    class PlayerView {
+        private Vector2 location;
+        private int width;
+        private int height;
+
+        PlayerView(int width, int height) {
+            location = new Vector2();
+            this.width = width;
+            this.height = height;
+        }
+
+        float distanceFromObject(GameObject obj) {
+            return Vector2.Distance(obj.transform.getLocation(), location);
+        }
+
+        boolean isWithinView(GameObject obj) {
+            return true;
+        }
+    }
+
+    class GameObjectsContainer {
+        private int ticks;
+        private List<GameObject> gameObjectsFar;
+        private List<GameObject> gameObjectsMedium;
+        private List<DrawableObject> gameObjectsClose;
+        GameObjectsContainer() {
+            gameObjectsFar = new ArrayList<>();
+            gameObjectsMedium = new ArrayList<>();
+            gameObjectsClose = new ArrayList<>();
+        }
+
+        void update(PlayerView playerView) {
+            ticks++;
+            if (ticks > 100) {
+                for (GameObject obj : gameObjectsFar) {
+                    if (playerView.distanceFromObject(obj) > 7500) {
+                        // free game object
+                    }
+                    else if (playerView.distanceFromObject(obj) < 5000) {
+                        // move to medium
+                    }
+                }
+
+                ticks = 0;
+            }
+            if (ticks > 50) {
+                for (GameObject obj : gameObjectsMedium) {
+                    if (playerView.distanceFromObject(obj) < 2500) {
+                        // move to close
+                    }
+                }
+            }
+
+            for (DrawableObject obj : gameObjectsClose) {
+                if (playerView.isWithinView(obj)) {
+//                obj.draw();
+                }
+            }
+        }
+    }
+
     //Sprite Resources
     private static Pixmap background;
     private static Pixmap joystickPixmap;
@@ -60,9 +122,13 @@ public class GameScreen extends Screen implements GameEventListener {
     private Pool<EnemyShip> enemyPool;
     private Pool<Asteroid> asteroidPool;
 
+    private GameObjectsContainer gameObjectsContainer;
 
     GameScreen(final Game game) {
         super(game);
+
+        gameObjectsContainer = new GameObjectsContainer();
+
         Graphics g = game.getGraphics();
 
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
@@ -162,6 +228,9 @@ public class GameScreen extends Screen implements GameEventListener {
 
     @Override
     public void update(float deltaTime) {
+        gameContainer.update(deltaTime);
+        uiContainer.update(deltaTime);
+
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         for (TouchEvent event : touchEvents) {

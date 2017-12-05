@@ -17,14 +17,12 @@ public class FriendlyShip extends BaseCharacter{
     public FriendlyShip(Graphics g){
         setActorSpriteSheet(g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
         controllerState = ControllerState.AI_CONTROLLED;
-        update();
     }
 
     //Constructor
     public FriendlyShip(Pixmap pixmap, ControllerState state, float xLocation, float yLocation, float xScale, float yScale) {
         super(xLocation, yLocation, xScale, yScale, pixmap);
         controllerState = state;
-        update();
     }
 
     //Setter & Getters
@@ -35,8 +33,8 @@ public class FriendlyShip extends BaseCharacter{
         controllerState = state;
     }
 
-    protected void update() {
-        super.update();
+    protected void update(float deltaTime) {
+        super.update(deltaTime);
     }
 
     @Override

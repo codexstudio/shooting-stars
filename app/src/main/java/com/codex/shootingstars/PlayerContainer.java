@@ -6,7 +6,7 @@ import com.filip.androidgames.framework.types.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerContainer extends GameObject{
+public class PlayerContainer {
 
     //Members
     public List<FriendlyShip> friendlyShipList;
