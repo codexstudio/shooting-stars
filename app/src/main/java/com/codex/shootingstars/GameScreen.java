@@ -3,11 +3,13 @@ package com.codex.shootingstars;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.icu.util.Freezable;
+import android.util.Log;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Pool.PoolObjectFactory;
 import com.filip.androidgames.framework.Graphics.Point;
 import com.filip.androidgames.framework.Input.TouchEvent;
 import com.filip.androidgames.framework.impl.AndroidFont;
+import com.filip.androidgames.framework.impl.AndroidGame;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
@@ -31,7 +33,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private boolean isPaused = false;
 
-    private float score = 0;
+    private int score = 0;
 
     private boolean bIsTouching;
     private VirtualJoystick joystick;
@@ -302,6 +304,14 @@ public class GameScreen extends Screen implements GameEventListener {
     @Override
     public void onPlayerAdded(FriendlyShip fs) {
         gameContainer.add(fs);
+        score++;
+        Log.d("score", Integer.toString(score));
+        if (score >= 5) {
+            game.unlockAchievement(R.string.achievement_five_is_alive);
+        }
+        if (score >= 10) {
+            game.unlockAchievement(R.string.achievement_ten_ten);
+        }
     }
 
     @Override
@@ -310,7 +320,6 @@ public class GameScreen extends Screen implements GameEventListener {
     }
 
     private void checkCollisions() {
-
         List<FriendlyShip> frList = playerContainer.friendlyShipList;
         List<BaseCharacter> baseChList = gameContainer.containerList;
 
@@ -378,7 +387,6 @@ public class GameScreen extends Screen implements GameEventListener {
     }
 
     private void checkOutOfBounds() {
-
         List<BaseCharacter> baseChList = gameContainer.containerList;
 
         for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {

@@ -15,5 +15,6 @@ public interface Game
     void submitScore(int score);
     void showLeaderboard();
     void showAchievements();
+    void unlockAchievement(int resourceID);
 }
 
