@@ -1,7 +1,5 @@
 package com.filip.androidgames.framework;
 
-import android.graphics.Matrix;
-
 public interface Graphics
 {
     enum PixmapFormat

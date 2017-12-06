@@ -57,7 +57,7 @@ public abstract class DrawableObject extends GameObject {
         actorSpriteSheet.setPixmapTransform(transform);
     }
 
-    protected void draw(Graphics g){
+    protected void draw(Graphics g) {
         update();
         g.drawPixmap(actorSpriteSheet);
     }

@@ -9,8 +9,6 @@ import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
-// @todo: deprecate originalBitmap!!!
-
 public class AndroidPixmap implements Pixmap {
     private Matrix matrix;
     Bitmap bitmap;
