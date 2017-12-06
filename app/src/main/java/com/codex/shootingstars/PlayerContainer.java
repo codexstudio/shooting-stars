@@ -24,12 +24,9 @@ public class PlayerContainer {
     }
 
     //Methods
-    public void addShip(FriendlyShip ship, boolean addToGameContainer) {
+    public void addShip(FriendlyShip ship) {
         if (ship.getState() == FriendlyShip.ControllerState.PLAYER_CONTROLLED) {
             friendlyShipList.add(ship);
-            if (addToGameContainer) {
-                listener.onPlayerAdded(ship);
-            }
         }
         else { Log.wtf("WARNING!", "Tried to add a non PLAYER_CONTROLLED" + ship.getClass().getName() + "to the list."); }
     }
