@@ -181,6 +181,7 @@ public class MainMenuScreen extends Screen {
                 }
             }
         }
+        uiContainer.update(deltaTime);
     }
 
     @Override

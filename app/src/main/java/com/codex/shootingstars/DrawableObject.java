@@ -6,7 +6,6 @@ import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.types.Vector2;
 
 public abstract class DrawableObject extends GameObject {
-
     //Members
     private Pixmap actorSpriteSheet;
     private float boundingRadius;

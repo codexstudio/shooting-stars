@@ -21,10 +21,10 @@ import java.util.List;
 public class GameScreen extends Screen implements GameEventListener {
 
     //Sprite Resources
-    private static Pixmap background;
+//    private static Pixmap background;
     private static Pixmap joystickPixmap;
 
-    private Point bkgPos;
+//    private Point bkgPos;
     private Point joystickPos;
 
     private int width;
@@ -56,22 +56,26 @@ public class GameScreen extends Screen implements GameEventListener {
     private PlayerView playerView;
     private PlayerContainer playerContainer;
 
+    private SpaceBackground bkg;
+
     GameScreen(final Game game) {
         super(game);
 
         Graphics g = game.getGraphics();
+        width = g.getWidth();
+        height = g.getHeight();
 
         gameObjectsContainer = new GameObjectsContainer(g);
         playerView = new PlayerView(width, height);
         playerContainer = new PlayerContainer(this);
 
-        background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
+        bkg = new SpaceBackground(playerView, width, height);
+
+//        background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         joystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
 
         joystick = new VirtualJoystick();
-        width = g.getWidth();
-        height = g.getHeight();
-        bkgPos = new Point();
+//        bkgPos = new Point();
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
@@ -159,18 +163,14 @@ public class GameScreen extends Screen implements GameEventListener {
         if (!isPaused) {
             if (bIsTouching) {
                 final float scrollSpeed = 0.25f;
-                bkgPos.x -= scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR);
-                bkgPos.y += scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR);
-                if (bkgPos.x > width || bkgPos.x < -width) {
-                    bkgPos.x = 0;
-                }
-                if (bkgPos.y < -height || bkgPos.y > height) {
-                    bkgPos.y = 0;
-                }
+                Vector2 bkgPos = new Vector2();
+                bkgPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
+                bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR));
+
+                playerView.setLocation(bkgPos);
                 playerContainer.rotateShips(joystick.getDirection());
                 score += 1;
             }
-
         }
     }
 
@@ -179,23 +179,9 @@ public class GameScreen extends Screen implements GameEventListener {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
         g.clear(Color.WHITE);
-        //original
 
-        g.drawPixmap(background, bkgPos.x, bkgPos.y);
+        g.drawPixmap(bkg.getBackground(playerView));
 
-        if (bkgPos.x != 0 && bkgPos.y != 0) {
-            final int bkgYPos = ((bkgPos.y > 0) ? -1 : 1) * background.getHeight();
-            final int bkgXPos = ((bkgPos.x > 0) ? -1 : 1) * background.getWidth();
-
-            //up/down screens
-            g.drawPixmap(background, bkgPos.x, bkgYPos + bkgPos.y);
-
-            //left/right screens
-            g.drawPixmap(background, bkgXPos + bkgPos.x, bkgPos.y);
-
-            //fourth corner screen
-            g.drawPixmap(background, bkgXPos + bkgPos.x, bkgYPos + bkgPos.y);
-        }
         if (!isPaused) {
             if (bIsTouching) {
                 g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
@@ -221,6 +207,7 @@ public class GameScreen extends Screen implements GameEventListener {
             options.setVisibility(true);
         }
         uiContainer.drawContainer(g);
+
     }
 
     @Override
@@ -246,44 +233,6 @@ public class GameScreen extends Screen implements GameEventListener {
     public void onPlayerRemoved(FriendlyShip fs) {
 
     }
-
-//    private void checkCollisions() {
-//        List<FriendlyShip> frList = playerContainer.friendlyShipList;
-//        List<BaseCharacter> baseChList = gameContainer.containerList;
-//
-//        for (Iterator<FriendlyShip> frIterator = frList.iterator(); frIterator.hasNext();) {
-//            FriendlyShip frSp = frIterator.next();
-//            for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {
-//                BaseCharacter obj = bsChIterator.next();
-//                if (frSp.isCollidingWith(obj)) {
-//                    if (obj.getClass() == Asteroid.class) {
-//                        frIterator.remove();
-//                        bsChIterator.remove();
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (frList.isEmpty()) {
-//                            gameOver();
-//                        }
-//                    }
-//                    else if (obj.getClass() == EnemyShip.class) {
-//                        frIterator.remove();
-//                        bsChIterator.remove();
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (frList.isEmpty()) {
-//                            gameOver();
-//                        }
-//                    } else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-//                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-//                        playerContainer.addShip((FriendlyShip) obj, true);
-//                    }
-//                }
-//            }
-//        }
-//
-//        playerContainer.friendlyShipList = frList;
-//        gameContainer.containerList = baseChList;
-//    }
 
     private void gameOver() {
         pause();
