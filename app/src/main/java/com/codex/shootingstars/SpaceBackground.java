@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.impl.AndroidPixmap;
+import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Random;
 public class SpaceBackground {
     private Pixmap pixmap;
     private Random random = new Random();
-    private List<DrawableObject> significantObjects;
+    private List<BackgroundObject> significantObjects;
     private List<Vector2> starList;
     private int width;
     private int height;
@@ -31,7 +32,7 @@ public class SpaceBackground {
 
         for (int i = 0; i < 4; i++) {
             Vector2 loc = randomPointInCircle(1);
-            significantObjects.add(new Asteroid(g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888), loc.getX(), loc.getY(), 1, 1));
+            significantObjects.add(new BackgroundObject(g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888), new Transform2D(loc, new Vector2(), new Vector2())));
         }
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
