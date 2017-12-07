@@ -191,7 +191,7 @@ public class MainMenuScreen extends Screen {
         // g.drawText("Play game", 200, 200, font, Color.WHITE);
         g.drawAnimations(deltaTime);
 
-        uiContainer.drawContainer(g);
+        uiContainer.draw(g);
     }
 
     @Override

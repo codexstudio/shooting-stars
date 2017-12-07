@@ -4,6 +4,7 @@ import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.Pool;
+import com.filip.androidgames.framework.types.Transform2D;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -11,6 +12,17 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameObjectsContainer {
+    private class ObjectDescriptor extends GameObject {
+        Class<? extends DrawableObject> clazz;
+
+        ObjectDescriptor(Transform2D transform, Class<? extends DrawableObject> clazz) {
+            this.transform = transform;
+            this.clazz = clazz;
+        }
+
+        @Override
+        protected void update(float deltaTime) {}
+    }
 
     private final int FAR_MAX_DISTANCE = 7500;
     private final int MEDIUM_MAX_DISTANCE = 5000;
@@ -25,6 +37,7 @@ public class GameObjectsContainer {
     private List<GameObject> gameObjectsFar;
     private List<GameObject> gameObjectsMedium;
     private List<DrawableObject> gameObjectsClose;
+    private List<DrawableObject> gameObjectsToDraw;
 
     private Pool<FriendlyShip> friendlyPool;
     private Pool<EnemyShip> enemyPool;
@@ -36,8 +49,8 @@ public class GameObjectsContainer {
 
     GameObjectsContainer(Graphics g) {
         ticks = 1;
-        gameObjectsFar = new ArrayList<GameObject>();
-        gameObjectsMedium = new ArrayList<GameObject>();
+        gameObjectsFar = new ArrayList<>();
+        gameObjectsMedium = new ArrayList<>();
         gameObjectsClose = new ArrayList<DrawableObject>();
 
         friendlyShipPixmap = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888);
@@ -73,11 +86,41 @@ public class GameObjectsContainer {
         asteroidPool = new Pool<>(asteroidPoolFactory, 100);
     }
 
+    void insertObject(Class<? extends DrawableObject> clazz) {
+        gameObjectsFar.add(new ObjectDescriptor(new Transform2D(), clazz));
+    }
+
     void insertObjects (){
 
     }
 
-    void update(PlayerView playerView, Graphics g) {
+    private boolean free(GameObject obj) {
+        if (obj instanceof FriendlyShip) {
+            friendlyPool.free((FriendlyShip) obj);
+        } else if (obj instanceof EnemyShip) {
+            enemyPool.free((EnemyShip) obj);
+        } else if (obj instanceof Asteroid) {
+            asteroidPool.free((Asteroid) obj);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private DrawableObject newObject(GameObject obj) {
+        ObjectDescriptor objDesc = (ObjectDescriptor) obj;
+        if (objDesc.clazz == FriendlyShip.class) {
+            return friendlyPool.newObject();
+        } else if (objDesc.clazz == EnemyShip.class) {
+            return enemyPool.newObject();
+        } else if (objDesc.clazz == Asteroid.class) {
+            return asteroidPool.newObject();
+        } else {
+            return null;
+        }
+    }
+
+    void update(PlayerView playerView) {
         ticks++;
 
         //Check Far Distance Items
@@ -89,13 +132,7 @@ public class GameObjectsContainer {
                 //Free Game Object
                 if (playerView.distanceFromObject(farObj) > FAR_MAX_DISTANCE) {
                     if (farObj instanceof DrawableObject) {
-                        if (farObj.classOfObject == FriendlyShip.class) {
-                            friendlyPool.free((FriendlyShip) farObj);
-                        } else if (farObj.classOfObject == EnemyShip.class) {
-                            enemyPool.free((EnemyShip)farObj);
-                        } else if (farObj.classOfObject == Asteroid.class) {
-                            asteroidPool.free((Asteroid)farObj);
-                        }
+                            free(farObj);
                     }
                     else {
                         farIterator.remove();
@@ -128,13 +165,7 @@ public class GameObjectsContainer {
                         gameObjectsClose.add((DrawableObject) medObj);
                         medIterator.remove();
                     } else {
-                        if (medObj.classOfObject == FriendlyShip.class) {
-                            gameObjectsClose.add(friendlyPool.newObject());
-                        } else if (medObj.classOfObject == EnemyShip.class) {
-                            gameObjectsClose.add(enemyPool.newObject());
-                        } else if (medObj.classOfObject == Asteroid.class) {
-                            gameObjectsClose.add(asteroidPool.newObject());
-                        }
+                        gameObjectsClose.add(newObject(medObj));
                     }
                 }
             }
@@ -143,6 +174,7 @@ public class GameObjectsContainer {
 
         //Check Close Distance Items
         List<DrawableObject> closeList = gameObjectsClose;
+        List<DrawableObject> drawList = new ArrayList<>();
         for (Iterator<DrawableObject> closeIterator = closeList.iterator(); closeIterator.hasNext(); ) {
             DrawableObject closeObj = closeIterator.next();
 
@@ -153,9 +185,16 @@ public class GameObjectsContainer {
             }
             //Check to Draw
             else if (playerView.isWithinView(closeObj)) {
-                closeObj.draw(g);
+                drawList.add(closeObj);
             }
         }
         gameObjectsClose = closeList;
+        gameObjectsToDraw = drawList;
+    }
+
+    void draw(Graphics g) {
+        for (DrawableObject obj : gameObjectsToDraw) {
+            obj.draw(g);
+        }
     }
 }

@@ -2,20 +2,13 @@ package com.codex.shootingstars;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.icu.util.Freezable;
-import android.util.Log;
 import com.filip.androidgames.framework.*;
-import com.filip.androidgames.framework.Pool.PoolObjectFactory;
 import com.filip.androidgames.framework.Graphics.Point;
 import com.filip.androidgames.framework.Input.TouchEvent;
 import com.filip.androidgames.framework.impl.AndroidFont;
-import com.filip.androidgames.framework.impl.AndroidGame;
-import com.filip.androidgames.framework.impl.AndroidGraphics;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen extends Screen implements GameEventListener {
@@ -114,6 +107,7 @@ public class GameScreen extends Screen implements GameEventListener {
     @Override
     public void update(float deltaTime) {
         uiContainer.update(deltaTime);
+        gameObjectsContainer.update(playerView);
 
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
@@ -206,8 +200,9 @@ public class GameScreen extends Screen implements GameEventListener {
             endPauseBtn.setVisibility(true);
             options.setVisibility(true);
         }
-        uiContainer.drawContainer(g);
 
+        gameObjectsContainer.draw(g);
+        uiContainer.draw(g);
     }
 
     @Override

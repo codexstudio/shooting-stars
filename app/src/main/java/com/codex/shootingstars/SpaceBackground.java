@@ -75,6 +75,5 @@ public class SpaceBackground {
 //                canvas.drawBitmap(obj.getBitmap(),
 //            }
 //        }
-
     }
 }

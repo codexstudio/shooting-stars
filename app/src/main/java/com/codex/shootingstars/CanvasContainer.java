@@ -35,7 +35,7 @@ public class CanvasContainer<T extends DrawableObject> {
         }
     }
 
-    public void drawContainer(Graphics g) {
+    public void draw(Graphics g) {
         for (T obj : containerList) {
             obj.draw(g);
         }

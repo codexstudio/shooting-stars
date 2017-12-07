@@ -3,10 +3,8 @@ package com.codex.shootingstars;
 import com.filip.androidgames.framework.types.*;
 
 public abstract class GameObject {
-
     //Members
     protected Transform2D transform;
-    Class<? extends DrawableObject> classOfObject;
 
     //Constructor
     protected GameObject() {
