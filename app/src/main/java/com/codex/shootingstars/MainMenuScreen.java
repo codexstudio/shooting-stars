@@ -1,25 +1,20 @@
 package com.codex.shootingstars;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Input.TouchEvent;
-import com.filip.androidgames.framework.impl.AndroidFont;
 
 import java.util.List;
 
 public class MainMenuScreen extends Screen {
     private static Pixmap background;
-    private Pixmap explosion;
-    private Font font;
 
-    private Button playGameMenubtn;
-    private Button optionsMenubtn;
-    private Button lbMenubtn;
-    private Button charMenubtn;
+    private Button playGameBtn;
+    private Button optionsBtn;
+    private Button leaderboardsBtn;
+    private Button charBtn;
     private Button backBtn;
-    //    Button leftCharbtn;
-    //    Button rightCharbtn;
+    private Button soundOnBtn;
+    private Button soundOffBtn;
 
     private Button shipOne;
     private Button shipTwo;
@@ -33,28 +28,38 @@ public class MainMenuScreen extends Screen {
     private StaticUI options;
     private StaticUI title;
 
+    private Pixmap numbersPixmap;
+    public static Music mainTheme;
+
     private CanvasContainer<BaseUIObject> uiContainer;
 
     public MainMenuScreen(Game game) {
         super(game);
 
+        Settings.loadFiles(game.getFileIO());
+        mainTheme = game.getAudio().newMusic("Bag Raiders - Shooting Stars.mp3");
+        mainTheme.setLooping(true);
+        if (Settings.soundEnabled) {
+            mainTheme.play();
+        }
+
         Graphics g = game.getGraphics();
+
         background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
+        numbersPixmap = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB8888);
         //explosion = g.newPixmap("explosion.png", Graphics.PixmapFormat.ARGB8888);
         //g.addAnimation(explosion, 300, 300, 6, 8, 256, 256, true);
-        font = new AndroidFont(48, Typeface.DEFAULT, Color.WHITE);
-
 
         uiContainer = new CanvasContainer<BaseUIObject>();
 
 
-        playGameMenubtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Play_Game.png", Graphics.PixmapFormat.ARGB8888));
-        optionsMenubtn = new Button(g.getWidth() / 2, g.getHeight() * 2.5f / 5, 1.0f, 1.0f, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
-        lbMenubtn = new Button(g.getWidth() / 2, g.getHeight() * 3 / 5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png", Graphics.PixmapFormat.ARGB8888));
-        charMenubtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1.0f, 1.0f, g.newPixmap("Characters.png", Graphics.PixmapFormat.ARGB8888));
+        playGameBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Play_Game.png", Graphics.PixmapFormat.ARGB8888));
+        optionsBtn = new Button(g.getWidth() / 2, g.getHeight() * 2.5f / 5, 1.0f, 1.0f, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
+        leaderboardsBtn = new Button(g.getWidth() / 2, g.getHeight() * 3 / 5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png", Graphics.PixmapFormat.ARGB8888));
+        charBtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1.0f, 1.0f, g.newPixmap("Characters.png", Graphics.PixmapFormat.ARGB8888));
         backBtn = new Button(g.getWidth() - 200, g.getHeight() - 100, 1.0f, 1.0f, g.newPixmap("Back.png", Graphics.PixmapFormat.ARGB8888));
-//        leftCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("LeftArrow.png",Graphics.PixmapFormat.ARGB8888));
-//        rightCharbtn = new Button(g.getWidth()/2, g.getHeight()*2/5, 1.0f, 1.0f, g.newPixmap("RightArrow.png",Graphics.PixmapFormat.ARGB8888));
+        soundOnBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Sound_On.png", Graphics.PixmapFormat.ARGB8888));
+        soundOffBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Sound_Off.png", Graphics.PixmapFormat.ARGB8888));
 
         shipOne = new Button(g.getWidth() / 4, g.getHeight() * 1 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
         shipTwo = new Button(g.getWidth() / 4, g.getHeight() * 2 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip2.png", Graphics.PixmapFormat.ARGB8888));
@@ -69,13 +74,13 @@ public class MainMenuScreen extends Screen {
         title = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("title.png", Graphics.PixmapFormat.ARGB8888));
 
 
-        uiContainer.add(playGameMenubtn);
-        uiContainer.add(optionsMenubtn);
-        uiContainer.add(lbMenubtn);
-        uiContainer.add(charMenubtn);
+        uiContainer.add(playGameBtn);
+        uiContainer.add(optionsBtn);
+        uiContainer.add(leaderboardsBtn);
+        uiContainer.add(charBtn);
         uiContainer.add(backBtn);
-//       uiContainer.add(leftCharbtn);
-//       uiContainer.add(rightCharbtn);
+        uiContainer.add(soundOnBtn);
+        uiContainer.add(soundOffBtn);
 
         uiContainer.add(character);
         uiContainer.add(options);
@@ -90,8 +95,8 @@ public class MainMenuScreen extends Screen {
         uiContainer.add(shipSix);
 
         backBtn.setVisibility(false);
-//        leftCharbtn.setVisibility(false);
-//        rightCharbtn.setVisibility(false);
+        soundOffBtn.setVisibility(false);
+        soundOnBtn.setVisibility(false);
 
         character.setVisibility(false);
         options.setVisibility(false);
@@ -113,39 +118,51 @@ public class MainMenuScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (playGameMenubtn.isVisible()) {
-                    if (playGameMenubtn.getBoundingRect().contains(event.x, event.y)) {
+                if (playGameBtn.isVisible()) {
+                    if (playGameBtn.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new GameScreen(game));
                     }
                 }
-                if (optionsMenubtn.isVisible()) {
-                    if (optionsMenubtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameMenubtn.setVisibility(false);
-                        lbMenubtn.setVisibility(false);
-                        charMenubtn.setVisibility(false);
-                        optionsMenubtn.setVisibility(false);
+                if (optionsBtn.isVisible()) {
+                    if (optionsBtn.getBoundingRect().contains(event.x, event.y)) {
+                        playGameBtn.setVisibility(false);
+                        leaderboardsBtn.setVisibility(false);
+                        charBtn.setVisibility(false);
+                        optionsBtn.setVisibility(false);
+                        title.setVisibility(false);
+
                         backBtn.setVisibility(true);
                         options.setVisibility(true);
-                        title.setVisibility(false);
+
+                        if (Settings.soundEnabled)
+                        {
+                            soundOnBtn.setVisibility(true);
+                            soundOffBtn.setVisibility(false);
+                        }
+                        else
+                        {
+                            soundOffBtn.setVisibility(true);
+                            soundOnBtn.setVisibility(false);
+                        }
                     }
                 }
-                if (lbMenubtn.isVisible()) {
-                    if (lbMenubtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameMenubtn.setVisibility(false);
-                        optionsMenubtn.setVisibility(false);
-                        charMenubtn.setVisibility(false);
-                        lbMenubtn.setVisibility(false);
+                if (leaderboardsBtn.isVisible()) {
+                    if (leaderboardsBtn.getBoundingRect().contains(event.x, event.y)) {
+                        playGameBtn.setVisibility(false);
+                        optionsBtn.setVisibility(false);
+                        charBtn.setVisibility(false);
+                        leaderboardsBtn.setVisibility(false);
                         backBtn.setVisibility(true);
                         leaderboards.setVisibility(true);
                         title.setVisibility(false);
                     }
                 }
-                if (charMenubtn.isVisible()) {
-                    if (charMenubtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameMenubtn.setVisibility(false);
-                        lbMenubtn.setVisibility(false);
-                        charMenubtn.setVisibility(false);
-                        optionsMenubtn.setVisibility(false);
+                if (charBtn.isVisible()) {
+                    if (charBtn.getBoundingRect().contains(event.x, event.y)) {
+                        playGameBtn.setVisibility(false);
+                        leaderboardsBtn.setVisibility(false);
+                        charBtn.setVisibility(false);
+                        optionsBtn.setVisibility(false);
                         backBtn.setVisibility(true);
                         character.setVisibility(true);
                         title.setVisibility(false);
@@ -160,24 +177,45 @@ public class MainMenuScreen extends Screen {
                 }
                 if (backBtn.isVisible()) {
                     if (backBtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameMenubtn.setVisibility(true);
-                        lbMenubtn.setVisibility(true);
-                        optionsMenubtn.setVisibility(true);
-                        charMenubtn.setVisibility(true);
+                        playGameBtn.setVisibility(true);
+                        leaderboardsBtn.setVisibility(true);
+                        optionsBtn.setVisibility(true);
+                        charBtn.setVisibility(true);
                         backBtn.setVisibility(false);
                         title.setVisibility(true);
 
-                        character.setVisibility(false);
-                        options.setVisibility(false);
                         leaderboards.setVisibility(false);
 
+                        character.setVisibility(false);
                         shipOne.setVisibility(false);
                         shipTwo.setVisibility(false);
                         shipThree.setVisibility(false);
                         shipFour.setVisibility(false);
                         shipFive.setVisibility(false);
                         shipSix.setVisibility(false);
+
+                        options.setVisibility(false);
+                        soundOffBtn.setVisibility(false);
+                        soundOnBtn.setVisibility(false);
                     }
+                }
+                if (soundOnBtn.isVisible() && (soundOnBtn.getBoundingRect().contains(event.x, event.y)))
+                {
+                    soundOnBtn.setVisibility(false);
+                    soundOffBtn.setVisibility(true);
+                    Settings.soundEnabled = false;
+                    Settings.saveFiles(game.getFileIO());
+                    mainTheme.dispose();
+                }
+                else if (soundOffBtn.isVisible() && (soundOffBtn.getBoundingRect().contains(event.x, event.y)))
+                {
+                    soundOnBtn.setVisibility(true);
+                    soundOffBtn.setVisibility(false);
+                    Settings.soundEnabled = true;
+                    Settings.saveFiles(game.getFileIO());
+                    mainTheme = game.getAudio().newMusic("Bag Raiders - Shooting Stars.mp3");
+                    mainTheme.setLooping(true);
+                    mainTheme.play();
                 }
             }
         }
@@ -204,4 +242,18 @@ public class MainMenuScreen extends Screen {
     @Override
     public void dispose() {
     }
+
+    public void drawText(Graphics g, String line, int x, int y) {
+        int len = line.length();
+        for (int i = 0; i < len; i++){
+            int srcX = 0;
+            char character = line.charAt(i);
+            int s = Character.getNumericValue(character);
+
+            srcX = s*44;
+            g.drawPixmap(numbersPixmap, x, y, srcX, 0, 44, 58);
+            x += 44;
+        }
+    }
+
 }

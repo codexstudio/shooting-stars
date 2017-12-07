@@ -1,12 +1,11 @@
 package com.filip.androidgames.framework.impl;
 
-import java.io.IOException;
-
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-
 import com.filip.androidgames.framework.Music;
+
+import java.io.IOException;
 
 public class AndroidMusic implements Music, OnCompletionListener {
     MediaPlayer mediaPlayer;

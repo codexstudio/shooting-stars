@@ -2,18 +2,24 @@ package com.codex.shootingstars;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.icu.util.Freezable;
 import com.filip.androidgames.framework.*;
-import com.filip.androidgames.framework.Pool.PoolObjectFactory;
 import com.filip.androidgames.framework.Graphics.Point;
 import com.filip.androidgames.framework.Input.TouchEvent;
+import com.filip.androidgames.framework.Pool.PoolObjectFactory;
 import com.filip.androidgames.framework.impl.AndroidFont;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+//link for the font for blue colours
+//http://www.1001fonts.com/unispace-font.html?text=Shooting%20Stars&fg=3d9994
+
+//link for the font with red colours
+//http://www.1001fonts.com/unispace-font.html?text=Game%20Over&fg=f02d2f
+
+
 
 public class GameScreen extends Screen implements GameEventListener {
     //Sprite Resources
@@ -22,6 +28,7 @@ public class GameScreen extends Screen implements GameEventListener {
     private Pixmap friendlyShipPixmap;
     private Pixmap enemyShipPixmap;
     private Pixmap asteroidPixmap;
+    private Pixmap numbersPixmap;
 
     private Point bkgPos;
     private Point joystickPos;
@@ -31,17 +38,17 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private boolean isPaused = false;
 
-    private float score = 0;
+    private int score = 0;
 
     private boolean bIsTouching;
     private VirtualJoystick joystick;
 
-    private Button playPauseBtn;
-    private Button pauseResumeBtn;
-    private Button endPauseBtn;
+    private Button pauseBtn;
+    private Button resumeBtn;
+    private Button endBtn;
     private Button death;
-    private Button restart;
-    private Button options;
+    private Button restartBtn;
+    private Button optionsBtn;
 
     private StaticUI playScore;
     private StaticUI gameOver;
@@ -68,6 +75,7 @@ public class GameScreen extends Screen implements GameEventListener {
         friendlyShipPixmap = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888);
         enemyShipPixmap = g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888);
         asteroidPixmap = g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888);
+        numbersPixmap = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB8888);
 
         joystick = new VirtualJoystick();
         width = g.getWidth();
@@ -134,28 +142,19 @@ public class GameScreen extends Screen implements GameEventListener {
         testAIFrShip.transform.setLocation(new Vector2(width / 4 *3, 250.0f));
 
         //UI containers
-        playPauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
-        pauseResumeBtn = new Button(width / 2, height / 2, 1.0f, 1.0f, g.newPixmap("Resume.png", Graphics.PixmapFormat.ARGB8888));
-        endPauseBtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
+        pauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
+        resumeBtn = new Button(width / 2, height / 2, 1.0f, 1.0f, g.newPixmap("Resume.png", Graphics.PixmapFormat.ARGB8888));
+        endBtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
         death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
-        restart = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
-        options = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
+        restartBtn = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
+        optionsBtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
 
-        playScore = new StaticUI(102, 36, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
+        playScore = new StaticUI(123, 29, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
         gameOver = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
         paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
 
-//        uiContainer.add(options, playPauseBtn, pauseResumeBtn, endPauseBtn, playScore, death, restart, gameOver, paused);
-        uiContainer.add(options);
-        uiContainer.add(playPauseBtn);
-        uiContainer.add(pauseResumeBtn);
-        uiContainer.add(endPauseBtn);
-        uiContainer.add(playScore);
-        uiContainer.add(death);
-        uiContainer.add(restart);
-        uiContainer.add(gameOver);
-        uiContainer.add(paused);
+       uiContainer.add(optionsBtn, pauseBtn, resumeBtn, endBtn, playScore, death, restartBtn, gameOver, paused);
     }
 
     @Override
@@ -169,36 +168,36 @@ public class GameScreen extends Screen implements GameEventListener {
                 joystickPos.x = event.x;
                 joystickPos.y = event.y;
 
-                if (playPauseBtn.isVisible()) {
-                    if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius()) {
+                if (pauseBtn.isVisible()) {
+                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
                         pause();
-                        pauseResumeBtn.setVisibility(true);
+                        resumeBtn.setVisibility(true);
                         paused.setVisibility(true);
                     }
                 }
             }
 
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (pauseResumeBtn.isVisible()) {
-                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius()) {
-                        pause();
+                if (resumeBtn.isVisible()) {
+                    if (Vector2.Distance(new Vector2(event.x, event.y), resumeBtn.transform.getLocation()) < resumeBtn.getBoundingRadius()) {
+                        resume();
                     }
                 }
-                if (endPauseBtn.isVisible()) {
-                    if (endPauseBtn.getBoundingRect().contains(event.x, event.y)) {
+                if (endBtn.isVisible()) {
+                    if (endBtn.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new MainMenuScreen(game));
                     }
                 }
                 if (death.isVisible()) {
                     if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
                         pause();
-                        restart.setVisibility(true);
+                        restartBtn.setVisibility(true);
                         gameOver.setVisibility(true);
-                        pauseResumeBtn.setVisibility(false);
+                        resumeBtn.setVisibility(false);
                     }
                 }
-                if (restart.isVisible()) {
-                    if (restart.getBoundingRect().contains(event.x, event.y)) {
+                if (restartBtn.isVisible()) {
+                    if (restartBtn.getBoundingRect().contains(event.x, event.y)) {
                         game.setScreen(new GameScreen(game));
                     }
                 }
@@ -241,7 +240,6 @@ public class GameScreen extends Screen implements GameEventListener {
         Graphics g = game.getGraphics();
         g.clear(Color.WHITE);
         //original
-
         g.drawPixmap(background, bkgPos.x, bkgPos.y);
 
         if (bkgPos.x != 0 && bkgPos.y != 0) {
@@ -261,26 +259,26 @@ public class GameScreen extends Screen implements GameEventListener {
             if (bIsTouching) {
                 g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
             }
-            playPauseBtn.setVisibility(true);
+            pauseBtn.setVisibility(true);
             playScore.setVisibility(true);
             death.setVisibility(true);
 
-            restart.setVisibility(false);
-            endPauseBtn.setVisibility(false);
-            options.setVisibility(false);
+            restartBtn.setVisibility(false);
+            endBtn.setVisibility(false);
+            optionsBtn.setVisibility(false);
             gameOver.setVisibility(false);
-            pauseResumeBtn.setVisibility(false);
+            resumeBtn.setVisibility(false);
             paused.setVisibility(false);
 
-            g.drawText(String.valueOf(score), 212, 72, font, Color.WHITE);
         } else {
-            playPauseBtn.setVisibility(false);
+            pauseBtn.setVisibility(false);
             playScore.setVisibility(false);
             death.setVisibility(false);
 
-            endPauseBtn.setVisibility(true);
-            options.setVisibility(true);
+            endBtn.setVisibility(true);
+            optionsBtn.setVisibility(true);
         }
+        drawText(g, String.valueOf(score), 256, 0);
         gameContainer.drawContainer(g);
         uiContainer.drawContainer(g);
     }
@@ -426,9 +424,21 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private void gameOver() {
         pause();
-        restart.setVisibility(true);
+        restartBtn.setVisibility(true);
         gameOver.setVisibility(true);
-        pauseResumeBtn.setVisibility(false);
+        resumeBtn.setVisibility(false);
     }
 
+    public void drawText(Graphics g, String line, int x, int y) {
+        int len = line.length();
+        for (int i = 0; i < len; i++){
+            int srcX = 0;
+            char character = line.charAt(i);
+            int s = Character.getNumericValue(character);
+
+            srcX = s*44;
+            g.drawPixmap(numbersPixmap, x, y, srcX, 0, 44, 58);
+            x += 44;
+        }
+    }
 }

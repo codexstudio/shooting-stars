@@ -1,21 +1,16 @@
 package com.filip.androidgames.framework.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
 import android.content.res.AssetManager;
 import android.graphics.*;
 import android.graphics.Paint.Style;
-
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import com.filip.androidgames.framework.Font;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
-import com.filip.androidgames.framework.types.Vector2;
 
-import java.lang.Math;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AndroidGraphics implements Graphics {
     AssetManager assets;
@@ -184,6 +179,7 @@ public class AndroidGraphics implements Graphics {
         paint.setColor(color);
         canvas.drawText(str, x, y, paint);
     }
+
 
     @Override
     public int getWidth() {
