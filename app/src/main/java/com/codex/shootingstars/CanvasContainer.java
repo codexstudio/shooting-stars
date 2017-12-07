@@ -29,11 +29,15 @@ public class CanvasContainer<T extends DrawableObject> {
         containerList.remove(obj);
     }
 
+    public void update(float deltaTime) {
+        for (T obj : containerList) {
+            obj.update(deltaTime);
+        }
+    }
+
     public void drawContainer(Graphics g) {
         for (T obj : containerList) {
-            if (obj.isVisible()) {
-                obj.draw(g);
-            }
+            obj.draw(g);
         }
     }
 

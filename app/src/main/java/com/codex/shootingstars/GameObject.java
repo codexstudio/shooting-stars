@@ -6,6 +6,7 @@ public abstract class GameObject {
 
     //Members
     protected Transform2D transform;
+    Class<? extends DrawableObject> classOfObject;
 
     //Constructor
     protected GameObject() {
@@ -13,7 +14,5 @@ public abstract class GameObject {
     }
 
     //Methods
-    protected void update() {
-
-    }
+    protected abstract void update(float deltaTime);
 }

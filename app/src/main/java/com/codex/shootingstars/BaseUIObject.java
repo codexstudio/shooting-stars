@@ -18,8 +18,7 @@ public abstract class BaseUIObject extends DrawableObject {
     //Setter & Getters
 
     //Methods
-    protected void update()
-    {
-        super.update();
+    protected void update(float deltaTime) {
+        super.update(deltaTime);
     }
 }

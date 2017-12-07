@@ -6,7 +6,7 @@ import com.filip.androidgames.framework.types.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerContainer extends GameObject{
+public class PlayerContainer {
 
     //Members
     public List<FriendlyShip> friendlyShipList;
@@ -24,12 +24,9 @@ public class PlayerContainer extends GameObject{
     }
 
     //Methods
-    public void addShip(FriendlyShip ship, boolean addToGameContainer) {
+    public void addShip(FriendlyShip ship) {
         if (ship.getState() == FriendlyShip.ControllerState.PLAYER_CONTROLLED) {
             friendlyShipList.add(ship);
-            if (addToGameContainer) {
-                listener.onPlayerAdded(ship);
-            }
         }
         else { Log.wtf("WARNING!", "Tried to add a non PLAYER_CONTROLLED" + ship.getClass().getName() + "to the list."); }
     }
