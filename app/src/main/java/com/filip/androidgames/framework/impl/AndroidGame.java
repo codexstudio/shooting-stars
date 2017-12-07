@@ -136,4 +136,9 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
     public void showAchievements() {
         startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), 200);
     }
+
+    @Override
+    public void unlockAchievement(int resourceID) {
+        Games.Achievements.unlock(getApiClient(), getString(resourceID));
+    }
 }

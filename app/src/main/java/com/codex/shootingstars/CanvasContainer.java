@@ -29,7 +29,7 @@ public class CanvasContainer<T extends DrawableObject> {
         containerList.remove(obj);
     }
 
-    public void drawContainer(Graphics g){
+    public void drawContainer(Graphics g) {
         for (T obj : containerList) {
             if (obj.isVisible()) {
                 obj.draw(g);
