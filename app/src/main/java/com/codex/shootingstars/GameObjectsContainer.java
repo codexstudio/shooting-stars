@@ -123,7 +123,7 @@ public class GameObjectsContainer {
     void update(PlayerView playerView) {
         ticks++;
 
-        //Check Far Distance Items
+        //Check Far distance Items
         if (ticks > 100) {
             List<GameObject> farList = gameObjectsFar;
             for (Iterator<GameObject> farIterator = farList.iterator(); farIterator.hasNext(); ) {
@@ -148,7 +148,7 @@ public class GameObjectsContainer {
             ticks = 1;
         }
 
-        //Check Medium Distance Items
+        //Check Medium distance Items
         if (ticks % 50 == 0) {
             List<GameObject> medList = gameObjectsMedium;
             for (Iterator<GameObject> medIterator = medList.iterator(); medIterator.hasNext(); ) {
@@ -172,7 +172,7 @@ public class GameObjectsContainer {
             gameObjectsMedium = medList;
         }
 
-        //Check Close Distance Items
+        //Check Close distance Items
         List<DrawableObject> closeList = gameObjectsClose;
         List<DrawableObject> drawList = new ArrayList<>();
         for (Iterator<DrawableObject> closeIterator = closeList.iterator(); closeIterator.hasNext(); ) {

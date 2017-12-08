@@ -76,29 +76,29 @@ public class Vector2 {
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public Vector2 getClampedToSize(float MaxSize) {
-        if (magnitude() > MaxSize) {
+    public Vector2 getClampedToSize(float maxSize) {
+        if (magnitude() > maxSize) {
             Vector2 temp = unitVector();
-            temp.scale(MaxSize);
+            temp.scale(maxSize);
             return temp;
         } else {
             return this;
         }
     }
 
-    public static final float DotProduct(final Vector2 lhs, final Vector2 rhs) {
+    public static final float dotProduct(final Vector2 lhs, final Vector2 rhs) {
         return lhs.getX() * rhs.getX() + lhs.getY() * rhs.getY();
     }
 
-    public static final float CrossProduct(final Vector2 lhs, final Vector2 rhs) {
+    public static final float crossProduct(final Vector2 lhs, final Vector2 rhs) {
         return lhs.getX() * rhs.getY() - lhs.getY() * rhs.getX();
     }
 
-    public static final float Distance(final Vector2 lhs, final Vector2 rhs) {
+    public static final float distance(final Vector2 lhs, final Vector2 rhs) {
         return (float) Math.abs(Math.sqrt(Math.pow(rhs.getX() - lhs.getX(), 2) + Math.pow(rhs.getY() - lhs.getY(), 2)));
     }
 
-    public static final float Projection(final Vector2 a, final Vector2 b){
-        return DotProduct(a, b.unitVector());
+    public static final float projection(final Vector2 a, final Vector2 b){
+        return dotProduct(a, b.unitVector());
     }
 }

@@ -70,7 +70,7 @@ public abstract class DrawableObject extends GameObject {
     }
 
     protected boolean isCollidingWith(DrawableObject object) {
-        float distance = Math.abs(Vector2.Distance(this.transform.getLocation(), object.transform.getLocation()));
+        float distance = Math.abs(Vector2.distance(this.transform.getLocation(), object.transform.getLocation()));
         return distance < this.getBoundingRadius() + object.getBoundingRadius();
     }
 }

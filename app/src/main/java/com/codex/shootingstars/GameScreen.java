@@ -102,6 +102,8 @@ public class GameScreen extends Screen implements GameEventListener {
         uiContainer.add(restart);
         uiContainer.add(gameOver);
         uiContainer.add(paused);
+
+        game.unlockAchievement(R.string.achievement_first_game);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class GameScreen extends Screen implements GameEventListener {
                 joystickPos.y = event.y;
 
                 if (playPauseBtn.isVisible()) {
-                    if (Vector2.Distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius()) {
+                    if (Vector2.distance(new Vector2(event.x, event.y), playPauseBtn.transform.getLocation()) < playPauseBtn.getBoundingRadius()) {
                         pause();
                         pauseResumeBtn.setVisibility(true);
                         paused.setVisibility(true);
@@ -129,7 +131,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (pauseResumeBtn.isVisible()) {
-                    if (Vector2.Distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius()) {
+                    if (Vector2.distance(new Vector2(event.x, event.y), pauseResumeBtn.transform.getLocation()) < pauseResumeBtn.getBoundingRadius()) {
                         pause();
                     }
                 }
@@ -139,7 +141,7 @@ public class GameScreen extends Screen implements GameEventListener {
                     }
                 }
                 if (death.isVisible()) {
-                    if (Vector2.Distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
+                    if (Vector2.distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
                         pause();
                         restart.setVisibility(true);
                         gameOver.setVisibility(true);
@@ -158,13 +160,23 @@ public class GameScreen extends Screen implements GameEventListener {
             if (bIsTouching) {
                 final float scrollSpeed = 0.25f;
                 Vector2 bkgPos = new Vector2();
-                bkgPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
-                bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.Projection(joystick.getDirection(), Vector2.UP_VECTOR));
+                bkgPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
+                bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
 
                 playerView.setLocation(bkgPos);
                 playerContainer.rotateShips(joystick.getDirection());
                 score += 1;
             }
+        }
+
+        if (score > 5) {
+            game.unlockAchievement(R.string.achievement_five_is_alive);
+        }
+        if (score > 10) {
+            game.unlockAchievement(R.string.achievement_ten_ten);
+        }
+        if (score > 500) {
+            game.unlockAchievement(R.string.achievement_answer_to_everything);
         }
     }
 
