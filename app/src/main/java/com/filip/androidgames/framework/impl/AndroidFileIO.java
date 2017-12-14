@@ -1,16 +1,10 @@
 package com.filip.androidgames.framework.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.content.res.AssetManager;
 import android.os.Environment;
-
 import com.filip.androidgames.framework.FileIO;
+
+import java.io.*;
 
 public class AndroidFileIO implements FileIO {
     AssetManager assets;
@@ -28,7 +22,7 @@ public class AndroidFileIO implements FileIO {
 
     @Override
     public InputStream readFile(String fileName) throws IOException {
-        return new FileInputStream(externalStoragePath + fileName);
+    return new FileInputStream(externalStoragePath + fileName);
     }
 
     @Override
@@ -36,4 +30,3 @@ public class AndroidFileIO implements FileIO {
         return new FileOutputStream(externalStoragePath + fileName);
     }
 }
-
