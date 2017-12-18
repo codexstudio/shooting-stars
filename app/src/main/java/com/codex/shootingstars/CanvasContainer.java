@@ -37,5 +37,12 @@ public class CanvasContainer<T extends DrawableObject> {
         }
     }
 
+    protected void setVisibility(boolean b)
+    {
+        for(T obj : containerList){
+            obj.setVisibility(b);
+        }
+    }
+
     public int getSize() { return containerList.size(); }
 }
