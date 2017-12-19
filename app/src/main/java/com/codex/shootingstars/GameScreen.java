@@ -9,7 +9,6 @@ import com.filip.androidgames.framework.impl.AndroidFont;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.util.Iterator;
 import java.util.List;
 
 //link for the font for blue colours

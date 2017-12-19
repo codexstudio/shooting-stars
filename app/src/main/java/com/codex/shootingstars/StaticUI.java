@@ -14,4 +14,8 @@ public class StaticUI extends BaseUIObject{
     protected StaticUI(float xLocation, float yLocation, float xScale, float yScale, Pixmap pixmap) {
         super(xLocation, yLocation, xScale, yScale, pixmap);
     }
+
+    protected void update(float deltaTime) {
+        super.update(deltaTime);
+    }
 }

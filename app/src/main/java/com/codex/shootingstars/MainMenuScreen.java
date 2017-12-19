@@ -7,6 +7,7 @@ import java.util.List;
 
 public class MainMenuScreen extends Screen {
     private static Pixmap background;
+    String leaderboardsLines[] = new String[5];
 
     private Button playGameBtn;
     private Button optionsBtn;
@@ -28,6 +29,8 @@ public class MainMenuScreen extends Screen {
     private StaticUI options;
     private StaticUI title;
 
+    private TextObject scoreText;
+
     private Pixmap numbersPixmap;
     public static Music mainTheme;
 
@@ -45,6 +48,10 @@ public class MainMenuScreen extends Screen {
         mainTheme.setLooping(true);
         if (Settings.soundEnabled) {
             mainTheme.play();
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            leaderboardsLines[i] = "" + (i + 1) + ". " + Settings.highscores[i];
         }
 
         Graphics g = game.getGraphics();
@@ -81,6 +88,7 @@ public class MainMenuScreen extends Screen {
         options = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
         title = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("title.png", Graphics.PixmapFormat.ARGB8888));
 
+        //scoreText = new TextObject(256, 200, 1, 1, 58, 44, 44, 58, g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB8888), String.valueOf(leaderboardsLines));
 
         mainMenuContainer.add(title, playGameBtn, optionsBtn, leaderboardsBtn, charactersBtn);
         optionsContainer.add(options, backBtn, soundOffBtn, soundOnBtn);
