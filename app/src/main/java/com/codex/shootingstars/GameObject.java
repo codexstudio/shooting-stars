@@ -13,4 +13,14 @@ public abstract class GameObject {
 
     //Methods
     protected abstract void update(float deltaTime);
+
+    public void setTransform (Vector2 location, Vector2 rotation, Vector2 scale) {
+        transform.setLocation(location);
+        transform.setRotation(rotation);
+        transform.setScale(scale);
+    }
+
+    public void setTransform(Transform2D transform2D) {
+        transform = transform2D;
+    }
 }

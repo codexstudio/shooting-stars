@@ -59,7 +59,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private GameObjectsContainer gameObjectsContainer;
     private PlayerView playerView;
-    private PlayerContainer playerContainer;
 
     private SpaceBackground bkg;
 
@@ -70,9 +69,8 @@ public class GameScreen extends Screen implements GameEventListener {
         width = g.getWidth();
         height = g.getHeight();
 
-        gameObjectsContainer = new GameObjectsContainer(g);
+        gameObjectsContainer = new GameObjectsContainer(g, this);
         playerView = new PlayerView(width, height);
-        playerContainer = new PlayerContainer(this);
 
         bkg = new SpaceBackground(playerView, width, height);
 
@@ -88,7 +86,6 @@ public class GameScreen extends Screen implements GameEventListener {
         HUDContainer = new CanvasContainer<>();
         pauseContainer = new CanvasContainer<>();
         deathContainer = new CanvasContainer<>();
-        playerContainer = new PlayerContainer(this);
 
 //        FriendlyShip starterShip = friendlyPool.newObject();
 //        starterShip.transform.setLocation(new Vector2(width / 2, height / 2));
@@ -115,7 +112,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     @Override
     public void update(float deltaTime) {
-        gameObjectsContainer.update(playerView);
+        gameObjectsContainer.update(playerView, joystick, deltaTime);
         HUDContainer.update(deltaTime);
         pauseContainer.update(deltaTime);
         deathContainer.update(deltaTime);
@@ -168,7 +165,6 @@ public class GameScreen extends Screen implements GameEventListener {
                 bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
 
                 playerView.setLocation(bkgPos);
-                playerContainer.rotateShips(joystick.getDirection());
                 score += 1;
             }
         }
@@ -212,6 +208,7 @@ public class GameScreen extends Screen implements GameEventListener {
         else{
             deathContainer.setVisibility(true);
         }
+        gameObjectsContainer.draw(g);
         HUDContainer.draw(g);
         pauseContainer.draw(g);
         deathContainer.draw(g);
