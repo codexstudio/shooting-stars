@@ -82,7 +82,7 @@ public class MainMenuScreen extends Screen {
         title = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("title.png", Graphics.PixmapFormat.ARGB8888));
 
 
-        mainMenuContainer.add(title, playGameBtn, optionsBtn, leaderboardsBtn, charatersBtn);
+        mainMenuContainer.add(title, playGameBtn, optionsBtn, leaderboardsBtn, charactersBtn);
         optionsContainer.add(options, backBtn, soundOffBtn, soundOnBtn);
         leaderboardsContainer.add(leaderboards, backBtn);
         charactersContainer.add(character, shipOne, shipTwo, shipThree, shipFour, shipFive, shipSix, backBtn);
@@ -96,6 +96,10 @@ public class MainMenuScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+        mainMenuContainer.update(deltaTime);
+        optionsContainer.update(deltaTime);
+        charactersContainer.update(deltaTime);
+        leaderboardsContainer.update(deltaTime);
 
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {

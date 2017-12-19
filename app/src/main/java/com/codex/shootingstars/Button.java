@@ -29,7 +29,7 @@ public class Button extends BaseUIObject {
     protected boolean onTouchCircle(Input.TouchEvent event) {
         if(event.type == Input.TouchEvent.TOUCH_UP){
 
-            if (Vector2.Distance(new Vector2(event.x, event.y), transform.getLocation()) < getBoundingRadius()){
+            if (Vector2.distance(new Vector2(event.x, event.y), transform.getLocation()) < getBoundingRadius()){
                 return true;}
         }
         return false;

@@ -52,7 +52,6 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private Font font;
 
-    private CanvasContainer<BaseUIObject> uiContainer;
     private CanvasContainer<BaseUIObject> HUDContainer;
     private CanvasContainer<BaseUIObject> pauseContainer;
     private CanvasContainer<BaseUIObject> deathContainer;
@@ -79,13 +78,13 @@ public class GameScreen extends Screen implements GameEventListener {
 
 //        background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         joystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
+        numbersPixmap = g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB4444);
 
         joystick = new VirtualJoystick();
 //        bkgPos = new Point();
         joystickPos = new Point();
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
-        uiContainer = new CanvasContainer<>();
         HUDContainer = new CanvasContainer<>();
         pauseContainer = new CanvasContainer<>();
         deathContainer = new CanvasContainer<>();
@@ -107,7 +106,7 @@ public class GameScreen extends Screen implements GameEventListener {
         gameOverUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
         pausedUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
-        game.unlockAchievement(R.string.achievement_first_game);
+//        game.unlockAchievement(R.string.achievement_first_game);
        HUDContainer.add(pauseBtn, scoreUI, death);
        pauseContainer.add(pausedUI, resumeBtn, endBtn);
        deathContainer.add(gameOverUI, restartBtn, endBtn);
@@ -116,8 +115,10 @@ public class GameScreen extends Screen implements GameEventListener {
 
     @Override
     public void update(float deltaTime) {
-        uiContainer.update(deltaTime);
         gameObjectsContainer.update(playerView);
+        HUDContainer.update(deltaTime);
+        pauseContainer.update(deltaTime);
+        deathContainer.update(deltaTime);
 
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
@@ -173,13 +174,13 @@ public class GameScreen extends Screen implements GameEventListener {
         }
 
         if (score > 5) {
-            game.unlockAchievement(R.string.achievement_five_is_alive);
+//            game.unlockAchievement(R.string.achievement_five_is_alive);
         }
         if (score > 10) {
-            game.unlockAchievement(R.string.achievement_ten_ten);
+//            game.unlockAchievement(R.string.achievement_ten_ten);
         }
         if (score > 500) {
-            game.unlockAchievement(R.string.achievement_answer_to_everything);
+//            game.unlockAchievement(R.string.achievement_answer_to_everything);
         }
 
 //        checkOutOfBounds();
