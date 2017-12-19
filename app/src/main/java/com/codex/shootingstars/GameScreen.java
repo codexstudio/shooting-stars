@@ -9,6 +9,7 @@ import com.filip.androidgames.framework.impl.AndroidFont;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
+import java.util.Iterator;
 import java.util.List;
 
 //link for the font for blue colours
@@ -32,6 +33,7 @@ public class GameScreen extends Screen implements GameEventListener {
     private int height;
 
     private boolean isPaused = false;
+    private boolean isAlive = true;
 
     private int score = 0;
 
@@ -43,15 +45,18 @@ public class GameScreen extends Screen implements GameEventListener {
     private Button endBtn;
     private Button death;
     private Button restartBtn;
-    private Button optionsBtn;
 
-    private StaticUI playScore;
-    private StaticUI gameOver;
-    private StaticUI paused;
+    private StaticUI scoreUI;
+    private StaticUI gameOverUI;
+    private StaticUI pausedUI;
 
     private Font font;
 
     private CanvasContainer<BaseUIObject> uiContainer;
+    private CanvasContainer<BaseUIObject> HUDContainer;
+    private CanvasContainer<BaseUIObject> pauseContainer;
+    private CanvasContainer<BaseUIObject> deathContainer;
+
 
     private GameObjectsContainer gameObjectsContainer;
     private PlayerView playerView;
@@ -81,6 +86,10 @@ public class GameScreen extends Screen implements GameEventListener {
         font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
         uiContainer = new CanvasContainer<>();
+        HUDContainer = new CanvasContainer<>();
+        pauseContainer = new CanvasContainer<>();
+        deathContainer = new CanvasContainer<>();
+        playerContainer = new PlayerContainer(this);
 
 //        FriendlyShip starterShip = friendlyPool.newObject();
 //        starterShip.transform.setLocation(new Vector2(width / 2, height / 2));
@@ -93,16 +102,16 @@ public class GameScreen extends Screen implements GameEventListener {
         endBtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
         death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
         restartBtn = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
-        optionsBtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
 
-        playScore = new StaticUI(123, 29, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
-        gameOver = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
-        paused = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
-
-
-       uiContainer.add(optionsBtn, pauseBtn, resumeBtn, endBtn, playScore, death, restartBtn, gameOver, paused);
+        scoreUI = new StaticUI(123, 29, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
+        gameOverUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
+        pausedUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
         game.unlockAchievement(R.string.achievement_first_game);
+       HUDContainer.add(pauseBtn, scoreUI, death);
+       pauseContainer.add(pausedUI, resumeBtn, endBtn);
+       deathContainer.add(gameOverUI, restartBtn, endBtn);
+       deathContainer.setVisibility(false);
     }
 
     @Override
@@ -122,40 +131,35 @@ public class GameScreen extends Screen implements GameEventListener {
                 if (pauseBtn.isVisible()) {
                     if (Vector2.distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
                         pause();
-                        resumeBtn.setVisibility(true);
-                        paused.setVisibility(true);
                     }
                 }
             }
 
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (resumeBtn.isVisible()) {
-                    if (Vector2.distance(new Vector2(event.x, event.y), resumeBtn.transform.getLocation()) < resumeBtn.getBoundingRadius()) {
+                    if (resumeBtn.onTouchCircle(event)) {
                         resume();
                     }
                 }
                 if (endBtn.isVisible()) {
-                    if (endBtn.getBoundingRect().contains(event.x, event.y)) {
+                    if (endBtn.onTouchRect(event)) {
                         game.setScreen(new MainMenuScreen(game));
                     }
                 }
                 if (death.isVisible()) {
-                    if (Vector2.distance(new Vector2(event.x, event.y), death.transform.getLocation()) < death.getBoundingRadius()) {
-                        pause();
-                        restartBtn.setVisibility(true);
-                        gameOver.setVisibility(true);
-                        resumeBtn.setVisibility(false);
+                    if (death.onTouchCircle(event)) {
+                        gameOver();
                     }
                 }
                 if (restartBtn.isVisible()) {
-                    if (restartBtn.getBoundingRect().contains(event.x, event.y)) {
+                    if (restartBtn.onTouchRect(event)) {
                         game.setScreen(new GameScreen(game));
                     }
                 }
             }
         }
 
-        if (!isPaused) {
+        if (!isPaused && isAlive) {
             if (bIsTouching) {
                 final float scrollSpeed = 0.25f;
                 Vector2 bkgPos = new Vector2();
@@ -178,8 +182,8 @@ public class GameScreen extends Screen implements GameEventListener {
             game.unlockAchievement(R.string.achievement_answer_to_everything);
         }
 
-        checkOutOfBounds();
-        checkCollisions();
+//        checkOutOfBounds();
+//        checkCollisions();
     }
 
 
@@ -190,33 +194,26 @@ public class GameScreen extends Screen implements GameEventListener {
 
         g.drawPixmap(bkg.getBackground(playerView));
 
-        if (!isPaused) {
-            if (bIsTouching) {
-                g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
+        if (isAlive) {
+            if (!isPaused) {
+                if (bIsTouching) {
+                    g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
+                }
+                HUDContainer.setVisibility(true);
+                pauseContainer.setVisibility(false);
+
+            } else {
+                HUDContainer.setVisibility(false);
+                pauseContainer.setVisibility(true);
             }
-            pauseBtn.setVisibility(true);
-            playScore.setVisibility(true);
-            death.setVisibility(true);
-
-            restartBtn.setVisibility(false);
-            endBtn.setVisibility(false);
-            optionsBtn.setVisibility(false);
-            gameOver.setVisibility(false);
-            resumeBtn.setVisibility(false);
-            paused.setVisibility(false);
-
-        } else {
-            pauseBtn.setVisibility(false);
-            playScore.setVisibility(false);
-            death.setVisibility(false);
-
-            endBtn.setVisibility(true);
-            optionsBtn.setVisibility(true);
+            drawText(g, String.valueOf(score), 256, 0);
         }
-
-        drawText(g, String.valueOf(score), 256, 0);
-        gameObjectsContainer.draw(g);
-        uiContainer.draw(g);
+        else{
+            deathContainer.setVisibility(true);
+        }
+        HUDContainer.draw(g);
+        pauseContainer.draw(g);
+        deathContainer.draw(g);
     }
 
     @Override
@@ -307,10 +304,9 @@ public class GameScreen extends Screen implements GameEventListener {
 //    }
 
     private void gameOver() {
-        pause();
-        restartBtn.setVisibility(true);
-        gameOver.setVisibility(true);
-        resumeBtn.setVisibility(false);
+        isAlive = false;
+        pauseContainer.setVisibility(false);
+        HUDContainer.setVisibility(false);
     }
 
     public void drawText(Graphics g, String line, int x, int y) {

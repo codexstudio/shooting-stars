@@ -11,7 +11,7 @@ public class MainMenuScreen extends Screen {
     private Button playGameBtn;
     private Button optionsBtn;
     private Button leaderboardsBtn;
-    private Button charBtn;
+    private Button charactersBtn;
     private Button backBtn;
     private Button soundOnBtn;
     private Button soundOffBtn;
@@ -32,6 +32,10 @@ public class MainMenuScreen extends Screen {
     public static Music mainTheme;
 
     private CanvasContainer<BaseUIObject> uiContainer;
+    private CanvasContainer<BaseUIObject> mainMenuContainer;
+    private CanvasContainer<BaseUIObject> optionsContainer;
+    private CanvasContainer<BaseUIObject> leaderboardsContainer;
+    private CanvasContainer<BaseUIObject> charactersContainer;
 
     public MainMenuScreen(Game game) {
         super(game);
@@ -50,13 +54,17 @@ public class MainMenuScreen extends Screen {
         //explosion = g.newPixmap("explosion.png", Graphics.PixmapFormat.ARGB8888);
         //g.addAnimation(explosion, 300, 300, 6, 8, 256, 256, true);
 
-        uiContainer = new CanvasContainer<BaseUIObject>();
+        //uiContainer = new CanvasContainer<BaseUIObject>();
+        mainMenuContainer = new CanvasContainer<BaseUIObject>();
+        charactersContainer = new CanvasContainer<BaseUIObject>();
+        leaderboardsContainer = new CanvasContainer<BaseUIObject>();
+        optionsContainer = new CanvasContainer<BaseUIObject>();
 
 
         playGameBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Play_Game.png", Graphics.PixmapFormat.ARGB8888));
         optionsBtn = new Button(g.getWidth() / 2, g.getHeight() * 2.5f / 5, 1.0f, 1.0f, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
         leaderboardsBtn = new Button(g.getWidth() / 2, g.getHeight() * 3 / 5, 1.0f, 1.0f, g.newPixmap("Leaderboards.png", Graphics.PixmapFormat.ARGB8888));
-        charBtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1.0f, 1.0f, g.newPixmap("Characters.png", Graphics.PixmapFormat.ARGB8888));
+        charactersBtn = new Button(g.getWidth() / 2, g.getHeight() * 3.5f / 5, 1.0f, 1.0f, g.newPixmap("Characters.png", Graphics.PixmapFormat.ARGB8888));
         backBtn = new Button(g.getWidth() - 200, g.getHeight() - 100, 1.0f, 1.0f, g.newPixmap("Back.png", Graphics.PixmapFormat.ARGB8888));
         soundOnBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Sound_On.png", Graphics.PixmapFormat.ARGB8888));
         soundOffBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Sound_Off.png", Graphics.PixmapFormat.ARGB8888));
@@ -74,40 +82,15 @@ public class MainMenuScreen extends Screen {
         title = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("title.png", Graphics.PixmapFormat.ARGB8888));
 
 
-        uiContainer.add(playGameBtn);
-        uiContainer.add(optionsBtn);
-        uiContainer.add(leaderboardsBtn);
-        uiContainer.add(charBtn);
-        uiContainer.add(backBtn);
-        uiContainer.add(soundOnBtn);
-        uiContainer.add(soundOffBtn);
+        mainMenuContainer.add(title, playGameBtn, optionsBtn, leaderboardsBtn, charatersBtn);
+        optionsContainer.add(options, backBtn, soundOffBtn, soundOnBtn);
+        leaderboardsContainer.add(leaderboards, backBtn);
+        charactersContainer.add(character, shipOne, shipTwo, shipThree, shipFour, shipFive, shipSix, backBtn);
 
-        uiContainer.add(character);
-        uiContainer.add(options);
-        uiContainer.add(leaderboards);
-        uiContainer.add(title);
-
-        uiContainer.add(shipOne);
-        uiContainer.add(shipTwo);
-        uiContainer.add(shipThree);
-        uiContainer.add(shipFour);
-        uiContainer.add(shipFive);
-        uiContainer.add(shipSix);
-
-        backBtn.setVisibility(false);
-        soundOffBtn.setVisibility(false);
-        soundOnBtn.setVisibility(false);
-
-        character.setVisibility(false);
-        options.setVisibility(false);
-        leaderboards.setVisibility(false);
-
-        shipOne.setVisibility(false);
-        shipTwo.setVisibility(false);
-        shipThree.setVisibility(false);
-        shipFour.setVisibility(false);
-        shipFive.setVisibility(false);
-        shipSix.setVisibility(false);
+        mainMenuContainer.setVisibility(true);
+        optionsContainer.setVisibility(false);
+        leaderboardsContainer.setVisibility(false);
+        charactersContainer.setVisibility(false);
     }
 
     @Override
@@ -119,21 +102,14 @@ public class MainMenuScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (playGameBtn.isVisible()) {
-                    if (playGameBtn.getBoundingRect().contains(event.x, event.y)) {
+                    if (playGameBtn.onTouchRect(event)) {
                         game.setScreen(new GameScreen(game));
                     }
                 }
                 if (optionsBtn.isVisible()) {
-                    if (optionsBtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameBtn.setVisibility(false);
-                        leaderboardsBtn.setVisibility(false);
-                        charBtn.setVisibility(false);
-                        optionsBtn.setVisibility(false);
-                        title.setVisibility(false);
-
-                        backBtn.setVisibility(true);
-                        options.setVisibility(true);
-
+                    if (optionsBtn.onTouchRect(event)) {
+                        mainMenuContainer.setVisibility(false);
+                        optionsContainer.setVisibility(true);
                         if (Settings.soundEnabled)
                         {
                             soundOnBtn.setVisibility(true);
@@ -147,59 +123,26 @@ public class MainMenuScreen extends Screen {
                     }
                 }
                 if (leaderboardsBtn.isVisible()) {
-                    if (leaderboardsBtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameBtn.setVisibility(false);
-                        optionsBtn.setVisibility(false);
-                        charBtn.setVisibility(false);
-                        leaderboardsBtn.setVisibility(false);
-                        backBtn.setVisibility(true);
-                        leaderboards.setVisibility(true);
-                        title.setVisibility(false);
+                    if (leaderboardsBtn.onTouchRect(event)) {
+                        leaderboardsContainer.setVisibility(true);
+                        mainMenuContainer.setVisibility(false);
                     }
                 }
-                if (charBtn.isVisible()) {
-                    if (charBtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameBtn.setVisibility(false);
-                        leaderboardsBtn.setVisibility(false);
-                        charBtn.setVisibility(false);
-                        optionsBtn.setVisibility(false);
-                        backBtn.setVisibility(true);
-                        character.setVisibility(true);
-                        title.setVisibility(false);
-
-                        shipOne.setVisibility(true);
-                        shipTwo.setVisibility(true);
-                        shipThree.setVisibility(true);
-                        shipFour.setVisibility(true);
-                        shipFive.setVisibility(true);
-                        shipSix.setVisibility(true);
+                if (charactersBtn.isVisible()) {
+                    if (charactersBtn.onTouchRect(event)) {
+                        charactersContainer.setVisibility(true);
+                        mainMenuContainer.setVisibility(false);
                     }
                 }
                 if (backBtn.isVisible()) {
-                    if (backBtn.getBoundingRect().contains(event.x, event.y)) {
-                        playGameBtn.setVisibility(true);
-                        leaderboardsBtn.setVisibility(true);
-                        optionsBtn.setVisibility(true);
-                        charBtn.setVisibility(true);
-                        backBtn.setVisibility(false);
-                        title.setVisibility(true);
-
-                        leaderboards.setVisibility(false);
-
-                        character.setVisibility(false);
-                        shipOne.setVisibility(false);
-                        shipTwo.setVisibility(false);
-                        shipThree.setVisibility(false);
-                        shipFour.setVisibility(false);
-                        shipFive.setVisibility(false);
-                        shipSix.setVisibility(false);
-
-                        options.setVisibility(false);
-                        soundOffBtn.setVisibility(false);
-                        soundOnBtn.setVisibility(false);
+                    if (backBtn.onTouchRect(event)) {
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                 }
-                if (soundOnBtn.isVisible() && (soundOnBtn.getBoundingRect().contains(event.x, event.y)))
+                if (soundOnBtn.isVisible() && soundOnBtn.onTouchRect(event))
                 {
                     soundOnBtn.setVisibility(false);
                     soundOffBtn.setVisibility(true);
@@ -207,7 +150,7 @@ public class MainMenuScreen extends Screen {
                     Settings.saveFiles(game.getFileIO());
                     mainTheme.dispose();
                 }
-                else if (soundOffBtn.isVisible() && (soundOffBtn.getBoundingRect().contains(event.x, event.y)))
+                else if (soundOffBtn.isVisible() && soundOffBtn.onTouchRect(event))
                 {
                     soundOnBtn.setVisibility(true);
                     soundOffBtn.setVisibility(false);
@@ -219,7 +162,6 @@ public class MainMenuScreen extends Screen {
                 }
             }
         }
-        uiContainer.update(deltaTime);
     }
 
     @Override
@@ -229,7 +171,10 @@ public class MainMenuScreen extends Screen {
         // g.drawText("Play game", 200, 200, font, Color.WHITE);
         g.drawAnimations(deltaTime);
 
-        uiContainer.draw(g);
+        mainMenuContainer.draw(g);
+        optionsContainer.draw(g);
+        charactersContainer.draw(g);
+        leaderboardsContainer.draw(g);
     }
 
     @Override

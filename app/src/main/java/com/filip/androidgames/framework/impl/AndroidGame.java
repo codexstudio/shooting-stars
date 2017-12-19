@@ -1,22 +1,13 @@
 package com.filip.androidgames.framework.impl;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.Window;
 import android.view.WindowManager;
-
 import com.codex.shootingstars.R;
-import com.filip.androidgames.framework.Audio;
-import com.filip.androidgames.framework.FileIO;
-import com.filip.androidgames.framework.Game;
-import com.filip.androidgames.framework.Graphics;
-import com.filip.androidgames.framework.Input;
-import com.filip.androidgames.framework.Screen;
+import com.filip.androidgames.framework.*;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
