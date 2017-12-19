@@ -60,17 +60,19 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
 
         RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        adParams.addRule(RelativeLayout.ALIGN_TOP);
+        adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         mainLayout.addView(adView, adParams);
 
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+        interstitialAd.loadAd(new AdRequest.Builder()
+                .addTestDevice("B57D33CB645F80B0C9B0A4DA157C3113").build());
 
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+                interstitialAd.loadAd(new AdRequest.Builder()
+                        .addTestDevice("B57D33CB645F80B0C9B0A4DA157C3113").build());
             }
         });
 
@@ -169,7 +171,9 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
     public void showBanner() {
         this.runOnUiThread(() -> {
             adView.setVisibility(View.VISIBLE);
-            adView.loadAd(new AdRequest.Builder().build());
+//            adView.loadAd(new AdRequest.Builder().build());
+            adView.loadAd(new AdRequest.Builder()
+                    .addTestDevice("B57D33CB645F80B0C9B0A4DA157C3113").build());
         });
     }
 
