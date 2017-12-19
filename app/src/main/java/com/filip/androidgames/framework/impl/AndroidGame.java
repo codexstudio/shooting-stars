@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import com.codex.shootingstars.R;
 import com.filip.androidgames.framework.*;
+import com.google.android.gms.ads.*;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
@@ -18,6 +21,8 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
     Input input;
     FileIO fileIO;
     Screen screen;
+    AdView adView;
+    InterstitialAd interstitialAd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +48,34 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
         fileIO = new AndroidFileIO(getAssets());
         audio = new AndroidAudio(this);
         input = new AndroidInput(this, renderView, scaleX, scaleY);
+
+        MobileAds.initialize(this, "ca-app-pub-5402971235820519~4289993839");
+
+        adView = new AdView(this);
+        adView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        adView.setAdSize(AdSize.SMART_BANNER);
+
+        RelativeLayout mainLayout = new RelativeLayout(this);
+        mainLayout.addView(renderView);
+
+        RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        adParams.addRule(RelativeLayout.ALIGN_TOP);
+        mainLayout.addView(adView, adParams);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+
         screen = getStartScreen();
-        setContentView(renderView);
+        setContentView(mainLayout);
     }
 
     @Override
@@ -130,6 +161,31 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
 
     @Override
     public void unlockAchievement(int resourceID) {
-        Games.Achievements.unlock(getApiClient(), getString(resourceID));
+        if (isSignedIn())
+            Games.Achievements.unlock(getApiClient(), getString(resourceID));
+    }
+
+    @Override
+    public void showBanner() {
+        this.runOnUiThread(() -> {
+            adView.setVisibility(View.VISIBLE);
+            adView.loadAd(new AdRequest.Builder().build());
+        });
+    }
+
+    @Override
+    public void hideBanner() {
+        this.runOnUiThread(() -> {
+           adView.setVisibility(View.GONE);
+        });
+    }
+
+    @Override
+    public void showInterstitialAd() {
+        this.runOnUiThread(() -> {
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            }
+        });
     }
 }

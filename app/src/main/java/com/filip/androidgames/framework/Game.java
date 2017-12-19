@@ -16,5 +16,10 @@ public interface Game
     void showLeaderboard();
     void showAchievements();
     void unlockAchievement(int resourceID);
+
+    void showBanner();
+    void hideBanner();
+
+    void showInterstitialAd();
 }
 

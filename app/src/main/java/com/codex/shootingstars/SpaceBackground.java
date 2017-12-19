@@ -55,8 +55,6 @@ public class SpaceBackground {
         canvas.drawColor(Color.BLACK);
         starPaint.setColor(Color.WHITE);
 
-        Log.d("current view", Float.toString(playerView.getLocation().getX()) + "\t" + Float.toString(playerView.getLocation().getY()));
-
         for (Vector2 star : starList) {
             if (playerView.isWithinView(star)) {
                 final Vector2 location = playerView.getScreenLocation(star);

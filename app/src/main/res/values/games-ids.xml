@@ -9,4 +9,6 @@
     <string name="achievement_lonely_death">CgkIrfvu4fIDEAIQBQ</string>
     <string name="achievement_first_game">CgkIrfvu4fIDEAIQCA</string>
     <string name="leaderboard_top_score">CgkIrfvu4fIDEAIQBg</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5402971235820519/1041848118</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-5402971235820519/4111451311</string>
 </resources>

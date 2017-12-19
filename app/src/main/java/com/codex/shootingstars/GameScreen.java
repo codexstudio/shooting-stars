@@ -106,7 +106,7 @@ public class GameScreen extends Screen implements GameEventListener {
         gameOverUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("game_over.png", Graphics.PixmapFormat.ARGB8888));
         pausedUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
-//        game.unlockAchievement(R.string.achievement_first_game);
+        game.unlockAchievement(R.string.achievement_first_game);
        HUDContainer.add(pauseBtn, scoreUI, death);
        pauseContainer.add(pausedUI, resumeBtn, endBtn);
        deathContainer.add(gameOverUI, restartBtn, endBtn);
@@ -149,7 +149,9 @@ public class GameScreen extends Screen implements GameEventListener {
                 }
                 if (death.isVisible()) {
                     if (death.onTouchCircle(event)) {
-                        gameOver();
+//                        game.showBanner();
+//                        game.showInterstitialAd();
+//                        gameOver();
                     }
                 }
                 if (restartBtn.isVisible()) {
@@ -174,13 +176,10 @@ public class GameScreen extends Screen implements GameEventListener {
         }
 
         if (score > 5) {
-//            game.unlockAchievement(R.string.achievement_five_is_alive);
+            game.unlockAchievement(R.string.achievement_five_is_alive);
         }
         if (score > 10) {
-//            game.unlockAchievement(R.string.achievement_ten_ten);
-        }
-        if (score > 500) {
-//            game.unlockAchievement(R.string.achievement_answer_to_everything);
+            game.unlockAchievement(R.string.achievement_ten_ten);
         }
 
 //        checkOutOfBounds();
