@@ -69,8 +69,8 @@ public class GameScreen extends Screen implements GameEventListener {
         width = g.getWidth();
         height = g.getHeight();
 
-        gameObjectsContainer = new GameObjectsContainer(g, this);
         playerView = new PlayerView(width, height);
+        gameObjectsContainer = new GameObjectsContainer(g, this, playerView);
 
         bkg = new SpaceBackground(playerView, width, height);
 
@@ -110,7 +110,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     @Override
     public void update(float deltaTime) {
-        gameObjectsContainer.update(playerView, joystick, deltaTime);
+        gameObjectsContainer.update(joystick, deltaTime);
         HUDContainer.update(deltaTime);
         pauseContainer.update(deltaTime);
         deathContainer.update(deltaTime);

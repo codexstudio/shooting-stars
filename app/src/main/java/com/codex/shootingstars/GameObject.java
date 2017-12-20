@@ -5,10 +5,12 @@ import com.filip.androidgames.framework.types.*;
 public abstract class GameObject {
     //Members
     protected Transform2D transform;
+    protected Vector2 worldLocation;
 
     //Constructor
     protected GameObject() {
         transform = new Transform2D();
+        worldLocation = new Vector2();
     }
 
     //Methods
@@ -23,4 +25,10 @@ public abstract class GameObject {
     public void setTransform(Transform2D transform2D) {
         transform = transform2D;
     }
+
+    public void setWorldLocation(Vector2 location) {
+        worldLocation = location;
+    }
+
+    public Vector2 getWorldLocation() { return worldLocation; };
 }

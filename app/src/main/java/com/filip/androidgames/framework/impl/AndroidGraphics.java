@@ -196,4 +196,5 @@ public class AndroidGraphics implements Graphics {
         final AndroidPixmap pm = (AndroidPixmap) pixmap;
         canvas.drawBitmap(pm.bitmap, pm.getMatrix(), null);
     }
+
 }
