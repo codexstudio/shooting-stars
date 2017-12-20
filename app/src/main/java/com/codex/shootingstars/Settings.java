@@ -1,5 +1,6 @@
 package com.codex.shootingstars;
 
+import android.util.Log;
 import com.filip.androidgames.framework.FileIO;
 
 import java.io.*;
@@ -28,7 +29,12 @@ public class Settings {
                     in.close();
             }catch (IOException e){}
         }
+        Log.d("Test",String.valueOf(soundEnabled));
 
+        for (int a = 0; a < 5; a++)
+        {
+            Log.d("Test",String.valueOf(highscores[a]));
+        }
     }
 
     public static void saveFiles(FileIO files){

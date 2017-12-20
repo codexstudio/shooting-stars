@@ -29,7 +29,7 @@ public class MainMenuScreen extends Screen {
     private StaticUI options;
     private StaticUI title;
 
-    private TextObject scoreText;
+    boolean bKeepPlaying;
 
     private Pixmap numbersPixmap;
     public static Music mainTheme;
@@ -43,15 +43,18 @@ public class MainMenuScreen extends Screen {
     public MainMenuScreen(Game game) {
         super(game);
 
+        bKeepPlaying = false;
         Settings.loadFiles(game.getFileIO());
-        mainTheme = game.getAudio().newMusic("Bag Raiders - Shooting Stars.mp3");
-        mainTheme.setLooping(true);
         if (Settings.soundEnabled) {
-            mainTheme.play();
+            if (mainTheme == null) {
+                mainTheme = game.getAudio().newMusic("Bag Raiders - Shooting Stars.mp3");
+                mainTheme.setLooping(true);
+                mainTheme.play();
+            }
         }
         for (int i = 0; i < 5; i++)
         {
-            leaderboardsLines[i] = "" + (i + 1) + ". " + Settings.highscores[i];
+            leaderboardsLines[i] = "" + (i + 1) + ". " + Settings.highscores[i]; // "1. 40"
         }
 
         Graphics g = game.getGraphics();
@@ -88,8 +91,6 @@ public class MainMenuScreen extends Screen {
         options = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("Options.png", Graphics.PixmapFormat.ARGB8888));
         title = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("title.png", Graphics.PixmapFormat.ARGB8888));
 
-        //scoreText = new TextObject(256, 200, 1, 1, 58, 44, 44, 58, g.newPixmap("numbers.png", Graphics.PixmapFormat.ARGB8888), String.valueOf(leaderboardsLines));
-
         mainMenuContainer.add(title, playGameBtn, optionsBtn, leaderboardsBtn, charactersBtn);
         optionsContainer.add(options, backBtn, soundOffBtn, soundOnBtn);
         leaderboardsContainer.add(leaderboards, backBtn);
@@ -115,6 +116,7 @@ public class MainMenuScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (playGameBtn.isVisible()) {
                     if (playGameBtn.onTouchRect(event)) {
+                        bKeepPlaying = true;
                         game.setScreen(new GameScreen(game));
                     }
                 }
@@ -160,7 +162,11 @@ public class MainMenuScreen extends Screen {
                     soundOffBtn.setVisibility(true);
                     Settings.soundEnabled = false;
                     Settings.saveFiles(game.getFileIO());
-                    mainTheme.dispose();
+                    if (mainTheme != null) {
+                        mainTheme.stop();
+                        mainTheme.dispose();
+                        mainTheme = null;
+                    }
                 }
                 else if (soundOffBtn.isVisible() && soundOffBtn.onTouchRect(event))
                 {
@@ -183,6 +189,15 @@ public class MainMenuScreen extends Screen {
         // g.drawText("Play game", 200, 200, font, Color.WHITE);
         g.drawAnimations(deltaTime);
 
+        if (leaderboards.isVisible())
+        {
+            int y = 300;
+            for (int j=0; j <5; j++)
+            {
+                drawText(g, leaderboardsLines[j], 150,y);
+                y +=100;
+            }
+        }
         mainMenuContainer.draw(g);
         optionsContainer.draw(g);
         charactersContainer.draw(g);
@@ -191,10 +206,15 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void pause() {
+        if(mainTheme!= null && mainTheme.isPlaying()) {
+            mainTheme.pause();
+        }
     }
 
     @Override
     public void resume() {
+        if (mainTheme != null && Settings.soundEnabled){
+            mainTheme.play();}
     }
 
     @Override
@@ -209,6 +229,10 @@ public class MainMenuScreen extends Screen {
             int s = Character.getNumericValue(character);
 
             srcX = s*44;
+            if (character == '.')
+            {
+                srcX = 440;
+            }
             g.drawPixmap(numbersPixmap, x, y, srcX, 0, 44, 58);
             x += 44;
         }

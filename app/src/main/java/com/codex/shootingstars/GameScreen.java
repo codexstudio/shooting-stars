@@ -1,15 +1,18 @@
 package com.codex.shootingstars;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
-import com.filip.androidgames.framework.*;
+import com.filip.androidgames.framework.Game;
+import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
 import com.filip.androidgames.framework.Input.TouchEvent;
-import com.filip.androidgames.framework.impl.AndroidFont;
+import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.Screen;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
+
+import static com.codex.shootingstars.MainMenuScreen.mainTheme;
 
 //link for the font for blue colours
 //http://www.1001fonts.com/unispace-font.html?text=Shooting%20Stars&fg=3d9994
@@ -49,8 +52,6 @@ public class GameScreen extends Screen implements GameEventListener {
     private StaticUI gameOverUI;
     private StaticUI pausedUI;
 
-    private Font font;
-
     private CanvasContainer<BaseUIObject> HUDContainer;
     private CanvasContainer<BaseUIObject> pauseContainer;
     private CanvasContainer<BaseUIObject> deathContainer;
@@ -80,7 +81,6 @@ public class GameScreen extends Screen implements GameEventListener {
         joystick = new VirtualJoystick();
 //        bkgPos = new Point();
         joystickPos = new Point();
-        font = new AndroidFont(96, Typeface.DEFAULT, Color.WHITE);
 
         HUDContainer = new CanvasContainer<>();
         pauseContainer = new CanvasContainer<>();
@@ -106,7 +106,6 @@ public class GameScreen extends Screen implements GameEventListener {
        HUDContainer.add(pauseBtn, scoreUI, death);
        pauseContainer.add(pausedUI, resumeBtn, endBtn);
        deathContainer.add(gameOverUI, restartBtn, endBtn);
-       deathContainer.setVisibility(false);
     }
 
     @Override
@@ -120,37 +119,45 @@ public class GameScreen extends Screen implements GameEventListener {
 
         for (TouchEvent event : touchEvents) {
             bIsTouching = joystick.isActiveAndSetDirection(event);
-
-            if (event.type == TouchEvent.TOUCH_DOWN) {
-                joystickPos.x = event.x;
-                joystickPos.y = event.y;
-
-                if (pauseBtn.isVisible()) {
-                    if (Vector2.distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
-                        pause();
-                    }
-                }
-            }
+            joystickPos.x = event.x;
+            joystickPos.y = event.y;
 
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (resumeBtn.isVisible()) {
+                if (isPaused) {
                     if (resumeBtn.onTouchCircle(event)) {
-                        resume();
+                        setPause();
                     }
-                }
-                if (endBtn.isVisible()) {
                     if (endBtn.onTouchRect(event)) {
+                        if (Settings.soundEnabled) {
+                            if (mainTheme != null) {
+                                mainTheme.stop();
+                                mainTheme.dispose();
+                                mainTheme = null;
+                            }
+                        }
                         game.setScreen(new MainMenuScreen(game));
                     }
                 }
-                if (death.isVisible()) {
+                if (isAlive) {
                     if (death.onTouchCircle(event)) {
+                        setPause();
                         gameOver();
                     }
+                    if (Vector2.distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
+                        setPause();
+                    }
                 }
-                if (restartBtn.isVisible()) {
+                if (!isAlive) {
                     if (restartBtn.onTouchRect(event)) {
                         game.setScreen(new GameScreen(game));
+                    }
+                    if (endBtn.onTouchRect(event)) {
+                        if (mainTheme != null) {
+                            mainTheme.stop();
+                            mainTheme.dispose();
+                            mainTheme = null;
+                        }
+                        game.setScreen(new MainMenuScreen(game));
                     }
                 }
             }
@@ -158,7 +165,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
         if (!isPaused && isAlive) {
             if (bIsTouching) {
-                final float scrollSpeed = 0.25f;
+                final float scrollSpeed = 0.05f;
                 Vector2 bkgPos = new Vector2();
                 bkgPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
                 bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
@@ -195,32 +202,39 @@ public class GameScreen extends Screen implements GameEventListener {
                 if (bIsTouching) {
                     g.drawPixmap(joystickPixmap, new Point(joystickPos.x - 128, joystickPos.y - 128), new Point(256));
                 }
-                HUDContainer.setVisibility(true);
-                pauseContainer.setVisibility(false);
-
+                gameObjectsContainer.draw(g);
+                HUDContainer.draw(g);
+                drawText(g, String.valueOf(score), 256, 0);
             } else {
-                HUDContainer.setVisibility(false);
-                pauseContainer.setVisibility(true);
+                pauseContainer.draw(g);
             }
-            drawText(g, String.valueOf(score), 256, 0);
         }
         else{
-            deathContainer.setVisibility(true);
+            deathContainer.draw(g);
         }
-        gameObjectsContainer.draw(g);
-        HUDContainer.draw(g);
-        pauseContainer.draw(g);
-        deathContainer.draw(g);
     }
 
+    public void setPause()
+    {
+        if(isPaused)
+        {
+            isPaused = false;
+        }
+        else
+            isPaused = true;
+    }
     @Override
     public void pause() {
-        isPaused = true;
+        if(mainTheme!= null && mainTheme.isPlaying()) {
+            mainTheme.pause();
+        }
+        setPause();
     }
 
     @Override
     public void resume() {
-        isPaused = false;
+        if (mainTheme != null && Settings.soundEnabled){
+        mainTheme.play();}
     }
 
     @Override
@@ -302,8 +316,8 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private void gameOver() {
         isAlive = false;
-        pauseContainer.setVisibility(false);
-        HUDContainer.setVisibility(false);
+        Settings.addScore(score);
+        Settings.saveFiles(game.getFileIO());
     }
 
     public void drawText(Graphics g, String line, int x, int y) {
