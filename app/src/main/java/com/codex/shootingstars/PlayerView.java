@@ -11,7 +11,7 @@ public class PlayerView {
     private int height;
 
     PlayerView(int width, int height) {
-        location = new Vector2(0, 0);
+        location = new Vector2(width / 2, height / 2);
         this.width = width;
         this.height = height;
     }
@@ -20,14 +20,15 @@ public class PlayerView {
     void setLocation(Vector2 value) { location = value; }
 
     float distanceFromObject(GameObject obj) {
-        return Vector2.distance(obj.transform.getLocation(), location);
+//        return Vector2.distance(obj.transform.getLocation(), location);
+        return Vector2.distance(obj.getWorldLocation(), location);
     }
 
     boolean isWithinView(DrawableObject obj) {
-        final float xPosRightEdge = obj.transform.getLocation().getX() + obj.getBoundingRadius();
-        final float xPosLeftEdge = obj.transform.getLocation().getX() - obj.getBoundingRadius();
-        final float yPosTopEdge = obj.transform.getLocation().getY() - obj.getBoundingRadius();
-        final float yPosBottomEdge = obj.transform.getLocation().getY() + obj.getBoundingRadius();
+        final float xPosRightEdge = obj.getWorldLocation().getX() + obj.getBoundingRadius();
+        final float xPosLeftEdge = obj.getWorldLocation().getX() - obj.getBoundingRadius();
+        final float yPosTopEdge = obj.getWorldLocation().getY() - obj.getBoundingRadius();
+        final float yPosBottomEdge = obj.getWorldLocation().getY() + obj.getBoundingRadius();
 
         if (xPosRightEdge > location.getX() - width / 2 - OFF_SCREEN_EXTENSION &&
             xPosLeftEdge < location.getX() + width / 2 + OFF_SCREEN_EXTENSION &&

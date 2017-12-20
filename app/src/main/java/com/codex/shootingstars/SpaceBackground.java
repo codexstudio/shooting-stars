@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import com.filip.androidgames.framework.Graphics;
+import com.filip.androidgames.framework.MathUtil;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.impl.AndroidPixmap;
 import com.filip.androidgames.framework.types.Vector2;
@@ -17,7 +18,7 @@ import java.util.Random;
 public class SpaceBackground {
     private final static int OBJECT_GENERATION_RADIUS = 2500;
     private final static int NUMBER_OF_STARS = 5000;
-    private Random random = new Random();
+
     private List<BackgroundObject> significantObjects;
     private List<Vector2> starList;
     private int width;
@@ -35,7 +36,7 @@ public class SpaceBackground {
 
     private void generateObjects(Vector2 location, int radius) {
         for (int i = 0; i < NUMBER_OF_STARS; i++) {
-            starList.add(randomPointInCircle(radius));
+            starList.add(MathUtil.randomPointInCircle(radius));
         }
 
 //        for (int i = 0; i < 4; i++) {
@@ -43,11 +44,7 @@ public class SpaceBackground {
 //        }
     }
 
-    private Vector2 randomPointInCircle(float radius) {
-        double t = 2 * Math.PI * random.nextDouble();
-        double r = Math.sqrt(random.nextDouble()) * radius;
-        return new Vector2((float) (Math.cos(t) * r), (float) (Math.sin(t) * r));
-    }
+
 
     Pixmap getBackground(final PlayerView playerView) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
