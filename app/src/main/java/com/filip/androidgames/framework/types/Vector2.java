@@ -48,6 +48,10 @@ public class Vector2 {
         y += rhs.getY();
     }
 
+    public static Vector2 sum(final Vector2 lhs, final Vector2 rhs) {
+        return new Vector2(lhs.getX() + rhs.getX(), lhs.getY() + rhs.getY());
+    }
+
     public void subtract(final Vector2 rhs) {
         x -= rhs.getX();
         y -= rhs.getY();
@@ -86,19 +90,19 @@ public class Vector2 {
         }
     }
 
-    public static final float dotProduct(final Vector2 lhs, final Vector2 rhs) {
+    public static float dotProduct(final Vector2 lhs, final Vector2 rhs) {
         return lhs.getX() * rhs.getX() + lhs.getY() * rhs.getY();
     }
 
-    public static final float crossProduct(final Vector2 lhs, final Vector2 rhs) {
+    public static float crossProduct(final Vector2 lhs, final Vector2 rhs) {
         return lhs.getX() * rhs.getY() - lhs.getY() * rhs.getX();
     }
 
-    public static final float distance(final Vector2 lhs, final Vector2 rhs) {
+    public static float distance(final Vector2 lhs, final Vector2 rhs) {
         return (float) Math.abs(Math.sqrt(Math.pow(rhs.getX() - lhs.getX(), 2) + Math.pow(rhs.getY() - lhs.getY(), 2)));
     }
 
-    public static final float projection(final Vector2 a, final Vector2 b){
+    public static float projection(final Vector2 a, final Vector2 b){
         return dotProduct(a, b.unitVector());
     }
 }

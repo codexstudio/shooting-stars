@@ -20,8 +20,6 @@ import static com.codex.shootingstars.MainMenuScreen.mainTheme;
 //link for the font with red colours
 //http://www.1001fonts.com/unispace-font.html?text=Game%20Over&fg=f02d2f
 
-
-
 public class GameScreen extends Screen implements GameEventListener {
 
     //Sprite Resources
@@ -70,7 +68,7 @@ public class GameScreen extends Screen implements GameEventListener {
         height = g.getHeight();
 
         playerView = new PlayerView(width, height);
-        gameObjectsContainer = new GameObjectsContainer(g, this, playerView);
+        gameObjectsContainer = new GameObjectsContainer(g, this);
 
         bkg = new SpaceBackground(playerView, width, height);
 
@@ -110,7 +108,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     @Override
     public void update(float deltaTime) {
-        gameObjectsContainer.update(joystick, deltaTime);
+        gameObjectsContainer.update(playerView, joystick, deltaTime);
         HUDContainer.update(deltaTime);
         pauseContainer.update(deltaTime);
         deathContainer.update(deltaTime);

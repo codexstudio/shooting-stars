@@ -1,17 +1,15 @@
 package com.codex.shootingstars;
 
-import android.util.Log;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
-import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
-public class GameObjectsContainer {
+class GameObjectsContainer {
     private class ObjectDescriptor extends GameObject {
         Class<? extends DrawableObject> clazz;
 
@@ -21,7 +19,8 @@ public class GameObjectsContainer {
         }
 
         @Override
-        protected void update(float deltaTime) {}
+        protected void update(float deltaTime) {
+        }
     }
 
     private final int FAR_MAX_DISTANCE = 7500;
@@ -32,15 +31,11 @@ public class GameObjectsContainer {
     private final float CHANCE_ENEMYSHIP = CHANCE_ASTEROID + 0.4f; //40% chance to spawn
     private final float CHANCE_FRIENDLYSHIP = CHANCE_ENEMYSHIP + 0.4f; //40% chance to spawn
 
-    private int ticks;
-
-    private Pixmap friendlyShipPixmap;
-    private Pixmap enemyShipPixmap;
-    private Pixmap asteroidPixmap;
+    private float currTime;
 
     private List<GameObject> gameObjectsFar;
     private List<GameObject> gameObjectsMedium;
-    private List<DrawableObject> gameObjectsClose;
+    private List<DrawableObject> gameObjectsClose = new ArrayList<DrawableObject>();
     private List<DrawableObject> gameObjectsToDraw;
     private PlayerContainer playerContainer;
 
@@ -48,84 +43,57 @@ public class GameObjectsContainer {
     private Pool<EnemyShip> enemyPool;
     private Pool<Asteroid> asteroidPool;
 
-    private Pool.PoolObjectFactory<FriendlyShip> friendlyPoolFactory;
-    private Pool.PoolObjectFactory<EnemyShip> enemyPoolFactory;
-    private Pool.PoolObjectFactory<Asteroid> asteroidPoolFactory;
-
-    PlayerView playerView;
-
-    GameObjectsContainer(Graphics g, GameEventListener listener, PlayerView playerView) {
-        this.playerView = playerView;
-        ticks = 1;
+    GameObjectsContainer(Graphics g, GameEventListener listener) {
+        currTime = 0;
         gameObjectsFar = new ArrayList<>();
         gameObjectsMedium = new ArrayList<>();
-        gameObjectsClose = new ArrayList<DrawableObject>();
-        gameObjectsToDraw = new ArrayList<DrawableObject>();
+        gameObjectsToDraw = new ArrayList<>();
         playerContainer = new PlayerContainer(listener);
 
-        friendlyShipPixmap = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888);
-        enemyShipPixmap = g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888);
-        asteroidPixmap = g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888);
-
-        friendlyPoolFactory = new Pool.PoolObjectFactory<FriendlyShip>() {
-            @Override
-            public FriendlyShip createObject() {
-                FriendlyShip temp = new FriendlyShip(friendlyShipPixmap, FriendlyShip.ControllerState.AI_CONTROLLED, -500.0f, -500.0f, 0.25f, 0.25f);
-                return temp;
-            }
-        };
-
-        enemyPoolFactory = new Pool.PoolObjectFactory<EnemyShip>() {
-            @Override
-            public EnemyShip createObject() {
-                EnemyShip temp = new EnemyShip(enemyShipPixmap, -500.0f, -500.0f, 0.5f, 0.5f);
-                return temp;
-            }
-        };
-
-        asteroidPoolFactory = new Pool.PoolObjectFactory<Asteroid>() {
-            @Override
-            public Asteroid createObject() {
-                Asteroid temp = new Asteroid(asteroidPixmap, -500.0f, -500.0f, 0.5f, 0.5f);
-                return temp;
-            }
-        };
-
-        friendlyPool = new Pool<>(friendlyPoolFactory, 100);
-        enemyPool = new Pool<>(enemyPoolFactory, 100);
-        asteroidPool = new Pool<>(asteroidPoolFactory, 100);
+        friendlyPool = new Pool<>(
+                () -> new FriendlyShip(
+                        g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888),
+                        FriendlyShip.ControllerState.AI_CONTROLLED, -500.0f, -500.0f, 0.25f, 0.25f),
+                100
+        );
+        enemyPool = new Pool<>(
+                () -> new EnemyShip(
+                        g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888),
+                        -500.0f, -500.0f, 0.5f, 0.5f),
+                100
+        );
+        asteroidPool = new Pool<>(
+                () -> new Asteroid(
+                        g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888),
+                        -500.0f, -500.0f, 0.5f, 0.5f),
+                100
+        );
 
         setUpGameStart(g);
     }
 
-    private boolean free(GameObject obj) {
+    private void free(GameObject obj) {
         if (obj instanceof FriendlyShip) {
             friendlyPool.free((FriendlyShip) obj);
         } else if (obj instanceof EnemyShip) {
             enemyPool.free((EnemyShip) obj);
         } else if (obj instanceof Asteroid) {
             asteroidPool.free((Asteroid) obj);
-        } else {
-            return false;
         }
-        return true;
     }
 
     private DrawableObject newObject(Class<? extends DrawableObject> clazz, Vector2 location) {
         if (clazz == FriendlyShip.class) {
             FriendlyShip tempFriendlyShip = friendlyPool.newObject();
-//            tempFriendlyShip.transform.setLocation(location);
             tempFriendlyShip.setWorldLocation(location);
             return tempFriendlyShip;
         } else if (clazz == EnemyShip.class) {
             EnemyShip tempEnemyShip = enemyPool.newObject();
-//            tempEnemyShip.transform.setLocation(location);
             tempEnemyShip.setWorldLocation(location);
             return tempEnemyShip;
 
         } else if (clazz == Asteroid.class) {
             Asteroid tempAsteroid = asteroidPool.newObject();
-//            tempAsteroid.transform.setLocation(location);
             tempAsteroid.setWorldLocation(location);
             return tempAsteroid;
         } else {
@@ -137,59 +105,49 @@ public class GameObjectsContainer {
         if (obj instanceof ObjectDescriptor) {
             ObjectDescriptor objDesc = (ObjectDescriptor) obj;
             return newObject(objDesc.clazz, obj.getWorldLocation());
-        }
-        else {
+        } else {
             return (DrawableObject) obj;
         }
     }
 
-    private ObjectDescriptor createRandomGameObject (){
-        float randDistance = randomFloatWithinRange(MEDIUM_MAX_DISTANCE, FAR_MAX_DISTANCE);
+    private ObjectDescriptor createRandomGameObject() {
+        Random random = new Random();
+        float randDistance = random.nextFloat() * (FAR_MAX_DISTANCE - MEDIUM_MAX_DISTANCE) + MEDIUM_MAX_DISTANCE;
         Vector2 worldLocation = MathUtil.randomVectorWithMagnitude(randDistance);
 
-        float randClass = (float) Math.random();
+        float randClass = random.nextFloat();
 
         if (randClass < CHANCE_ASTEROID) {
-            ObjectDescriptor tempAsteroid = new ObjectDescriptor(worldLocation, Asteroid.class);
-            return tempAsteroid;
-        }
-        else if (randClass < CHANCE_ENEMYSHIP) {
-            ObjectDescriptor tempEnemyShip = new ObjectDescriptor(worldLocation, EnemyShip.class);
-            return tempEnemyShip;
-        }
-        else if (randClass < CHANCE_FRIENDLYSHIP) {
-            ObjectDescriptor tempFriendlyShip = new ObjectDescriptor(worldLocation, FriendlyShip.class);
-            return tempFriendlyShip;
-        }
-        else {
+            return new ObjectDescriptor(worldLocation, Asteroid.class);
+        } else if (randClass < CHANCE_ENEMYSHIP) {
+            return new ObjectDescriptor(worldLocation, EnemyShip.class);
+        } else if (randClass < CHANCE_FRIENDLYSHIP) {
+            return new ObjectDescriptor(worldLocation, FriendlyShip.class);
+        } else {
             return null;
         }
     }
 
-    float randomFloatWithinRange(float min, float max)
-    {
-        float range = (max - min) + 1.0f;
-        return (float)(Math.random() * range) + min;
-    }
-
-    void setUpGameStart(Graphics g) {
+    private void setUpGameStart(Graphics g) {
         FriendlyShip startingShip = (FriendlyShip) newObject(FriendlyShip.class, new Vector2(g.getWidth() / 2, g.getHeight() / 2));
         startingShip.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
         playerContainer.addShip(startingShip);
 
-        //gameObjectsFar.add(newObject(Asteroid.class, new Vector2(100.0f, 100.0f)));
-
+        gameObjectsFar.add(new ObjectDescriptor(new Vector2(100, 100), FriendlyShip.class));
+        gameObjectsFar.add(new ObjectDescriptor(new Vector2(150, 150), FriendlyShip.class));
+        gameObjectsFar.add(new ObjectDescriptor(new Vector2(200, 175), FriendlyShip.class));
+        gameObjectsFar.add(new ObjectDescriptor(new Vector2(250, 200), FriendlyShip.class));
         for (int i = 0; i < SPAWN_THRESHOLD; i++) {
             gameObjectsFar.add(createRandomGameObject());
         }
 
     }
 
-    void update(VirtualJoystick joystick, float deltaTime) {
-        ticks++;
+    void update(PlayerView playerView, VirtualJoystick joystick, float deltaTime) {
+        currTime += deltaTime;
 
         //Check Far distance Items
-        if (ticks > 100) {
+        if (currTime > 1.0f) {
             List<GameObject> farList = gameObjectsFar;
             for (Iterator<GameObject> farIterator = farList.iterator(); farIterator.hasNext(); ) {
                 GameObject farObj = farIterator.next();
@@ -197,9 +155,8 @@ public class GameObjectsContainer {
                 //Free Game Object
                 if (playerView.distanceFromObject(farObj) > FAR_MAX_DISTANCE) {
                     if (farObj instanceof DrawableObject) {
-                            free(farObj);
-                    }
-                    else {
+                        free(farObj);
+                    } else {
                         farIterator.remove();
                     }
                 }
@@ -210,11 +167,11 @@ public class GameObjectsContainer {
                 }
             }
             gameObjectsFar = farList;
-            ticks = 1;
+            currTime = 0;
         }
 
         //Check Medium distance Items
-        if (ticks % 50 == 0) {
+        if (currTime > 0.5f) {
             List<GameObject> medList = gameObjectsMedium;
             for (Iterator<GameObject> medIterator = medList.iterator(); medIterator.hasNext(); ) {
                 GameObject medObj = medIterator.next();
@@ -260,9 +217,8 @@ public class GameObjectsContainer {
         playerContainer.rotateShips(joystick.getDirection());
 
         for (FriendlyShip obj : playerContainer.friendlyShipList) {
-            obj.update(deltaTime);
             obj.transform.setLocation(obj.getWorldLocation());
-            //Log.i("haha", "x : " + playerView.getLocation().getX() + ", y : " + playerView.getLocation().getY());
+            obj.update(deltaTime);
         }
 
         for (DrawableObject obj : gameObjectsToDraw) {
