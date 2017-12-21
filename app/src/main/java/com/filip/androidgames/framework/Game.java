@@ -17,7 +17,7 @@ public interface Game
     void showAchievements();
     void unlockAchievement(int resourceID);
 
-    void showBanner();
+    void showBannerAd();
     void hideBanner();
 
     void showInterstitialAd();

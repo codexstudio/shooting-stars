@@ -2,7 +2,6 @@ package com.codex.shootingstars;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -137,8 +136,8 @@ public class GameScreen extends Screen implements GameEventListener {
                 }
                 if (isAlive) {
                     if (death.onTouchCircle(event)) {
-                        setPause();
-                        gameOver();
+                        game.showBannerAd();
+                        game.showInterstitialAd();
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
                         setPause();
@@ -173,10 +172,10 @@ public class GameScreen extends Screen implements GameEventListener {
         }
 
         if (score > 5) {
-            game.unlockAchievement(R.string.achievement_five_is_alive);
+//            game.unlockAchievement(R.string.achievement_five_is_alive);
         }
         if (score > 10) {
-            game.unlockAchievement(R.string.achievement_ten_ten);
+//            game.unlockAchievement(R.string.achievement_ten_ten);
         }
 
     }

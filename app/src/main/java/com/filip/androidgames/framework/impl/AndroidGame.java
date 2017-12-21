@@ -168,7 +168,7 @@ public abstract class AndroidGame extends BaseGameActivity implements Game {
     }
 
     @Override
-    public void showBanner() {
+    public void showBannerAd() {
         this.runOnUiThread(() -> {
             adView.setVisibility(View.VISIBLE);
 //            adView.loadAd(new AdRequest.Builder().build());
