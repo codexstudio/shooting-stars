@@ -20,7 +20,6 @@ public class PlayerView {
     void setLocation(Vector2 value) { location = value; }
 
     float distanceFromObject(GameObject obj) {
-//        return Vector2.distance(obj.transform.getLocation(), location);
         return Vector2.distance(obj.getWorldLocation(), location);
     }
 

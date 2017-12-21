@@ -43,7 +43,7 @@ class GameObjectsContainer {
     private Pool<EnemyShip> enemyPool;
     private Pool<Asteroid> asteroidPool;
 
-    GameObjectsContainer(Graphics g, GameEventListener listener) {
+    GameObjectsContainer(Graphics g, GameEventListener listener, PlayerView playerView) {
         currTime = 0;
         gameObjectsFar = new ArrayList<>();
         gameObjectsMedium = new ArrayList<>();
@@ -69,7 +69,7 @@ class GameObjectsContainer {
                 100
         );
 
-        setUpGameStart(g);
+        setUpGameStart(g, playerView);
     }
 
     private void free(GameObject obj) {
@@ -105,15 +105,14 @@ class GameObjectsContainer {
         if (obj instanceof ObjectDescriptor) {
             ObjectDescriptor objDesc = (ObjectDescriptor) obj;
             return newObject(objDesc.clazz, obj.getWorldLocation());
-        } else {
-            return (DrawableObject) obj;
         }
+        return (DrawableObject) obj;
     }
 
-    private ObjectDescriptor createRandomGameObject() {
+    private ObjectDescriptor createRandomGameObject(PlayerView playerView) {
         Random random = new Random();
         float randDistance = random.nextFloat() * (FAR_MAX_DISTANCE - MEDIUM_MAX_DISTANCE) + MEDIUM_MAX_DISTANCE;
-        Vector2 worldLocation = MathUtil.randomVectorWithMagnitude(randDistance);
+        Vector2 worldLocation = Vector2.sum(MathUtil.randomVectorWithMagnitude(randDistance), playerView.getLocation());
 
         float randClass = random.nextFloat();
 
@@ -128,19 +127,14 @@ class GameObjectsContainer {
         }
     }
 
-    private void setUpGameStart(Graphics g) {
+    private void setUpGameStart(Graphics g, PlayerView playerView) {
         FriendlyShip startingShip = (FriendlyShip) newObject(FriendlyShip.class, new Vector2(g.getWidth() / 2, g.getHeight() / 2));
         startingShip.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
         playerContainer.addShip(startingShip);
 
-        gameObjectsFar.add(new ObjectDescriptor(new Vector2(100, 100), FriendlyShip.class));
-        gameObjectsFar.add(new ObjectDescriptor(new Vector2(150, 150), FriendlyShip.class));
-        gameObjectsFar.add(new ObjectDescriptor(new Vector2(200, 175), FriendlyShip.class));
-        gameObjectsFar.add(new ObjectDescriptor(new Vector2(250, 200), FriendlyShip.class));
         for (int i = 0; i < SPAWN_THRESHOLD; i++) {
-            gameObjectsFar.add(createRandomGameObject());
+            gameObjectsFar.add(createRandomGameObject(playerView));
         }
-
     }
 
     void update(PlayerView playerView, VirtualJoystick joystick, float deltaTime) {
@@ -167,6 +161,11 @@ class GameObjectsContainer {
                 }
             }
             gameObjectsFar = farList;
+
+            for (int i = gameObjectsFar.size() + gameObjectsMedium.size() + gameObjectsClose.size(); i < SPAWN_THRESHOLD; i++) {
+                gameObjectsFar.add(createRandomGameObject(playerView));
+            }
+
             currTime = 0;
         }
 

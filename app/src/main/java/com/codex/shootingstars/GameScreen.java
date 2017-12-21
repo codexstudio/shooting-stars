@@ -68,7 +68,7 @@ public class GameScreen extends Screen implements GameEventListener {
         height = g.getHeight();
 
         playerView = new PlayerView(width, height);
-        gameObjectsContainer = new GameObjectsContainer(g, this);
+        gameObjectsContainer = new GameObjectsContainer(g, this, playerView);
 
         bkg = new SpaceBackground(playerView, width, height);
 
@@ -83,11 +83,6 @@ public class GameScreen extends Screen implements GameEventListener {
         HUDContainer = new CanvasContainer<>();
         pauseContainer = new CanvasContainer<>();
         deathContainer = new CanvasContainer<>();
-
-//        FriendlyShip starterShip = friendlyPool.newObject();
-//        starterShip.transform.setLocation(new Vector2(width / 2, height / 2));
-//        starterShip.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-//        playerContainer.addShip(starterShip);
 
         //UI containers
         pauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
@@ -180,8 +175,6 @@ public class GameScreen extends Screen implements GameEventListener {
             game.unlockAchievement(R.string.achievement_ten_ten);
         }
 
-//        checkOutOfBounds();
-//        checkCollisions();
     }
 
 
