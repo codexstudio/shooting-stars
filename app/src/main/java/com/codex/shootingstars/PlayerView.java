@@ -29,13 +29,10 @@ public class PlayerView {
         final float yPosTopEdge = obj.getWorldLocation().getY() - obj.getBoundingRadius();
         final float yPosBottomEdge = obj.getWorldLocation().getY() + obj.getBoundingRadius();
 
-        if (xPosRightEdge > location.getX() - width / 2 - OFF_SCREEN_EXTENSION &&
-            xPosLeftEdge < location.getX() + width / 2 + OFF_SCREEN_EXTENSION &&
-            yPosTopEdge < location.getY() + height / 2 + OFF_SCREEN_EXTENSION &&
-            yPosBottomEdge > location.getY() - height / 2 - OFF_SCREEN_EXTENSION) {
-            return true;
-        }
-        return false;
+        return xPosRightEdge > location.getX() - width / 2 - OFF_SCREEN_EXTENSION &&
+                xPosLeftEdge < location.getX() + width / 2 + OFF_SCREEN_EXTENSION &&
+                yPosTopEdge < location.getY() + height / 2 + OFF_SCREEN_EXTENSION &&
+                yPosBottomEdge > location.getY() - height / 2 - OFF_SCREEN_EXTENSION;
     }
 
     boolean isWithinView(BackgroundObject obj) {
@@ -47,21 +44,14 @@ public class PlayerView {
         final boolean topEdgeInView = objYPos - obj.getHeight() / 2 < location.getY() + height / 2 + OFF_SCREEN_EXTENSION;
         final boolean bottomEdgeInView = objYPos + obj.getHeight() / 2 > location.getY() - height / 2 - OFF_SCREEN_EXTENSION;
 
-        if (rightEdgeInView && leftEdgeInView && topEdgeInView && bottomEdgeInView) {
-            return true;
-        }
-        return false;
+        return rightEdgeInView && leftEdgeInView && topEdgeInView && bottomEdgeInView;
     }
 
     boolean isWithinView(Vector2 point) {
-        if (point.getX() > location.getX() - width / 2 &&
-            point.getX() < location.getX() + width / 2 &&
-            point.getY() < location.getY() + height / 2 &&
-            point.getY() > location.getY() - height / 2)
-        {
-            return true;
-        }
-        return false;
+        return point.getX() > location.getX() - width / 2 &&
+                point.getX() < location.getX() + width / 2 &&
+                point.getY() < location.getY() + height / 2 &&
+                point.getY() > location.getY() - height / 2;
     }
 
     Vector2 getScreenLocation(Vector2 obj) {

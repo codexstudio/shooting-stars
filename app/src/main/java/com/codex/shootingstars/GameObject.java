@@ -30,5 +30,5 @@ public abstract class GameObject {
         worldLocation = location;
     }
 
-    public Vector2 getWorldLocation() { return worldLocation; };
+    public Vector2 getWorldLocation() { return worldLocation; }
 }

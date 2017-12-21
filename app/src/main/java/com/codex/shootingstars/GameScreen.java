@@ -204,12 +204,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     public void setPause()
     {
-        if(isPaused)
-        {
-            isPaused = false;
-        }
-        else
-            isPaused = true;
+        isPaused = !isPaused;
     }
     @Override
     public void pause() {
