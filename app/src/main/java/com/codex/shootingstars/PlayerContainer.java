@@ -21,8 +21,8 @@ public class PlayerContainer {
     }
 
     //Setters & Getters
-    public int getShipListSize(){
-        return friendlyShipList.size();
+    public List<FriendlyShip> getFriendlyShipList() {
+        return friendlyShipList;
     }
 
     //Methods
@@ -34,8 +34,13 @@ public class PlayerContainer {
     }
 
     public void removeShip(FriendlyShip ship) {
+        ship.changeControllerState(FriendlyShip.ControllerState.AI_CONTROLLED);
+        ship.offset.setX(0.0f);
+        ship.offset.setY(0.0f);
         friendlyShipList.remove(ship);
-        listener.onPlayerRemoved(ship);
+        if (friendlyShipList.size() <= 0){
+            listener.deathListener();
+        }
     }
 
     public void rotateShips(Vector2 direction) {

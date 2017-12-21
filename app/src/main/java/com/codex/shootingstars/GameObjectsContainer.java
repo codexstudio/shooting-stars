@@ -24,7 +24,7 @@ class GameObjectsContainer {
     private final int FAR_MAX_DISTANCE = 5000;
     private final int MEDIUM_MAX_DISTANCE = 2500;
     private final int CLOSE_MAX_DISTANCE = 1000;
-    private final int SPAWN_THRESHOLD = 200;
+    private final int SPAWN_THRESHOLD = 300;
 
     //Chances below must add up to 100%
     private final float CHANCE_ASTEROID = 0.3f; //30% chance to spawn
@@ -128,62 +128,57 @@ class GameObjectsContainer {
     }
 
     private void checkCollisions() {
-        List<DrawableObject> drawList = gameObjectsToDraw;
-        List<FriendlyShip> frList = playerContainer.friendlyShipList;
 
-        for (ListIterator<DrawableObject> drawIterator = drawList.listIterator(); drawIterator.hasNext();) {
-            DrawableObject obj = drawIterator.next();
-            for (ListIterator<FriendlyShip> frIterator = frList.listIterator(); frIterator.hasNext();) {
-                FriendlyShip frSp = frIterator.next();
+        //Check collisions in gameObjectsToDraw
+        for (DrawableObject otherObj : gameObjectsToDraw) {
+            if (otherObj.getClass() == Asteroid.class) {
+                for (DrawableObject refObj : gameObjectsToDraw) {
+                    if (!refObj.equals(otherObj) && refObj.isCollidingWith(otherObj)) {
+                        gameObjectsClose.remove(refObj);
+                        free(refObj);
+                        return;
+                    }
+                }
+            } else if (otherObj.getClass() == EnemyShip.class) {
+                for (DrawableObject refObj : gameObjectsToDraw) {
+                    if (refObj.getClass() == FriendlyShip.class && ((FriendlyShip) refObj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED && refObj.isCollidingWith(otherObj)) {
+                        gameObjectsClose.remove(refObj);
+                        free(refObj);
+                        return;
+                    }
+                }
+            }
+        }
+
+        List<FriendlyShip> cacheRemoveFSList = new ArrayList<FriendlyShip>();
+        List<FriendlyShip> cacheAddFSList = new ArrayList<FriendlyShip>();
+        //Check collisions in the playerContainer
+        here:
+        for (FriendlyShip frSp : playerContainer.getFriendlyShipList()) {
+            for (DrawableObject obj : gameObjectsToDraw) {
                 if (frSp.isCollidingWith(obj)) {
                     if (obj.getClass() == Asteroid.class || obj.getClass() == EnemyShip.class) {
-                        frSp.changeControllerState(FriendlyShip.ControllerState.AI_CONTROLLED);
-                        gameObjectsClose.remove(frSp);
-                        friendlyPool.free(frSp);
-                        frIterator.remove();
-                        if (frList.isEmpty()) {
-                            //gameOver();
-                        }
+                        cacheRemoveFSList.add(frSp);
+                        break here;
                     }
                     else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-                        ((FriendlyShip) obj).offset = Vector2.difference(obj.getWorldLocation(), playerContainer.getLocation());
-                        frIterator.add((FriendlyShip) obj);
-                        gameObjectsClose.remove(frSp);
-                        drawIterator.remove();
+                        cacheAddFSList.add((FriendlyShip) obj);
+                        break here;
                     }
                 }
             }
         }
 
-        gameObjectsToDraw = drawList;
-        playerContainer.friendlyShipList = frList;
-
-        List<DrawableObject> drawListOne = gameObjectsToDraw;
-        List<DrawableObject> drawListTwo = gameObjectsToDraw;
-
-        for (ListIterator<DrawableObject> drawOneIterator = drawListOne.listIterator(); drawOneIterator.hasNext();) {
-            DrawableObject objOne = drawOneIterator.next();
-            for (ListIterator<DrawableObject> drawTwoIterator = drawListTwo.listIterator(); drawTwoIterator.hasNext();) {
-                DrawableObject objTwo = drawTwoIterator.next();
-                if (objOne.getClass() == Asteroid.class) {
-                    if (objOne.isCollidingWith(objTwo)) {
-                        gameObjectsClose.remove(objTwo);
-                        drawTwoIterator.remove();
-                    }
-                }
-                else if (objOne.getClass() == EnemyShip.class) {
-                    if (objOne.isCollidingWith(objTwo)) {
-                        if (objTwo.getClass() == FriendlyShip.class) {
-                            gameObjectsClose.remove(objTwo);
-                            drawTwoIterator.remove();
-                        }
-                    }
-                }
-            }
+        for (FriendlyShip frSp : cacheRemoveFSList) {
+            playerContainer.removeShip(frSp);
+            friendlyPool.free(frSp);
         }
-
-        gameObjectsToDraw = drawListTwo;
+        for (FriendlyShip frSp : cacheAddFSList) {
+            frSp.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
+            frSp.offset = Vector2.difference(frSp.getWorldLocation(), playerContainer.getLocation());
+            playerContainer.addShip(frSp);
+            gameObjectsClose.remove(frSp);
+        }
 
     }
 
@@ -211,6 +206,7 @@ class GameObjectsContainer {
                 if (playerView.distanceFromObject(farObj) > FAR_MAX_DISTANCE) {
                     if (farObj instanceof DrawableObject) {
                         free(farObj);
+                        farIterator.remove();
                     } else {
                         farIterator.remove();
                     }
@@ -223,7 +219,7 @@ class GameObjectsContainer {
             }
             gameObjectsFar = farList;
 
-            for (int i = gameObjectsFar.size() + gameObjectsMedium.size() + gameObjectsClose.size(); i < SPAWN_THRESHOLD; i++) {
+            while (gameObjectsFar.size() + gameObjectsMedium.size() + gameObjectsClose.size() < SPAWN_THRESHOLD) {
                 gameObjectsFar.add(createRandomGameObject(playerView));
             }
 
@@ -272,6 +268,7 @@ class GameObjectsContainer {
             }
         }
         gameObjectsClose = closeList;
+        gameObjectsToDraw.clear();
         gameObjectsToDraw = drawList;
 
         checkCollisions();
@@ -280,7 +277,7 @@ class GameObjectsContainer {
         playerContainer.setLocation(playerView.getLocation());
         playerContainer.update(deltaTime);
 
-        for (FriendlyShip obj : playerContainer.friendlyShipList) {
+        for (FriendlyShip obj : playerContainer.getFriendlyShipList()) {
             obj.transform.setLocation(playerView.getScreenLocation(obj.getWorldLocation()));
             obj.update(deltaTime);
         }
@@ -295,7 +292,7 @@ class GameObjectsContainer {
         for (DrawableObject obj : gameObjectsToDraw) {
             obj.draw(g);
         }
-        for (FriendlyShip obj : playerContainer.friendlyShipList) {
+        for (FriendlyShip obj : playerContainer.getFriendlyShipList()) {
             obj.draw(g);
         }
     }

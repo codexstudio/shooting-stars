@@ -4,7 +4,7 @@ import com.filip.androidgames.framework.types.Vector2;
 
 class PlayerView {
 
-    private final float OFF_SCREEN_EXTENSION = 5.0f;
+    private final float OFF_SCREEN_EXTENSION = 50.0f;
 
     private Vector2 location;
     final int width;
