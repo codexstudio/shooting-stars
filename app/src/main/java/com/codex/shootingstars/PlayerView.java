@@ -2,13 +2,13 @@ package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.types.Vector2;
 
-public class PlayerView {
+class PlayerView {
 
     private final float OFF_SCREEN_EXTENSION = 5.0f;
 
     private Vector2 location;
-    private int width;
-    private int height;
+    final int width;
+    final int height;
 
     PlayerView(int width, int height) {
         location = new Vector2(width / 2, height / 2);
@@ -36,8 +36,8 @@ public class PlayerView {
     }
 
     boolean isWithinView(BackgroundObject obj) {
-        final float objXPos = obj.getTransform().getLocation().getX();
-        final float objYPos = obj.getTransform().getLocation().getY();
+        final float objXPos = obj.getLocation().getX();
+        final float objYPos = obj.getLocation().getY();
 
         final boolean rightEdgeInView = objXPos + obj.getWidth() / 2 > location.getX() - width / 2 - OFF_SCREEN_EXTENSION;
         final boolean leftEdgeInView = objXPos - obj.getWidth() / 2 < location.getX() + width / 2 + OFF_SCREEN_EXTENSION;

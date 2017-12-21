@@ -3,21 +3,23 @@ package com.codex.shootingstars;
 import android.graphics.Bitmap;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.types.Transform2D;
+import com.filip.androidgames.framework.types.Vector2;
 
 public class BackgroundObject {
     private Bitmap bitmap;
-    private Transform2D transform;
+    private Vector2 location;
 
-    BackgroundObject(Bitmap bitmap, Transform2D transform) {
+    BackgroundObject(Bitmap bitmap, Vector2 location) {
+        bitmap.setHasAlpha(true);
         this.bitmap = bitmap;
-        this.transform = transform;
+        this.location = location;
     }
 
     Bitmap getBitmap() { return bitmap; }
     void setBitmap(Bitmap bitmap) { this.bitmap = bitmap; }
 
-    Transform2D getTransform() { return transform; }
-    void setTransform(Transform2D transform) { this.transform = transform; }
+    Vector2 getLocation() { return location; }
+    void setLocation(Vector2 location) { this.location = location; }
 
     int getWidth() { return bitmap.getWidth(); }
     int getHeight() { return bitmap.getHeight(); }

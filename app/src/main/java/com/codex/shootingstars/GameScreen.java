@@ -1,5 +1,6 @@
 package com.codex.shootingstars;
 
+import android.content.Context;
 import android.graphics.Color;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
@@ -70,7 +71,7 @@ public class GameScreen extends Screen implements GameEventListener {
         playerView = new PlayerView(width, height);
         gameObjectsContainer = new GameObjectsContainer(g, this, playerView);
 
-        bkg = new SpaceBackground(playerView, width, height);
+        bkg = new SpaceBackground((Context) game, playerView);
 
 //        background = g.newPixmap("background.png", Graphics.PixmapFormat.RGB565);
         joystickPixmap = g.newPixmap("virtual-joystick-bkg.png", Graphics.PixmapFormat.ARGB4444);
