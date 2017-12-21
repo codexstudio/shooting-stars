@@ -160,11 +160,11 @@ public class GameScreen extends Screen implements GameEventListener {
         if (!isPaused && isAlive) {
             if (bIsTouching) {
                 final float scrollSpeed = 0.05f;
-                Vector2 bkgPos = new Vector2();
-                bkgPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
-                bkgPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
+                Vector2 playerPos = new Vector2();
+                playerPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
+                playerPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
 
-                playerView.setLocation(bkgPos);
+                playerView.setLocation(playerPos);
                 score += 1;
             }
         }
@@ -233,70 +233,6 @@ public class GameScreen extends Screen implements GameEventListener {
     @Override
     public void onPlayerRemoved(FriendlyShip fs) {
     }
-
-//    private void checkCollisions() {
-//        List<FriendlyShip> frList = playerContainer.friendlyShipList;
-//        List<BaseCharacter> baseChList = gameContainer.containerList;
-//
-//        for (Iterator<FriendlyShip> frIterator = frList.iterator(); frIterator.hasNext();) {
-//            FriendlyShip frSp = frIterator.next();
-//            for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {
-//                BaseCharacter obj = bsChIterator.next();
-//                if (frSp.isCollidingWith(obj)) {
-//                    if (obj.getClass() == Asteroid.class) {
-//                        frIterator.remove();
-//                        bsChIterator.remove();
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (frList.isEmpty()) {
-//                            gameOver();
-//                        }
-//                    }
-//                    else if (obj.getClass() == EnemyShip.class) {
-//                        frIterator.remove();
-//                        bsChIterator.remove();
-//                        frSp.setToPoolTransform();
-//                        friendlyPool.free(frSp);
-//                        if (frList.isEmpty()) {
-//                            gameOver();
-//                        }
-//                    } else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
-//                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
-//                        playerContainer.addShip((FriendlyShip) obj, true);
-//                    }
-//                }
-//            }
-//        }
-//
-//        playerContainer.friendlyShipList = frList;
-//        gameContainer.containerList = baseChList;
-//    }
-//
-//    private void checkOutOfBounds() {
-//        List<BaseCharacter> baseChList = gameContainer.containerList;
-//
-//        for (Iterator<BaseCharacter> bsChIterator = baseChList.iterator(); bsChIterator.hasNext();) {
-//            BaseCharacter obj = bsChIterator.next();
-//            final float OUT_OF_BOUNDS_EXTENSION = 5.0f;
-//            if (obj.transform.getLocation().getX() < -OUT_OF_BOUNDS_EXTENSION ||
-//                    obj.transform.getLocation().getX() > width + OUT_OF_BOUNDS_EXTENSION ||
-//                    obj.transform.getLocation().getY() < -OUT_OF_BOUNDS_EXTENSION ||
-//                    obj.transform.getLocation().getY() > height + OUT_OF_BOUNDS_EXTENSION)
-//            {
-//                bsChIterator.remove();
-//                obj.setToPoolTransform();
-//                if (obj.getClass() == FriendlyShip.class) {
-//                    friendlyPool.free((FriendlyShip) obj);
-//                } else if (obj.getClass() == EnemyShip.class) {
-//                    enemyPool.free((EnemyShip) obj);
-//                } else if (obj.getClass() == Asteroid.class) {
-//                    asteroidPool.free((Asteroid) obj);
-//                }
-//            }
-//        }
-//
-//        gameContainer.containerList = baseChList;
-//    }
 
     private void gameOver() {
         isAlive = false;

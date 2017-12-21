@@ -11,10 +11,12 @@ public class PlayerContainer {
     //Members
     public List<FriendlyShip> friendlyShipList;
     private GameEventListener listener;
+    private Vector2 location;
 
     //Constructor
-    public PlayerContainer(GameEventListener listener) {
+    public PlayerContainer(GameEventListener listener, PlayerView playerView) {
         this.listener = listener;
+        this.location = playerView.getLocation();
         friendlyShipList = new ArrayList<FriendlyShip>();
     }
 
@@ -41,4 +43,13 @@ public class PlayerContainer {
                 obj.transform.setRotation(direction);
         }
     }
+
+    void update(float deltaTime) {
+        for (FriendlyShip obj : friendlyShipList) {
+            obj.setWorldLocation(Vector2.sum(location, obj.offset));
+        }
+    }
+
+    void setLocation(Vector2 location) { this.location = location; }
+    Vector2 getLocation() { return location; }
 }

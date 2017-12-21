@@ -52,6 +52,10 @@ public class Vector2 {
         return new Vector2(lhs.getX() + rhs.getX(), lhs.getY() + rhs.getY());
     }
 
+    public static Vector2 difference(final Vector2 lhs, final Vector2 rhs) {
+        return new Vector2(lhs.getX() - rhs.getX(), lhs.getY() - rhs.getY());
+    }
+
     public void subtract(final Vector2 rhs) {
         x -= rhs.getX();
         y -= rhs.getY();

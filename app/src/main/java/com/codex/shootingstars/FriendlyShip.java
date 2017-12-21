@@ -2,6 +2,7 @@ package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Vector2;
 
 public class FriendlyShip extends BaseCharacter{
 
@@ -12,6 +13,7 @@ public class FriendlyShip extends BaseCharacter{
 
     //Members
     private ControllerState controllerState;
+    Vector2 offset;
 
     //Default Constructor
     public FriendlyShip(Graphics g){
@@ -42,4 +44,5 @@ public class FriendlyShip extends BaseCharacter{
         super.setToPoolTransform();
         this.controllerState = ControllerState.AI_CONTROLLED;
     }
+
 }

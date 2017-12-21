@@ -2,6 +2,7 @@ package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Vector2;
 
 public class Asteroid extends BaseCharacter {
 
@@ -19,7 +20,9 @@ public class Asteroid extends BaseCharacter {
 
     protected void update(float deltaTime) {
         super.update(deltaTime);
+        rotateClockwise(0.1f);
     }
+
     //Methods
 
 }

@@ -70,7 +70,22 @@ public abstract class DrawableObject extends GameObject {
     }
 
     protected boolean isCollidingWith(DrawableObject object) {
-        float distance = Math.abs(Vector2.distance(this.transform.getLocation(), object.transform.getLocation()));
+        float distance = Math.abs(Vector2.distance(this.getWorldLocation(), object.getWorldLocation()));
         return distance < this.getBoundingRadius() + object.getBoundingRadius();
+    }
+
+    protected void rotateClockwise(float amount) {
+        if (transform.getRotation().getX() >= 0 && transform.getRotation().getY() >= 0) {
+            transform.setRotation(new Vector2(transform.getRotation().getX() + amount, transform.getRotation().getY() - amount));
+        }
+        else if (transform.getRotation().getX() >= 0 && transform.getRotation().getY() <= 0) {
+            transform.setRotation(new Vector2(transform.getRotation().getX() - amount, transform.getRotation().getY() - amount));
+        }
+        else if (transform.getRotation().getX() <= 0 && transform.getRotation().getY() <= 0) {
+            transform.setRotation(new Vector2(transform.getRotation().getX() - amount, transform.getRotation().getY() + amount));
+        }
+        else if (transform.getRotation().getX() <= 0 && transform.getRotation().getY() >= 0) {
+            transform.setRotation(new Vector2(transform.getRotation().getX() + amount, transform.getRotation().getY() + amount));
+        }
     }
 }

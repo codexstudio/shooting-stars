@@ -18,4 +18,5 @@ public class EnemyShip extends BaseCharacter {
     }
 
     //Methods
+
 }

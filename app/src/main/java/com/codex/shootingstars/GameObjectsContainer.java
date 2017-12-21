@@ -1,13 +1,11 @@
 package com.codex.shootingstars;
 
+import android.util.Log;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 class GameObjectsContainer {
     private class ObjectDescriptor extends GameObject {
@@ -23,13 +21,15 @@ class GameObjectsContainer {
         }
     }
 
-    private final int FAR_MAX_DISTANCE = 7500;
-    private final int MEDIUM_MAX_DISTANCE = 5000;
-    private final int CLOSE_MAX_DISTANCE = 2500;
-    private final int SPAWN_THRESHOLD = 100;
-    private final float CHANCE_ASTEROID = 0.2f; //20% chance to spawn
-    private final float CHANCE_ENEMYSHIP = CHANCE_ASTEROID + 0.4f; //40% chance to spawn
-    private final float CHANCE_FRIENDLYSHIP = CHANCE_ENEMYSHIP + 0.4f; //40% chance to spawn
+    private final int FAR_MAX_DISTANCE = 5000;
+    private final int MEDIUM_MAX_DISTANCE = 2500;
+    private final int CLOSE_MAX_DISTANCE = 1000;
+    private final int SPAWN_THRESHOLD = 200;
+
+    //Chances below must add up to 100%
+    private final float CHANCE_ASTEROID = 0.3f; //30% chance to spawn
+    private final float CHANCE_ENEMYSHIP = CHANCE_ASTEROID + 0.35f; //35% chance to spawn
+    private final float CHANCE_FRIENDLYSHIP = CHANCE_ENEMYSHIP + 0.35f; //35% chance to spawn
 
     private float currTime;
 
@@ -48,7 +48,7 @@ class GameObjectsContainer {
         gameObjectsFar = new ArrayList<>();
         gameObjectsMedium = new ArrayList<>();
         gameObjectsToDraw = new ArrayList<>();
-        playerContainer = new PlayerContainer(listener);
+        playerContainer = new PlayerContainer(listener, playerView);
 
         friendlyPool = new Pool<>(
                 () -> new FriendlyShip(
@@ -59,7 +59,7 @@ class GameObjectsContainer {
         enemyPool = new Pool<>(
                 () -> new EnemyShip(
                         g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888),
-                        -500.0f, -500.0f, 0.5f, 0.5f),
+                        -500.0f, -500.0f, 0.4f, 0.4f),
                 100
         );
         asteroidPool = new Pool<>(
@@ -127,8 +127,69 @@ class GameObjectsContainer {
         }
     }
 
+    private void checkCollisions() {
+        List<DrawableObject> drawList = gameObjectsToDraw;
+        List<FriendlyShip> frList = playerContainer.friendlyShipList;
+
+        for (ListIterator<DrawableObject> drawIterator = drawList.listIterator(); drawIterator.hasNext();) {
+            DrawableObject obj = drawIterator.next();
+            for (ListIterator<FriendlyShip> frIterator = frList.listIterator(); frIterator.hasNext();) {
+                FriendlyShip frSp = frIterator.next();
+                if (frSp.isCollidingWith(obj)) {
+                    if (obj.getClass() == Asteroid.class || obj.getClass() == EnemyShip.class) {
+                        frSp.changeControllerState(FriendlyShip.ControllerState.AI_CONTROLLED);
+                        gameObjectsClose.remove(frSp);
+                        friendlyPool.free(frSp);
+                        frIterator.remove();
+                        if (frList.isEmpty()) {
+                            //gameOver();
+                        }
+                    }
+                    else if (obj.getClass() == FriendlyShip.class && ((FriendlyShip) obj).getState() == FriendlyShip.ControllerState.AI_CONTROLLED) {
+                        ((FriendlyShip) obj).changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
+                        ((FriendlyShip) obj).offset = Vector2.difference(obj.getWorldLocation(), playerContainer.getLocation());
+                        frIterator.add((FriendlyShip) obj);
+                        gameObjectsClose.remove(frSp);
+                        drawIterator.remove();
+                    }
+                }
+            }
+        }
+
+        gameObjectsToDraw = drawList;
+        playerContainer.friendlyShipList = frList;
+
+        List<DrawableObject> drawListOne = gameObjectsToDraw;
+        List<DrawableObject> drawListTwo = gameObjectsToDraw;
+
+        for (ListIterator<DrawableObject> drawOneIterator = drawListOne.listIterator(); drawOneIterator.hasNext();) {
+            DrawableObject objOne = drawOneIterator.next();
+            for (ListIterator<DrawableObject> drawTwoIterator = drawListTwo.listIterator(); drawTwoIterator.hasNext();) {
+                DrawableObject objTwo = drawTwoIterator.next();
+                if (objOne.getClass() == Asteroid.class) {
+                    if (objOne.isCollidingWith(objTwo)) {
+                        gameObjectsClose.remove(objTwo);
+                        drawTwoIterator.remove();
+                    }
+                }
+                else if (objOne.getClass() == EnemyShip.class) {
+                    if (objOne.isCollidingWith(objTwo)) {
+                        if (objTwo.getClass() == FriendlyShip.class) {
+                            gameObjectsClose.remove(objTwo);
+                            drawTwoIterator.remove();
+                        }
+                    }
+                }
+            }
+        }
+
+        gameObjectsToDraw = drawListTwo;
+
+    }
+
     private void setUpGameStart(Graphics g, PlayerView playerView) {
         FriendlyShip startingShip = (FriendlyShip) newObject(FriendlyShip.class, new Vector2(g.getWidth() / 2, g.getHeight() / 2));
+        startingShip.offset = new Vector2();
         startingShip.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
         playerContainer.addShip(startingShip);
 
@@ -213,10 +274,14 @@ class GameObjectsContainer {
         gameObjectsClose = closeList;
         gameObjectsToDraw = drawList;
 
+        checkCollisions();
+
         playerContainer.rotateShips(joystick.getDirection());
+        playerContainer.setLocation(playerView.getLocation());
+        playerContainer.update(deltaTime);
 
         for (FriendlyShip obj : playerContainer.friendlyShipList) {
-            obj.transform.setLocation(obj.getWorldLocation());
+            obj.transform.setLocation(playerView.getScreenLocation(obj.getWorldLocation()));
             obj.update(deltaTime);
         }
 
