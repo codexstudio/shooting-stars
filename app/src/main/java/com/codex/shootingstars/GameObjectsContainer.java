@@ -1,7 +1,5 @@
 package com.codex.shootingstars;
 
-import android.util.Log;
-import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
 import com.filip.androidgames.framework.Pool;
@@ -9,7 +7,6 @@ import com.filip.androidgames.framework.impl.VirtualJoystick;
 import com.filip.androidgames.framework.types.Transform2D;
 import com.filip.androidgames.framework.types.Vector2;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -59,7 +56,7 @@ public class GameObjectsContainer {
         gameObjectsToDraw = new ArrayList<DrawableObject>();
         playerContainer = new PlayerContainer(listener);
 
-        friendlyShipPixmap = g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888);
+        friendlyShipPixmap = g.newPixmap(Settings.PlayerShip, Graphics.PixmapFormat.ARGB8888);
         enemyShipPixmap = g.newPixmap("EnemyShip.png", Graphics.PixmapFormat.ARGB8888);
         asteroidPixmap = g.newPixmap("Asteroid.png", Graphics.PixmapFormat.ARGB8888);
 

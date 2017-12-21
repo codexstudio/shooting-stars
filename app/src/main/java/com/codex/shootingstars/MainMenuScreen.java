@@ -1,7 +1,9 @@
 package com.codex.shootingstars;
 
+import android.util.Log;
 import com.filip.androidgames.framework.*;
 import com.filip.androidgames.framework.Input.TouchEvent;
+import com.filip.androidgames.framework.types.Vector2;
 
 import java.util.List;
 
@@ -146,6 +148,35 @@ public class MainMenuScreen extends Screen {
                     if (charactersBtn.onTouchRect(event)) {
                         charactersContainer.setVisibility(true);
                         mainMenuContainer.setVisibility(false);
+                    }
+                }
+                if (character.isVisible())
+                {
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipOne.transform.getLocation()) < shipOne.getBoundingRadius()) {
+                        Log.d("Saved", "HELLO?");
+                        Settings.PlayerShip = "PlayerShip.png";
+                        Settings.saveFiles(game.getFileIO());
+                    }
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipTwo.transform.getLocation()) < shipTwo.getBoundingRadius()) {
+                        Settings.PlayerShip = "PlayerShip2.png";
+                        Settings.saveFiles(game.getFileIO());
+                    }
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipThree.transform.getLocation()) < shipThree.getBoundingRadius()) {
+                        Log.d("Saved", "HELLO?");
+                        Settings.PlayerShip = "PlayerShip3.png";
+                        Settings.saveFiles(game.getFileIO());
+                    }
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipFour.transform.getLocation()) < shipFour.getBoundingRadius()) {
+                        Settings.PlayerShip = "PlayerShip4.png";
+                        Settings.saveFiles(game.getFileIO());
+                    }
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipFive.transform.getLocation()) < shipFive.getBoundingRadius()) {
+                        Settings.PlayerShip = "PlayerShip5.png";
+                        Settings.saveFiles(game.getFileIO());
+                    }
+                    if (Vector2.distance(new Vector2(event.x, event.y), shipSix.transform.getLocation()) < shipSix.getBoundingRadius()) {
+                        Settings.PlayerShip = "PlayerShip6.png";
+                        Settings.saveFiles(game.getFileIO());
                     }
                 }
                 if (backBtn.isVisible()) {
