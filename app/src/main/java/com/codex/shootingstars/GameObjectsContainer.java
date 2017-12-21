@@ -52,7 +52,7 @@ class GameObjectsContainer {
 
         friendlyPool = new Pool<>(
                 () -> new FriendlyShip(
-                        g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888),
+                        g.newPixmap(Settings.PlayerShip, Graphics.PixmapFormat.ARGB8888),
                         FriendlyShip.ControllerState.AI_CONTROLLED, -500.0f, -500.0f, 0.25f, 0.25f),
                 100
         );

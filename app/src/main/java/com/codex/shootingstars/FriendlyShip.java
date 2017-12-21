@@ -17,7 +17,7 @@ public class FriendlyShip extends BaseCharacter{
 
     //Default Constructor
     public FriendlyShip(Graphics g){
-        setActorSpriteSheet(g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
+        setActorSpriteSheet(g.newPixmap(Settings.PlayerShip, Graphics.PixmapFormat.ARGB8888));
         controllerState = ControllerState.AI_CONTROLLED;
     }
 
