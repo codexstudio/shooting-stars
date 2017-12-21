@@ -2,6 +2,7 @@ package com.codex.shootingstars;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import com.filip.androidgames.framework.Game;
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Graphics.Point;
@@ -37,6 +38,8 @@ public class GameScreen extends Screen implements GameEventListener {
     private boolean isAlive = true;
 
     private int score = 0;
+    private float scrollSpeed = 0.05f;
+    private final float maxScrollSpeed = 0.14f;
 
     private boolean bIsTouching;
     private VirtualJoystick joystick;
@@ -158,15 +161,15 @@ public class GameScreen extends Screen implements GameEventListener {
         }
 
         if (!isPaused && isAlive) {
-            if (bIsTouching) {
-                final float scrollSpeed = 0.05f;
+            if (scrollSpeed <= maxScrollSpeed) scrollSpeed += 0.000025f;
+            //if (bIsTouching) {
                 Vector2 playerPos = new Vector2();
                 playerPos.setX(playerView.getLocation().getX() + scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.RIGHT_VECTOR));
                 playerPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
 
                 playerView.setLocation(playerPos);
                 score += 1;
-            }
+            //}
         }
 
         if (score > 5) {
@@ -226,12 +229,8 @@ public class GameScreen extends Screen implements GameEventListener {
     }
 
     @Override
-    public void onPlayerAdded(FriendlyShip fs) {
-
-    }
-
-    @Override
-    public void onPlayerRemoved(FriendlyShip fs) {
+    public void deathListener() {
+        gameOver();
     }
 
     private void gameOver() {

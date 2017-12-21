@@ -32,6 +32,17 @@ public class VirtualJoystick {
     }
 
     // returns direction clamped to MAX_JOYSTICK_DISTANCE
-    public Vector2 getDirection() { return direction.getClampedToSize(MAX_JOYSTICK_DISTANCE); }
+    public Vector2 getDirection() {
+        if (direction.getX() == 0.0f && direction.getY() == 0.0f) {
+            direction.setY(MAX_JOYSTICK_DISTANCE);
+        }
+        else if (direction.magnitude() < MAX_JOYSTICK_DISTANCE) {
+            Vector2 temp = direction;
+            temp.unitVector();
+            temp.scale(MAX_JOYSTICK_DISTANCE);
+            direction = temp;
+        }
+        return direction.getClampedToSize(MAX_JOYSTICK_DISTANCE);
+    }
     public Vector2 getRawDirection() { return direction; }
 }
