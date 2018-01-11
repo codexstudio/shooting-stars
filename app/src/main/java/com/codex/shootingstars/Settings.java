@@ -1,6 +1,5 @@
 package com.codex.shootingstars;
 
-import android.os.Environment;
 import android.util.Log;
 import com.filip.androidgames.framework.FileIO;
 
@@ -10,7 +9,6 @@ public class Settings {
     public static boolean soundEnabled = true;
     public static String PlayerShip = "PlayerShip.png";
     public static int[] highscores = new int[] {100, 50, 25, 12, 1};
-
 
     public static void loadFiles(FileIO files)
     {
@@ -32,12 +30,6 @@ public class Settings {
                     in.close();
             }catch (IOException e){}
         }
-        //Log.d("Test",String.valueOf(soundEnabled));
-
-        for (int a = 0; a < 5; a++)
-        {
-            Log.d("Loaded",String.valueOf(highscores[a]));
-        }
     }
 
     public static void saveFiles(FileIO files){
@@ -51,10 +43,10 @@ public class Settings {
             for (int i = 0; i < highscores.length; i++) {
                 out.write(Integer.toString(highscores[i]));
                 out.write('\n');
-                Log.d("Saved", String.valueOf(highscores[i]));
             }
         }
         catch (IOException e) {
+            Log.e("Cake", "Exception: " + e);
         }finally{
             try{
                 if (out !=null)
@@ -75,9 +67,5 @@ public class Settings {
                 break;
             }
         }
-    }
-
-    public static boolean isSDCARDAvailable(){
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
