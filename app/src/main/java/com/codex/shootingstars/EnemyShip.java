@@ -2,10 +2,12 @@ package com.codex.shootingstars;
 
 import com.filip.androidgames.framework.Graphics;
 import com.filip.androidgames.framework.Pixmap;
+import com.filip.androidgames.framework.types.Vector2;
 
 public class EnemyShip extends BaseCharacter {
 
     //Members
+    Vector2 waypoint;
 
     //Default Constructor
     public EnemyShip(Graphics g){
@@ -19,4 +21,16 @@ public class EnemyShip extends BaseCharacter {
 
     //Methods
 
+    protected void update(float deltaTime) {
+        super.update(deltaTime);
+        if (waypoint == null) {
+            waypoint = findNextWanderWaypoint();
+        }
+        else if (Vector2.distance(waypoint, getWorldLocation()) <= AI_SPEED) {
+            waypoint = findNextWanderWaypoint();
+        }
+        else {
+            moveTowardsWaypoint(waypoint);
+        }
+    }
 }

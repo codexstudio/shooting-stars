@@ -8,13 +8,14 @@ import java.util.Random;
 public class ShipAI {
     private static final int WANDER_RADIUS = 300;
 
-    private Vector2 findNextWanderWaypoint() {
+    private Vector2 findNextWanderWaypoint(Vector2 currWorldLocation) {
         Random random = new Random();
         double angle = random.nextDouble() * Math.PI * 2;
-        double radius = Math.sqrt(random.nextDouble()) * WANDER_RADIUS;
-        float x = (float) (Math.cos(angle) * radius);
-        float y = (float) (Math.sin(angle) * radius);
+        double radius = Math.sqrt(random.nextDouble()) * WANDER_RADIUS ;
+        float x = (float) (Math.cos(angle) * radius) + currWorldLocation.getX();
+        float y = (float) (Math.sin(angle) * radius) + currWorldLocation.getY();
 
         return new Vector2(x, y);
     }
+
 }

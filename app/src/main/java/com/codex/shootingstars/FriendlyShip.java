@@ -14,6 +14,7 @@ public class FriendlyShip extends BaseCharacter{
     //Members
     private ControllerState controllerState;
     Vector2 offset;
+    Vector2 waypoint;
 
     //Default Constructor
     public FriendlyShip(Graphics g){
@@ -37,12 +38,17 @@ public class FriendlyShip extends BaseCharacter{
 
     protected void update(float deltaTime) {
         super.update(deltaTime);
-    }
-
-    @Override
-    public void setToPoolTransform() {
-        super.setToPoolTransform();
-        this.controllerState = ControllerState.AI_CONTROLLED;
+        if (this.controllerState == ControllerState.AI_CONTROLLED) {
+            if (waypoint == null) {
+                waypoint = findNextWanderWaypoint();
+            }
+            else if (Vector2.distance(waypoint, getWorldLocation()) <= AI_SPEED) {
+                waypoint = findNextWanderWaypoint();
+            }
+            else {
+                moveTowardsWaypoint(waypoint);
+            }
+        }
     }
 
 }
