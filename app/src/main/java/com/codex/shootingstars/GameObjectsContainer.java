@@ -127,7 +127,7 @@ class GameObjectsContainer {
         }
     }
 
-    private void checkCollisions() {
+    private void checkCollisions(PlayerView playerView) {
 
         //Check collisions in gameObjectsToDraw
         for (DrawableObject otherObj : gameObjectsToDraw) {
@@ -172,11 +172,13 @@ class GameObjectsContainer {
         for (FriendlyShip frSp : cacheRemoveFSList) {
             playerContainer.removeShip(frSp);
             friendlyPool.free(frSp);
+            playerContainer.adjustPosition(playerView);
         }
         for (FriendlyShip frSp : cacheAddFSList) {
             frSp.changeControllerState(FriendlyShip.ControllerState.PLAYER_CONTROLLED);
             frSp.offset = Vector2.difference(frSp.getWorldLocation(), playerContainer.getLocation());
             playerContainer.addShip(frSp);
+            playerContainer.adjustPosition(playerView);
             gameObjectsClose.remove(frSp);
         }
 
@@ -271,7 +273,7 @@ class GameObjectsContainer {
         gameObjectsToDraw.clear();
         gameObjectsToDraw = drawList;
 
-        checkCollisions();
+        checkCollisions(playerView);
 
         playerContainer.rotateShips(joystick.getDirection());
         playerContainer.setLocation(playerView.getLocation());

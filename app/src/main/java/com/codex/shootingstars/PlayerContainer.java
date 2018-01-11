@@ -49,8 +49,29 @@ public class PlayerContainer {
         }
     }
 
+    public void adjustPosition(PlayerView playerView) {
+        Vector2 avgLocation = new Vector2();
+        for (FriendlyShip obj : friendlyShipList) {
+            avgLocation.setX(avgLocation.getX() + obj.transform.getLocation().getX());
+            avgLocation.setY(avgLocation.getY() + obj.transform.getLocation().getY());
+        }
+        avgLocation.setX(avgLocation.getX() / friendlyShipList.size());
+        avgLocation.setY(avgLocation.getY() / friendlyShipList.size());
+        float xOffset = avgLocation.getX() - playerView.width / 2;
+        float yOffset = avgLocation.getY() - playerView.height / 2;
+        for (FriendlyShip obj : friendlyShipList) {
+            obj.offset = (new Vector2(obj.offset.getX() - xOffset, obj.offset.getY() - yOffset));
+        }
+    }
+
     void update(float deltaTime) {
         for (FriendlyShip obj : friendlyShipList) {
+//            if (!obj.getWorldLocation().equals(Vector2.sum(obj.getWorldLocation(), obj.offset))) {
+//                obj.setWorldLocation(Vector2.sum(location, obj.offset.unitVector()));
+//            }
+//            else {
+//                obj.setWorldLocation(location);
+//            }
             obj.setWorldLocation(Vector2.sum(location, obj.offset));
         }
     }
