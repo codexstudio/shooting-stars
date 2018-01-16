@@ -24,10 +24,8 @@ import static com.codex.shootingstars.MainMenuScreen.mainTheme;
 public class GameScreen extends Screen implements GameEventListener {
 
     //Sprite Resources
-//    private static Pixmap background;
     private static Pixmap joystickPixmap;
     private Pixmap numbersPixmap;
-//    private Point bkgPos;
     private Point joystickPos;
 
     private int width;
@@ -36,7 +34,6 @@ public class GameScreen extends Screen implements GameEventListener {
     private boolean isPaused = false;
     private boolean isAlive = true;
 
-    private int score = 0;
     private float scrollSpeed = 0.05f;
     private final float maxScrollSpeed = 0.14f;
 
@@ -91,7 +88,7 @@ public class GameScreen extends Screen implements GameEventListener {
         pauseBtn = new Button(width - 64, 64, 0.28f, 0.28f, g.newPixmap("Pause_Button.png", Graphics.PixmapFormat.ARGB8888));
         resumeBtn = new Button(width / 2, height / 2, 1.0f, 1.0f, g.newPixmap("Resume.png", Graphics.PixmapFormat.ARGB8888));
         endBtn = new Button(width / 2, height * 5 / 6, 1.0f, 1.0f, g.newPixmap("End.png", Graphics.PixmapFormat.ARGB8888));
-        death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
+        //death = new Button(width - 64, 192, 0.28f, 0.28f, g.newPixmap("death.png", Graphics.PixmapFormat.ARGB8888));
         restartBtn = new Button(width / 2, height / 2, 1, 1, g.newPixmap("restart.png", Graphics.PixmapFormat.ARGB8888));
 
         scoreUI = new StaticUI(123, 29, 1.0f, 1.0f, g.newPixmap("Score.png", Graphics.PixmapFormat.ARGB8888));
@@ -99,7 +96,7 @@ public class GameScreen extends Screen implements GameEventListener {
         pausedUI = new StaticUI(g.getWidth() / 2, g.getHeight() * 1.5f / 11, 1, 1, g.newPixmap("paused.png", Graphics.PixmapFormat.ARGB8888));
 
         game.unlockAchievement(R.string.achievement_first_game);
-        HUDContainer.add(pauseBtn, scoreUI, death);
+        HUDContainer.add(pauseBtn, scoreUI);
         pauseContainer.add(pausedUI, resumeBtn, endBtn);
         deathContainer.add(gameOverUI, restartBtn, endBtn);
     }
@@ -135,10 +132,10 @@ public class GameScreen extends Screen implements GameEventListener {
                     }
                 }
                 if (isAlive) {
-                    if (death.onTouchCircle(event)) {
-                        game.showBannerAd();
-                        game.showInterstitialAd();
-                    }
+//                    if (death.onTouchCircle(event)) {
+//                        game.showBannerAd();
+//                        game.showInterstitialAd();
+//                    }
                     if (Vector2.distance(new Vector2(event.x, event.y), pauseBtn.transform.getLocation()) < pauseBtn.getBoundingRadius()) {
                         setPause();
                     }
@@ -167,15 +164,7 @@ public class GameScreen extends Screen implements GameEventListener {
                 playerPos.setY(playerView.getLocation().getY() - scrollSpeed * Vector2.projection(joystick.getDirection(), Vector2.UP_VECTOR));
 
                 playerView.setLocation(playerPos);
-                score += 1;
             //}
-        }
-
-        if (score > 5) {
-//            game.unlockAchievement(R.string.achievement_five_is_alive);
-        }
-        if (score > 10) {
-//            game.unlockAchievement(R.string.achievement_ten_ten);
         }
 
     }
@@ -195,7 +184,7 @@ public class GameScreen extends Screen implements GameEventListener {
                 }
                 gameObjectsContainer.draw(g);
                 HUDContainer.draw(g);
-                drawText(g, String.valueOf(score), 256, 0);
+                drawText(g, String.valueOf(gameObjectsContainer.getPlayerContainer().getScore()), 256, 0);
             } else {
                 pauseContainer.draw(g);
             }
@@ -234,7 +223,7 @@ public class GameScreen extends Screen implements GameEventListener {
 
     private void gameOver() {
         isAlive = false;
-        Settings.addScore(score);
+        Settings.addScore(gameObjectsContainer.getPlayerContainer().getScore());
         Settings.saveFiles(game.getFileIO());
     }
 

@@ -72,6 +72,8 @@ class GameObjectsContainer {
         setUpGameStart(g, playerView);
     }
 
+    public PlayerContainer getPlayerContainer() { return playerContainer; }
+
     private void free(GameObject obj) {
         if (obj instanceof FriendlyShip) {
             friendlyPool.free((FriendlyShip) obj);
@@ -180,6 +182,7 @@ class GameObjectsContainer {
             playerContainer.addShip(frSp);
             playerContainer.adjustPosition(playerView);
             gameObjectsClose.remove(frSp);
+            playerContainer.setScore(playerContainer.getScore() + playerContainer.friendlyShipList.size() - 1);
         }
 
     }

@@ -8,7 +8,7 @@ import java.io.*;
 public class Settings {
     public static boolean soundEnabled = true;
     public static String PlayerShip = "PlayerShip.png";
-    public static int[] highscores = new int[] {100, 50, 25, 12, 1};
+    public static int[] highscores = new int[] {0, 0, 0, 0, 0};
 
     public static void loadFiles(FileIO files)
     {

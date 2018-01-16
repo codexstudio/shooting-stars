@@ -77,11 +77,11 @@ public class MainMenuScreen extends Screen {
         soundOffBtn = new Button(g.getWidth() / 2, g.getHeight() * 2 / 5, 1.0f, 1.0f, g.newPixmap("Sound_Off.png", Graphics.PixmapFormat.ARGB8888));
 
         shipOne = new Button(g.getWidth() / 4, g.getHeight() * 1 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip.png", Graphics.PixmapFormat.ARGB8888));
-        shipTwo = new Button(g.getWidth() / 4, g.getHeight() * 2 / 5, 0.16f, 0.31f, g.newPixmap("PlayerShip2.png", Graphics.PixmapFormat.ARGB8888));
-        shipThree = new Button(g.getWidth() / 4, g.getHeight() * 3 / 5, 0.18f, 0.38f, g.newPixmap("PlayerShip3.png", Graphics.PixmapFormat.ARGB8888));
-        shipFour = new Button(g.getWidth() * 3 / 4, g.getHeight() * 1 / 5, 0.138f, 0.232f, g.newPixmap("PlayerShip4.png", Graphics.PixmapFormat.ARGB8888));
-        shipFive = new Button(g.getWidth() * 3 / 4, g.getHeight() * 2 / 5, 0.201f, 0.302f, g.newPixmap("PlayerShip5.png", Graphics.PixmapFormat.ARGB8888));
-        shipSix = new Button(g.getWidth() * 3 / 4, g.getHeight() * 3 / 5, 0.043f, 0.073f, g.newPixmap("PlayerShip6.png", Graphics.PixmapFormat.ARGB8888));
+        shipTwo = new Button(g.getWidth() / 4, g.getHeight() * 2 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip2.png", Graphics.PixmapFormat.ARGB8888));
+        shipThree = new Button(g.getWidth() / 4, g.getHeight() * 3 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip3.png", Graphics.PixmapFormat.ARGB8888));
+        shipFour = new Button(g.getWidth() * 3 / 4, g.getHeight() * 1 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip4.png", Graphics.PixmapFormat.ARGB8888));
+        shipFive = new Button(g.getWidth() * 3 / 4, g.getHeight() * 2 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip5.png", Graphics.PixmapFormat.ARGB8888));
+        shipSix = new Button(g.getWidth() * 3 / 4, g.getHeight() * 3 / 5, 2 / 5f, 2 / 5f, g.newPixmap("PlayerShip6.png", Graphics.PixmapFormat.ARGB8888));
 
         leaderboards = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("Leaderboards.png", Graphics.PixmapFormat.ARGB8888));
         character = new StaticUI(g.getWidth() / 2, g.getHeight() * 1 / 11, 1, 1, g.newPixmap("Characters.png", Graphics.PixmapFormat.ARGB8888));
@@ -150,26 +150,50 @@ public class MainMenuScreen extends Screen {
                     if (Vector2.distance(new Vector2(event.x, event.y), shipOne.transform.getLocation()) < shipOne.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), shipTwo.transform.getLocation()) < shipTwo.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip2.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), shipThree.transform.getLocation()) < shipThree.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip3.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), shipFour.transform.getLocation()) < shipFour.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip4.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), shipFive.transform.getLocation()) < shipFive.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip5.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                     if (Vector2.distance(new Vector2(event.x, event.y), shipSix.transform.getLocation()) < shipSix.getBoundingRadius()) {
                         Settings.PlayerShip = "PlayerShip6.png";
                         Settings.saveFiles(game.getFileIO());
+                        mainMenuContainer.setVisibility(true);
+                        charactersContainer.setVisibility(false);
+                        leaderboardsContainer.setVisibility(false);
+                        optionsContainer.setVisibility(false);
                     }
                 }
                 if (backBtn.isVisible()) {

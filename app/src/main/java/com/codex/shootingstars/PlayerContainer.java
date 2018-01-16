@@ -12,18 +12,23 @@ public class PlayerContainer {
     public List<FriendlyShip> friendlyShipList;
     private GameEventListener listener;
     private Vector2 location;
+    private int score;
 
     //Constructor
     public PlayerContainer(GameEventListener listener, PlayerView playerView) {
         this.listener = listener;
         this.location = playerView.getLocation();
         friendlyShipList = new ArrayList<FriendlyShip>();
+        score = 0;
     }
 
     //Setters & Getters
     public List<FriendlyShip> getFriendlyShipList() {
         return friendlyShipList;
     }
+
+    public int getScore() { return score; }
+    public void setScore(int value) { score = value; }
 
     //Methods
     public void addShip(FriendlyShip ship) {
